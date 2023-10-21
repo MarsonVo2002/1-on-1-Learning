@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/Login/login.dart';
+import 'package:lettutor/TeacherList/teacherlist.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           title: const Text('Flutter layout demo'),
         ),
         body: const Center(
-          child: Login(),
+          child: TeacherList(),
         ),
       ),
     );
