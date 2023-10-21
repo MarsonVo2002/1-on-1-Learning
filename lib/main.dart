@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/Login/login.dart';
+import 'package:lettutor/Teacher/teacher.dart';
 import 'package:lettutor/TeacherList/teacherlist.dart';
 
 void main() {
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
           title: const Text('Flutter layout demo'),
         ),
         body: const Center(
-          child: TeacherList(),
+          child: Teacher(),
         ),
       ),
     );
