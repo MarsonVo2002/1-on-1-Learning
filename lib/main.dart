@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/Login/login.dart';
+import 'package:lettutor/Schedule/schedule.dart';
 import 'package:lettutor/Teacher/teacher.dart';
 import 'package:lettutor/TeacherList/teacherlist.dart';
 
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
           title: const Text('Flutter layout demo'),
         ),
         body: const Center(
-          child: Teacher(),
+          child: Schedule(),
         ),
       ),
     );
