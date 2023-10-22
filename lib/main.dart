@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/History/history.dart';
 import 'package:lettutor/Login/login.dart';
 import 'package:lettutor/Schedule/schedule.dart';
 import 'package:lettutor/Teacher/teacher.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
           title: const Text('Flutter layout demo'),
         ),
         body: const Center(
-          child: Schedule(),
+          child:History(),
         ),
       ),
     );
