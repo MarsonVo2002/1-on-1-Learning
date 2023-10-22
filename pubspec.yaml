@@ -67,6 +67,7 @@ flutter:
       - asset/images/france.png
       - asset/icons/love.png
       - asset/images/video.jpg
+      - asset/images/English.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

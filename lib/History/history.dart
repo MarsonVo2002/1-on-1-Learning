@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../Schedule/ScheduleItem/DateSection/date_section.dart';
 import '../Schedule/ScheduleItem/TeacherSection/teacher_section.dart';
-import '../Schedule/ScheduleItem/TimeSection/time_section.dart';
 import 'HistoryTitleSection/history_title_section.dart';
 import 'ReviewSection/review_section.dart';
 
