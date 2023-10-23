@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/Schedule/ScheduleItem/schedule_item.dart';
-import 'package:lettutor/Schedule/TitleSection/title_section.dart';
+import 'package:lettutor/presentation/Schedule/ScheduleItem/schedule_item.dart';
+import 'package:lettutor/presentation/Schedule/TitleSection/title_section.dart';
 
 class Schedule extends StatelessWidget {
   const Schedule({super.key});

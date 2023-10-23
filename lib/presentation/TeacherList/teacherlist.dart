@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/TeacherList/HeaderSection/header_section.dart';
-import 'package:lettutor/TeacherList/SearchSection/search_section.dart';
-import 'package:lettutor/TeacherList/TeacherItem/teacher_item.dart';
+import 'package:lettutor/presentation/TeacherList/HeaderSection/header_section.dart';
+import 'package:lettutor/presentation/TeacherList/SearchSection/search_section.dart';
+import 'package:lettutor/presentation/TeacherList/TeacherItem/teacher_item.dart';
 
 class TeacherList extends StatelessWidget {
   const TeacherList({super.key});

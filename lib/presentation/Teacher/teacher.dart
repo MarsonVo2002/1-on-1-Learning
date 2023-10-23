@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/Teacher/LanguagesSection/languages_section.dart';
-import 'package:lettutor/Teacher/OtherSection/other_section.dart';
-import 'package:lettutor/Teacher/SpecialtiesSection/specialties_section.dart';
-import 'package:lettutor/Teacher/SuggestedCourseSection/suggested_course_section.dart';
-import 'package:lettutor/TeacherList/TeacherItem/AvatarSection/avatar_section.dart';
+import 'package:lettutor/presentation/Teacher/LanguagesSection/languages_section.dart';
+import 'package:lettutor/presentation/Teacher/OtherSection/other_section.dart';
+import 'package:lettutor/presentation/Teacher/SpecialtiesSection/specialties_section.dart';
+import 'package:lettutor/presentation/Teacher/SuggestedCourseSection/suggested_course_section.dart';
+import 'package:lettutor/presentation/TeacherList/TeacherItem/AvatarSection/avatar_section.dart';
 
 class Teacher extends StatelessWidget {
   const Teacher({super.key});

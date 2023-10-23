@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/Schedule/ScheduleItem/DateSection/date_section.dart';
-import 'package:lettutor/Schedule/ScheduleItem/TeacherSection/teacher_section.dart';
-import 'package:lettutor/Schedule/ScheduleItem/TimeSection/time_section.dart';
+import 'package:lettutor/presentation/Schedule/ScheduleItem/DateSection/date_section.dart';
+import 'package:lettutor/presentation/Schedule/ScheduleItem/TeacherSection/teacher_section.dart';
+import 'package:lettutor/presentation/Schedule/ScheduleItem/TimeSection/time_section.dart';
 
 class ScheduleItem extends StatelessWidget {
   const ScheduleItem({super.key});

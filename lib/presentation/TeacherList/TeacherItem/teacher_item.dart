@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/TeacherList/TeacherItem/AvatarSection/avatar_section.dart';
+import 'package:lettutor/presentation/TeacherList/TeacherItem/AvatarSection/avatar_section.dart';
 
 class TeacherItem extends StatelessWidget {
   const TeacherItem({super.key});

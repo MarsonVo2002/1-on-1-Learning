@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/Login/AlternativeMethodSection/alternative_method_section.dart';
-import 'package:lettutor/Login/ButtonSection/button_section.dart';
-import 'package:lettutor/Login/TextFieldSection/textfield_section.dart';
+import 'package:lettutor/presentation/Login/AlternativeMethodSection/alternative_method_section.dart';
+import 'package:lettutor/presentation/Login/ButtonSection/button_section.dart';
+import 'package:lettutor/presentation/Login/TextFieldSection/textfield_section.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/Course/CourseSection/course_section.dart';
-import 'package:lettutor/Course/CourseTitleSection/course_title_section.dart';
+import 'package:lettutor/presentation/Course/CourseSection/course_section.dart';
+import 'package:lettutor/presentation/Course/CourseTitleSection/course_title_section.dart';
 
 class Course extends StatelessWidget {
   const Course({super.key});
