@@ -9,7 +9,7 @@ class Schedule extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      color: const Color.fromARGB(255, 195, 193, 193),
+      padding: const EdgeInsets.all(10),
       child: ListView(
         children: const [
           TitleSection(),

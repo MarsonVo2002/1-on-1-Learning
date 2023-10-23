@@ -8,29 +8,64 @@ class CourseSection extends StatelessWidget {
     // TODO: implement build
     return Container(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(40),
-            border: Border.all(
-              color: Colors.black,
-            )),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
-            Image(
-              image: AssetImage('asset/images/English.jpg'),
-              width: 300,
-              height: 200,
+            const TextField(
+                decoration: InputDecoration(
+                    hintText: 'Search',
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 3, color: Colors.blue)),
+                    suffixIcon: Icon(Icons.search))),
+            const Row(
+              children: [
+                Text('Level: '),
+                Flexible(
+                  child: TextField(
+                      decoration: InputDecoration(
+                          suffixIcon: Icon(Icons.arrow_drop_down))),
+                )
+              ],
             ),
-            Text(
-              'Intermediate Conversation Topics',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            const Row(
+              children: [
+                Text('Category: '),
+                Flexible(
+                  child: TextField(
+                      decoration: InputDecoration(
+                          suffixIcon: Icon(Icons.arrow_drop_down))),
+                )
+              ],
             ),
-            Text(
-              'Express your ideas and opinions',
+            const SizedBox(
+              height: 30,
             ),
-            Text(
-              'Intermediate - 10 lessons',
-            )
+            Container(
+              padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    border: Border.all(
+                      color: Colors.black,
+                    )),
+                child: const Column(
+                  children: [
+                    Image(
+                      image: AssetImage('asset/images/English.jpg'),
+                      width: 300,
+                      height: 200,
+                    ),
+                    Text(
+                      'Intermediate Conversation Topics',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Express your ideas and opinions',
+                    ),
+                    Text(
+                      'Intermediate - 10 lessons',
+                    ),
+                  ],
+                ))
           ],
         ));
   }

@@ -13,9 +13,9 @@ class History extends StatelessWidget {
     // TODO: implement build
     return Container(
       padding: const EdgeInsets.all(10),
-      color: const Color.fromARGB(255, 195, 193, 193),
       child: ListView(children: [
         const HistoryTitleSection(),
+        const SizedBox(height: 20,),
         Container(
             decoration: BoxDecoration(
                 color: Colors.white,

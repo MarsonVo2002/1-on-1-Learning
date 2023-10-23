@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/presentation/Teacher/teacher.dart';
 import 'package:lettutor/presentation/TeacherList/TeacherItem/AvatarSection/avatar_section.dart';
 
 class TeacherItem extends StatelessWidget {
@@ -75,7 +76,7 @@ class TeacherItem extends StatelessWidget {
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         side: const BorderSide(width: 3, color: Colors.blue)),
-                    onPressed: () {},
+                    onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => const Teacher()));},
                     child: const Text(
                       'Book',
                       style: TextStyle(color: Colors.blue),

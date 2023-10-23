@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/main.dart';
 
 class ButtonSection extends StatelessWidget {
   @override
@@ -12,7 +13,9 @@ class ButtonSection extends StatelessWidget {
             const Text('Forgot password?',
                 style: TextStyle(color: Colors.blue)),
             SizedBox(width: double.infinity,child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+                  },
                  
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,

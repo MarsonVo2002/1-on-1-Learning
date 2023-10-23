@@ -44,8 +44,70 @@ class MyApp extends StatelessWidget {
           title: const Text('Lettutor'),
         ),
         body: const Center(
-          child: Call(),
+          child: Login(),
         ),
+      )
+    );
+  }
+}
+
+class Home extends StatefulWidget {
+  const Home({super.key});
+
+  @override
+  State<Home> createState() => _Home();
+}
+
+class _Home extends State<Home> {
+  int _selectedIndex = 0;
+  static const List<Widget> pages = [
+    TeacherList(),
+    Course(),
+    Schedule(),
+    History()
+  ];
+  void _onItemTapped(int index)
+  {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lettutor'),
+      ),
+      body: Center(
+        child: pages.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Course',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Schedule',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
+            backgroundColor: Colors.blue,
+          ),
+        ],
+        currentIndex: _selectedIndex,
+       
+        onTap: _onItemTapped,
       ),
     );
   }
