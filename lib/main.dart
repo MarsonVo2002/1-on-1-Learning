@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/Course/course.dart';
-import 'package:lettutor/CourseInfo/course_info.dart';
-import 'package:lettutor/History/history.dart';
-import 'package:lettutor/Lesson/lesson.dart';
-import 'package:lettutor/Login/login.dart';
-import 'package:lettutor/Schedule/schedule.dart';
-import 'package:lettutor/Teacher/teacher.dart';
-import 'package:lettutor/TeacherList/teacherlist.dart';
+import 'package:lettutor/presentation/Course/course.dart';
+import 'package:lettutor/presentation/CourseInfo/course_info.dart';
+import 'package:lettutor/presentation/History/history.dart';
+import 'package:lettutor/presentation/Lesson/lesson.dart';
+import 'package:lettutor/presentation/Login/login.dart';
+import 'package:lettutor/presentation/Schedule/schedule.dart';
+import 'package:lettutor/presentation/Teacher/teacher.dart';
+import 'package:lettutor/presentation/TeacherList/teacherlist.dart';
 
 void main() {
   runApp(const MyApp());
