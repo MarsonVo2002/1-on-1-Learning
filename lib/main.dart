@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/presentation/Call/call.dart';
 import 'package:lettutor/presentation/Course/course.dart';
 import 'package:lettutor/presentation/CourseInfo/course_info.dart';
 import 'package:lettutor/presentation/History/history.dart';
@@ -19,7 +20,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -41,10 +41,10 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Flutter layout demo'),
+          title: const Text('Lettutor'),
         ),
         body: const Center(
-          child: Lesson(),
+          child: Call(),
         ),
       ),
     );
