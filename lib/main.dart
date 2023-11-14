@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/presentation/Call/call.dart';
 import 'package:lettutor/presentation/Course/course.dart';
-import 'package:lettutor/presentation/CourseInfo/course_info.dart';
 import 'package:lettutor/presentation/History/history.dart';
-import 'package:lettutor/presentation/Lesson/lesson.dart';
 import 'package:lettutor/presentation/Login/login.dart';
 import 'package:lettutor/presentation/Schedule/schedule.dart';
-import 'package:lettutor/presentation/Teacher/teacher.dart';
 import 'package:lettutor/presentation/TeacherList/teacherlist.dart';
 
 void main() {
