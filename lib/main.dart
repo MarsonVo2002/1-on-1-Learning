@@ -1,48 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/presentation/Course/course.dart';
 import 'package:lettutor/presentation/History/history.dart';
 import 'package:lettutor/presentation/Login/login.dart';
 import 'package:lettutor/presentation/Schedule/schedule.dart';
 import 'package:lettutor/presentation/TeacherList/teacherlist.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyApp();
+}
+class AccountProvider extends ChangeNotifier
+{
+   final List<AccountDTO> accountList = [ AccountDTO(email:'example@gmail.com', password: '1234')];
+   void add(AccountDTO item) {
+    accountList.add(item);
+    notifyListeners();
+    print('Add account into account list');
+  }
+  void updated(String email, String password) {
+    AccountDTO updatedItem = accountList.firstWhere((element) => element.email == email);
+    print(password);
+    updatedItem = updatedItem.copyWith(password: password);
+    int index = accountList.indexWhere((element) => element.email == email);
+    accountList[index] = updatedItem;
+    print(updatedItem.password);
+    notifyListeners();
+    print('Update account');
+  }
+ 
+}
+class _MyApp extends State<MyApp> {
+   final provider = AccountProvider();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Lettutor'),
-        ),
-        body: const Center(
-          child: Login(),
-        ),
-      )
+   
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => provider)],
+      child: MaterialApp(
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: Scaffold(
+            appBar: AppBar(
+              title: const Text('Lettutor'),
+            ),
+            body: Center(
+              child: Login(),
+            ),
+          )),
     );
   }
 }
@@ -62,12 +77,12 @@ class _Home extends State<Home> {
     Schedule(),
     History()
   ];
-  void _onItemTapped(int index)
-  {
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -102,7 +117,6 @@ class _Home extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
-       
         onTap: _onItemTapped,
       ),
     );
@@ -111,16 +125,6 @@ class _Home extends State<Home> {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
