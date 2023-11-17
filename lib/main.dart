@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/model/account-dto.dart';
+import 'package:lettutor/model/teacher-detail-dto.dart';
+import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/presentation/Course/course.dart';
 import 'package:lettutor/presentation/History/history.dart';
 import 'package:lettutor/presentation/Login/login.dart';
@@ -17,16 +19,57 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyApp();
 }
-class AccountProvider extends ChangeNotifier
+class KeywordProvider extends ChangeNotifier
 {
-   final List<AccountDTO> accountList = [ AccountDTO(email:'example@gmail.com', password: '1234')];
-   void add(AccountDTO item) {
+  String keyword ='';
+  void copyWith(String word)
+  {
+    keyword = word;
+    notifyListeners();
+  }
+}
+class NameProvider extends ChangeNotifier
+{
+  String keyword ='';
+  void copyWith(String word)
+  {
+    keyword = word;
+    notifyListeners();
+  }
+}
+class NationalityProvider extends ChangeNotifier
+{
+  String keyword ='';
+  void copyWith(String word)
+  {
+    keyword = word;
+    notifyListeners();
+  }
+}
+class SearchProvider extends ChangeNotifier
+{
+  String name ='';
+  String nationality='';
+  void copyWith(String name, String nationality)
+  {
+    this.name = name;
+    this. nationality = nationality;
+    notifyListeners();
+  }
+}
+class AccountProvider extends ChangeNotifier {
+  final List<AccountDTO> accountList = [
+    AccountDTO(email: 'example@gmail.com', password: '12345')
+  ];
+  void add(AccountDTO item) {
     accountList.add(item);
     notifyListeners();
     print('Add account into account list');
   }
+
   void updated(String email, String password) {
-    AccountDTO updatedItem = accountList.firstWhere((element) => element.email == email);
+    AccountDTO updatedItem =
+        accountList.firstWhere((element) => element.email == email);
     print(password);
     updatedItem = updatedItem.copyWith(password: password);
     int index = accountList.indexWhere((element) => element.email == email);
@@ -35,16 +78,100 @@ class AccountProvider extends ChangeNotifier
     notifyListeners();
     print('Update account');
   }
- 
 }
+
+class TeacherProvider extends ChangeNotifier {
+  final List<TeacherDTO> teacherlist = [
+    TeacherDTO(
+        id: 1,
+        name: 'Keegan',
+        avatarpath: 'asset/images/avatar.png',
+        flaticon: 'asset/images/france.png',
+        nationality: 'France',
+        rating: 5),
+    TeacherDTO(
+        id: 2,
+        name: 'Keryl',
+        avatarpath: 'asset/images/avatar.png',
+        flaticon: 'asset/images/france.png',
+        nationality: 'Sweden',
+        rating: 4),
+    TeacherDTO(
+        id: 3,
+        name: 'Neegan',
+        avatarpath: 'asset/images/avatar.png',
+        flaticon: 'asset/images/france.png',
+        nationality: 'France',
+        rating: 3)
+  ];
+}
+
+class TeacherDetailProvider extends ChangeNotifier {
+  final List<TeacherDetailDTO> teacherlist = [
+    TeacherDetailDTO(
+        description:
+            'I am passionate about running and fitness, I often compete in '
+            'trail/mountain running events and I love pushing myself. I am '
+            'training to one day take part in ultra-endurance events. I also '
+            'enjoy watching rugbyon the weekends, reading and watchin... ',
+        specialities: [
+          'English for Business',
+          'Conversational',
+          'English for kids',
+          'IELTS',
+           'TOEIC',
+        ],
+        id: 1),
+   TeacherDetailDTO(
+        description:
+            'I am passionate about running and fitness, I often compete in '
+            'trail/mountain running events and I love pushing myself. I am '
+            'training to one day take part in ultra-endurance events. I also '
+            'enjoy watching rugbyon the weekends, reading and watchin... ',
+        specialities: [
+          'English for Business',
+          'STARTER',
+          'English for kids',
+          'IELTS',
+          'TOEIC',
+        ], id: 2),
+    TeacherDetailDTO(
+        description:
+            'I am passionate about running and fitness, I often compete in '
+            'trail/mountain running events and I love pushing myself. I am '
+            'training to one day take part in ultra-endurance events. I also '
+            'enjoy watching rugbyon the weekends, reading and watchin... ',
+        specialities: [
+          'English for kids',
+          'Conversational',
+          'TOELF',
+          'IELTS',
+           'TOEIC',
+        ], id: 3),
+  ];
+}
+
 class _MyApp extends State<MyApp> {
-   final provider = AccountProvider();
+  final provider = AccountProvider();
+  final teacherprovider = TeacherProvider();
+  final teacherdetailprovider = TeacherDetailProvider();
+  final keywordprovider = KeywordProvider();
+  final searchprovider = SearchProvider();
+  final nameprovider = NameProvider();
+  final nationalityprovider = NationalityProvider();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-   
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => provider)],
+      providers: [
+        ChangeNotifierProvider(create: (context) => provider),
+        ChangeNotifierProvider(create: (context) => teacherprovider),
+        ChangeNotifierProvider(create: (context) => teacherdetailprovider),
+        ChangeNotifierProvider(create: (context) => keywordprovider),
+        ChangeNotifierProvider(create: (context) => searchprovider),
+        ChangeNotifierProvider(create: (context) => nameprovider),
+        ChangeNotifierProvider(create: (context) => nationalityprovider),
+      ],
       child: MaterialApp(
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -71,12 +198,7 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
   int _selectedIndex = 0;
-  static const List<Widget> pages = [
-    TeacherList(),
-    Course(),
-    Schedule(),
-    History()
-  ];
+  static List<Widget> pages = [TeacherList(), Course(), Schedule(), History()];
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -90,9 +212,7 @@ class _Home extends State<Home> {
       appBar: AppBar(
         title: const Text('Lettutor'),
       ),
-      body: Center(
-        child: pages.elementAt(_selectedIndex),
-      ),
+      body: pages.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

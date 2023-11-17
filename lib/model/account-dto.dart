@@ -18,6 +18,5 @@ class AccountDTO {
       'email': email,
       'password': password,
     };
-
   }
 }

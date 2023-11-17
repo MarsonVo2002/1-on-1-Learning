@@ -20,7 +20,8 @@ class Teacher extends StatelessWidget {
                   name: 'Keeran',
                   avatarpath: 'asset/images/avatar.png',
                   nationality: 'France',
-                  flagpath: 'asset/images/france.png'),
+                  flagpath: 'asset/images/france.png',
+                  rating: 5,),
               Text(
                   'I am passionate about running and fitness, I often compete in trail/mountain running '
                   'events and I love pushing myself. I am training to one day take part in ultra-en...'),

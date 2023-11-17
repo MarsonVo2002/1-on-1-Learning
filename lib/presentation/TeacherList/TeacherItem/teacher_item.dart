@@ -1,15 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/main.dart';
+import 'package:lettutor/model/teacher-detail-dto.dart';
+import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/presentation/Teacher/teacher.dart';
 import 'package:lettutor/presentation/TeacherList/TeacherItem/AvatarSection/avatar_section.dart';
 
-class TeacherItem extends StatelessWidget {
-  const TeacherItem({super.key});
+Widget Specialities(List<String> item) {
+  List<Widget> list = [];
+  for (int i = 0; i < item.length; i++) {
+    list.add(
+      ElevatedButton(
+          style: ElevatedButton.styleFrom(primary: Colors.blue),
+          onPressed: () {},
+          child: Text(
+            item[i],
+            style: const TextStyle(color: Colors.white),
+          )),
+    );
+  }
+  return Wrap(direction: Axis.horizontal, spacing: 2, children: list);
+}
 
+class TeacherItem extends StatelessWidget {
+  final TeacherDTO teacher;
+  final TeacherDetailDTO detail;
+  const TeacherItem({super.key, required this.teacher, required this.detail});
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
         padding: const EdgeInsets.all(20),
+        width: 400,
+        height: 50,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(40),
             border: Border.all(
@@ -18,57 +40,15 @@ class TeacherItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           const  AvatarSection(
-                name: 'Keeran',
-                avatarpath: 'asset/images/avatar.png',
-                nationality: 'France',
-                flagpath: 'asset/images/france.png'),
-            Wrap(
-              direction: Axis.horizontal,
-              spacing: 2,
-              children: [
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.blue),
-                    onPressed: () {},
-                    child: const Text(
-                      'English for Business',
-                      style: TextStyle(color: Colors.white),
-                    )),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.blue),
-                    onPressed: () {},
-                    child: const Text(
-                      'Conversational',
-                      style: TextStyle(color: Colors.white),
-                    )),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.blue),
-                    onPressed: () {},
-                    child: const Text(
-                      'English for kids',
-                      style: TextStyle(color: Colors.white),
-                    )),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.blue),
-                    onPressed: () {},
-                    child: const Text(
-                      'IELTS',
-                      style: TextStyle(color: Colors.white),
-                    )),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.blue),
-                    onPressed: () {},
-                    child: const Text(
-                      'TOEIC',
-                      style: TextStyle(color: Colors.white),
-                    )),
-              ],
+            AvatarSection(
+              name: teacher.name,
+              avatarpath: teacher.avatarpath,
+              nationality: teacher.nationality,
+              flagpath: teacher.flaticon,
+              rating: teacher.rating,
             ),
-            const Text(
-                'I am passionate about running and fitness, I often compete in '
-                'trail/mountain running events and I love pushing myself. I am '
-                'training to one day take part in ultra-endurance events. I also '
-                'enjoy watching rugbyon the weekends, reading and watchin... '),
+            Specialities(detail.specialities),
+            Text(detail.description),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -76,7 +56,12 @@ class TeacherItem extends StatelessWidget {
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         side: const BorderSide(width: 3, color: Colors.blue)),
-                    onPressed: () { Navigator.push(context, MaterialPageRoute(builder: (context) => const Teacher()));},
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Teacher()));
+                    },
                     child: const Text(
                       'Book',
                       style: TextStyle(color: Colors.blue),

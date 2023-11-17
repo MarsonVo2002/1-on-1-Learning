@@ -8,7 +8,8 @@ class HeaderSection extends StatelessWidget {
     // TODO: implement build
     return Container(
       color: Colors.blue,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(5),
+      width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
