@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/model/account-dto.dart';
+import 'package:lettutor/model/calendar-dto.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/presentation/Course/course.dart';
@@ -19,44 +20,41 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyApp();
 }
-class KeywordProvider extends ChangeNotifier
-{
-  String keyword ='';
-  void copyWith(String word)
-  {
+
+class KeywordProvider extends ChangeNotifier {
+  String keyword = '';
+  void copyWith(String word) {
     keyword = word;
     notifyListeners();
   }
 }
-class NameProvider extends ChangeNotifier
-{
-  String keyword ='';
-  void copyWith(String word)
-  {
+
+class NameProvider extends ChangeNotifier {
+  String keyword = '';
+  void copyWith(String word) {
     keyword = word;
     notifyListeners();
   }
 }
-class NationalityProvider extends ChangeNotifier
-{
-  String keyword ='';
-  void copyWith(String word)
-  {
+
+class NationalityProvider extends ChangeNotifier {
+  String keyword = '';
+  void copyWith(String word) {
     keyword = word;
     notifyListeners();
   }
 }
-class SearchProvider extends ChangeNotifier
-{
-  String name ='';
-  String nationality='';
-  void copyWith(String name, String nationality)
-  {
+
+class SearchProvider extends ChangeNotifier {
+  String name = '';
+  String nationality = '';
+  void copyWith(String name, String nationality) {
     this.name = name;
-    this. nationality = nationality;
+    this.nationality = nationality;
     notifyListeners();
   }
 }
+
 class AccountProvider extends ChangeNotifier {
   final List<AccountDTO> accountList = [
     AccountDTO(email: 'example@gmail.com', password: '12345')
@@ -79,7 +77,18 @@ class AccountProvider extends ChangeNotifier {
     print('Update account');
   }
 }
-
+class DateTimeProvider extends ChangeNotifier
+{
+  final List<DateTime> list =[];
+  int totalLessonTime = 0;
+  void add(DateTime obj) {
+    list.add(obj);
+    totalLessonTime += 25;
+    notifyListeners();
+   
+  }
+  
+}
 class TeacherProvider extends ChangeNotifier {
   final List<TeacherDTO> teacherlist = [
     TeacherDTO(
@@ -88,54 +97,68 @@ class TeacherProvider extends ChangeNotifier {
         avatarpath: 'asset/images/avatar.png',
         flaticon: 'asset/images/france.png',
         nationality: 'France',
-        rating: 5),
+        rating: 5,
+        detail: TeacherDetailDTO(
+          description:
+              'I am passionate about running and fitness, I often compete in '
+              'trail/mountain running events and I love pushing myself. I am '
+              'training to one day take part in ultra-endurance events. I also '
+              'enjoy watching rugbyon the weekends, reading and watchin... ',
+          specialities: [
+            'English for Business',
+            'Conversational',
+            'English for kids',
+            'IELTS',
+            'TOEIC',
+          ],
+        ),
+        schedule: [
+          // Calendar(day: 'Thu', index: DateTime.thursday, time: '18:00'),
+          // Calendar(day: 'Wed', index: DateTime.wednesday, time: '17:30'),
+          DateTime.thursday, DateTime.wednesday
+        ],
+        time: ['18:00', '17:30'],
+        isBook: [false, false, false]
+       ),
     TeacherDTO(
         id: 2,
         name: 'Keryl',
         avatarpath: 'asset/images/avatar.png',
         flaticon: 'asset/images/france.png',
         nationality: 'Sweden',
-        rating: 4),
-    TeacherDTO(
-        id: 3,
-        name: 'Neegan',
-        avatarpath: 'asset/images/avatar.png',
-        flaticon: 'asset/images/france.png',
-        nationality: 'France',
-        rating: 3)
-  ];
-}
-
-class TeacherDetailProvider extends ChangeNotifier {
-  final List<TeacherDetailDTO> teacherlist = [
-    TeacherDetailDTO(
-        description:
-            'I am passionate about running and fitness, I often compete in '
-            'trail/mountain running events and I love pushing myself. I am '
-            'training to one day take part in ultra-endurance events. I also '
-            'enjoy watching rugbyon the weekends, reading and watchin... ',
-        specialities: [
-          'English for Business',
-          'Conversational',
-          'English for kids',
-          'IELTS',
-           'TOEIC',
+        rating: 4,
+        detail: TeacherDetailDTO(
+          description:
+              'I am passionate about running and fitness, I often compete in '
+              'trail/mountain running events and I love pushing myself. I am '
+              'training to one day take part in ultra-endurance events. I also '
+              'enjoy watching rugbyon the weekends, reading and watchin... ',
+          specialities: [
+            'English for Business',
+            'STARTER',
+            'English for kids',
+            'IELTS',
+            'TOEIC',
+          ],
+        ),
+         schedule: [
+          // Calendar(day: 'Fri', index: DateTime.friday, time: '21:00'),
+          // Calendar(day: 'Sat', index: DateTime.saturday, time: '19:30'),
+          // Calendar(day: 'Fri', index: DateTime.friday, time: '18:00'),
+          DateTime.friday, DateTime.saturday, DateTime.friday
         ],
-        id: 1),
-   TeacherDetailDTO(
-        description:
-            'I am passionate about running and fitness, I often compete in '
-            'trail/mountain running events and I love pushing myself. I am '
-            'training to one day take part in ultra-endurance events. I also '
-            'enjoy watching rugbyon the weekends, reading and watchin... ',
-        specialities: [
-          'English for Business',
-          'STARTER',
-          'English for kids',
-          'IELTS',
-          'TOEIC',
-        ], id: 2),
-    TeacherDetailDTO(
+        time: ['21:00', '19:30',  '18:00'],
+        isBook: [false, false, false]
+      ),
+        
+    TeacherDTO(
+      id: 3,
+      name: 'Neegan',
+      avatarpath: 'asset/images/avatar.png',
+      flaticon: 'asset/images/france.png',
+      nationality: 'France',
+      rating: 3,
+      detail: TeacherDetailDTO(
         description:
             'I am passionate about running and fitness, I often compete in '
             'trail/mountain running events and I love pushing myself. I am '
@@ -146,8 +169,63 @@ class TeacherDetailProvider extends ChangeNotifier {
           'Conversational',
           'TOELF',
           'IELTS',
-           'TOEIC',
-        ], id: 3),
+          'TOEIC',
+        ],
+      ),
+        schedule:  [
+          // Calendar(day: 'Sun', index: DateTime.sunday, time: '21:00'),
+          // Calendar(day: 'Tue', index: DateTime.tuesday, time: '19:30'),
+          // Calendar(day: 'Mon', index: DateTime.monday, time: '18:00'),
+          DateTime.sunday, DateTime.tuesday, DateTime.monday
+        ],
+        time: ['21:00','19:30','18:00'],
+        isBook: [false, false, false]
+      ),
+  ];
+}
+
+class TeacherDetailProvider extends ChangeNotifier {
+  final List<TeacherDetailDTO> teacherlist = [
+    //   TeacherDetailDTO(
+    //       description:
+    //           'I am passionate about running and fitness, I often compete in '
+    //           'trail/mountain running events and I love pushing myself. I am '
+    //           'training to one day take part in ultra-endurance events. I also '
+    //           'enjoy watching rugbyon the weekends, reading and watchin... ',
+    //       specialities: [
+    //         'English for Business',
+    //         'Conversational',
+    //         'English for kids',
+    //         'IELTS',
+    //          'TOEIC',
+    //       ],
+    //       id: 1),
+    //  TeacherDetailDTO(
+    //       description:
+    //           'I am passionate about running and fitness, I often compete in '
+    //           'trail/mountain running events and I love pushing myself. I am '
+    //           'training to one day take part in ultra-endurance events. I also '
+    //           'enjoy watching rugbyon the weekends, reading and watchin... ',
+    //       specialities: [
+    //         'English for Business',
+    //         'STARTER',
+    //         'English for kids',
+    //         'IELTS',
+    //         'TOEIC',
+    //       ], id: 2),
+    //   TeacherDetailDTO(
+    //       description:
+    //           'I am passionate about running and fitness, I often compete in '
+    //           'trail/mountain running events and I love pushing myself. I am '
+    //           'training to one day take part in ultra-endurance events. I also '
+    //           'enjoy watching rugbyon the weekends, reading and watchin... ',
+    //       specialities: [
+    //         'English for kids',
+    //         'Conversational',
+    //         'TOELF',
+    //         'IELTS',
+    //          'TOEIC',
+    //       ], id: 3),
   ];
 }
 
@@ -156,9 +234,7 @@ class _MyApp extends State<MyApp> {
   final teacherprovider = TeacherProvider();
   final teacherdetailprovider = TeacherDetailProvider();
   final keywordprovider = KeywordProvider();
-  final searchprovider = SearchProvider();
-  final nameprovider = NameProvider();
-  final nationalityprovider = NationalityProvider();
+  final datetimeprovider = DateTimeProvider();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -168,9 +244,7 @@ class _MyApp extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => teacherprovider),
         ChangeNotifierProvider(create: (context) => teacherdetailprovider),
         ChangeNotifierProvider(create: (context) => keywordprovider),
-        ChangeNotifierProvider(create: (context) => searchprovider),
-        ChangeNotifierProvider(create: (context) => nameprovider),
-        ChangeNotifierProvider(create: (context) => nationalityprovider),
+        ChangeNotifierProvider(create: (context) => datetimeprovider)
       ],
       child: MaterialApp(
           theme: ThemeData(

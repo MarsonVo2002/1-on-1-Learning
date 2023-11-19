@@ -20,8 +20,6 @@ class _SearchSection extends State<SearchSection> {
   @override
   Widget build(BuildContext context) {
     TeacherProvider provider = context.watch<TeacherProvider>();
-    TeacherDetailProvider detailprovider =
-        context.watch<TeacherDetailProvider>();
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: Text('Search')),
@@ -39,15 +37,15 @@ class _SearchSection extends State<SearchSection> {
                     if (!list.contains(provider.teacherlist[i]) &&
                         list.isEmpty) {
                       list.add(provider.teacherlist[i]);
-                      list_detail.add(detailprovider.teacherlist[i]);
+                    
                     } else {
                       if (!provider.teacherlist[i].name.contains(name) &&
                           list.contains(provider.teacherlist[i])) {
                         list.remove(provider.teacherlist[i]);
-                        list_detail.remove(detailprovider.teacherlist[i]);
+                       
                       } else if (!list.contains(provider.teacherlist[i])) {
                         list.add(provider.teacherlist[i]);
-                        list_detail.add(detailprovider.teacherlist[i]);
+                       
                       }
                     }
                   }
@@ -75,16 +73,16 @@ class _SearchSection extends State<SearchSection> {
                       if (!list.contains(provider.teacherlist[i]) &&
                           list.isEmpty) {
                         list.add(provider.teacherlist[i]);
-                        list_detail.add(detailprovider.teacherlist[i]);
+                       
                       } else {
                         if (!provider.teacherlist[i].nationality
                                 .contains(nationality) &&
                             list.contains(provider.teacherlist[i])) {
                           list.remove(provider.teacherlist[i]);
-                          list_detail.remove(detailprovider.teacherlist[i]);
+                        
                         } else if (!list.contains(provider.teacherlist[i])) {
                           list.add(provider.teacherlist[i]);
-                          list_detail.add(detailprovider.teacherlist[i]);
+                         
                         }
                       }
                     }
@@ -109,7 +107,7 @@ class _SearchSection extends State<SearchSection> {
                     padding: EdgeInsets.only(left: 10),
                     child: TeacherItem(
                       teacher: list[index],
-                      detail: list_detail[index],
+                      
                     ),
                   );
                 }),

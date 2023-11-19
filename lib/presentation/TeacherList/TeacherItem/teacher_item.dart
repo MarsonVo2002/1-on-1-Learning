@@ -23,8 +23,7 @@ Widget Specialities(List<String> item) {
 
 class TeacherItem extends StatelessWidget {
   final TeacherDTO teacher;
-  final TeacherDetailDTO detail;
-  const TeacherItem({super.key, required this.teacher, required this.detail});
+  const TeacherItem({super.key, required this.teacher});
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -47,8 +46,8 @@ class TeacherItem extends StatelessWidget {
               flagpath: teacher.flaticon,
               rating: teacher.rating,
             ),
-            Specialities(detail.specialities),
-            Text(detail.description),
+            Specialities(teacher.detail.specialities),
+            Text(teacher.detail.description),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -60,7 +59,7 @@ class TeacherItem extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Teacher()));
+                              builder: (context) => Teacher(teacher: teacher)));
                     },
                     child: const Text(
                       'Book',

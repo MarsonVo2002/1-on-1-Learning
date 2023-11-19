@@ -55,8 +55,7 @@ class _TeacherList extends State<TeacherList> {
     ];
     // TODO: implement build
     TeacherProvider provider = context.watch<TeacherProvider>();
-    TeacherDetailProvider detailprovider =
-        context.watch<TeacherDetailProvider>();
+   
     KeywordProvider keywordProvider = context.watch<KeywordProvider>();
     return Scaffold(
       body: Container(
@@ -113,7 +112,7 @@ class _TeacherList extends State<TeacherList> {
                   scrollDirection: Axis.horizontal,
                   itemCount: provider.teacherlist.length,
                   itemBuilder: (context, index) {
-                    TeacherDetailDTO curr = detailprovider.teacherlist[index];
+                    TeacherDTO curr = provider.teacherlist[index];
                  
                   
                     if (keywordProvider.keyword == 'All' ||
@@ -122,16 +121,16 @@ class _TeacherList extends State<TeacherList> {
                         padding: EdgeInsets.only(left: 10),
                         child: TeacherItem(
                           teacher: provider.teacherlist[index],
-                          detail: detailprovider.teacherlist[index],
+                          
                         ),
                       );
                     } else {
-                      if (curr.specialities.contains(keywordProvider.keyword)) {
+                      if (curr.detail.specialities.contains(keywordProvider.keyword)) {
                         return Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: TeacherItem(
                             teacher: provider.teacherlist[index],
-                            detail: detailprovider.teacherlist[index],
+                           
                           ),
                         );
                       } else {
