@@ -62,7 +62,7 @@ class AvatarSection extends StatelessWidget {
                 Row(
                   children: [
                     Image(
-                      image: AssetImage(teacher.avatarpath),
+                      image: AssetImage(teacher.flaticon),
                       width: 15,
                       height: 15,
                     ),
