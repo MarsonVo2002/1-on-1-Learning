@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/model/account-dto.dart';
-import 'package:lettutor/model/calendar-dto.dart';
+import 'package:lettutor/model/class-info.dart';
+import 'package:lettutor/model/course-dto.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/presentation/Course/course.dart';
+import 'package:lettutor/presentation/Favourite/favourite.dart';
 import 'package:lettutor/presentation/History/history.dart';
 import 'package:lettutor/presentation/Login/login.dart';
 import 'package:lettutor/presentation/Schedule/schedule.dart';
+import 'package:lettutor/presentation/Setting/setting.dart';
 import 'package:lettutor/presentation/TeacherList/teacherlist.dart';
 import 'package:provider/provider.dart';
 
@@ -25,32 +28,6 @@ class KeywordProvider extends ChangeNotifier {
   String keyword = '';
   void copyWith(String word) {
     keyword = word;
-    notifyListeners();
-  }
-}
-
-class NameProvider extends ChangeNotifier {
-  String keyword = '';
-  void copyWith(String word) {
-    keyword = word;
-    notifyListeners();
-  }
-}
-
-class NationalityProvider extends ChangeNotifier {
-  String keyword = '';
-  void copyWith(String word) {
-    keyword = word;
-    notifyListeners();
-  }
-}
-
-class SearchProvider extends ChangeNotifier {
-  String name = '';
-  String nationality = '';
-  void copyWith(String name, String nationality) {
-    this.name = name;
-    this.nationality = nationality;
     notifyListeners();
   }
 }
@@ -77,18 +54,127 @@ class AccountProvider extends ChangeNotifier {
     print('Update account');
   }
 }
-class DateTimeProvider extends ChangeNotifier
-{
-  final List<DateTime> list =[];
+
+class AccountSessionProvider extends ChangeNotifier {
+  AccountDTO account = AccountDTO(email: '', password: '');
+
+  void addHistory(ClassInfo info) {
+    account.history_list.add(info);
+    print('add to favourite');
+    notifyListeners();
+  }
+
+  void addTeacher(TeacherDTO teacher) {
+    account.teacher_list.add(teacher);
+    print('add to favourite');
+    notifyListeners();
+  }
+
+  void removeTeacher(TeacherDTO teacher) {
+    account.teacher_list.remove(teacher);
+    print('remove from favourite');
+    notifyListeners();
+  }
+
+  void removeHistory(ClassInfo info) {
+    account.history_list.remove(info);
+    print('remove from favourite');
+    notifyListeners();
+  }
+
+  void addLesson(ClassInfo obj) {
+    account.lesson_list.add(obj);
+    account.totalLessonTime += 25;
+    notifyListeners();
+  }
+
+  void removeLesson(ClassInfo obj) {
+    account.lesson_list.remove(obj);
+    account.totalLessonTime -= 25;
+    notifyListeners();
+  }
+
+  void setAccount(AccountDTO obj) {
+    account = obj;
+    notifyListeners();
+  }
+
+  void updateUsername(String name) {
+    account.name = name;
+    notifyListeners();
+  }
+
+  void updateAvatar(String avatarpath) {
+    account.avatarpath = avatarpath;
+    notifyListeners();
+  }
+}
+
+class ClassInfoProvider extends ChangeNotifier {
+  List<ClassInfo> list = [];
   int totalLessonTime = 0;
-  void add(DateTime obj) {
+  void add(ClassInfo obj) {
     list.add(obj);
     totalLessonTime += 25;
     notifyListeners();
-   
   }
-  
+
+  void remove(ClassInfo obj) {
+    list.remove(obj);
+    totalLessonTime -= 25;
+    notifyListeners();
+  }
 }
+
+class HistoryProvider extends ChangeNotifier {
+  final List<ClassInfo> list = [];
+  void add(ClassInfo info) {
+    list.add(info);
+    print('add to favourite');
+    notifyListeners();
+  }
+
+  void remove(ClassInfo info) {
+    list.remove(info);
+    print('remove from favourite');
+    notifyListeners();
+  }
+}
+
+class FavouriteProvider extends ChangeNotifier {
+  final List<TeacherDTO> list = [];
+  void add(TeacherDTO teacher) {
+    list.add(teacher);
+    print('add to favourite');
+    notifyListeners();
+  }
+
+  void remove(TeacherDTO teacher) {
+    list.remove(teacher);
+    print('remove from favourite');
+    notifyListeners();
+  }
+}
+
+class CourseProvider extends ChangeNotifier {
+  final List<CourseInformation> list = [
+    CourseInformation(
+        image: 'asset/images/English.jpg',
+        topic: 'Intermediate Conversation Topics',
+        short_description: 'Express your ideas and opinions',
+        level: 'Intermediate',
+        length: 10,
+        what: 'It can be intimidating to speak with foreigner, '
+            'no matter how much grammar and vocabulary you have mastered. '
+            'If you have basic knowledge of English but have not spent much time speaking '
+            'this course will help you ease your first English conversations.',
+        why: 'This course covers vocabulary at the CEFR A2 level. '
+            'You will build confidence while learning to speak about a '
+            'variety of common, everyday topics. In addition, you will build implicit '
+            'grammar knowledge as your tutor models correct answers and corrects your mistakes.')
+  ];
+}
+
 class TeacherProvider extends ChangeNotifier {
   final List<TeacherDTO> teacherlist = [
     TeacherDTO(
@@ -117,9 +203,15 @@ class TeacherProvider extends ChangeNotifier {
           // Calendar(day: 'Wed', index: DateTime.wednesday, time: '17:30'),
           DateTime.thursday, DateTime.wednesday
         ],
-        time: ['18:00', '17:30'],
-        isBook: [false, false, false]
-       ),
+        time: [
+          '18:00',
+          '17:30'
+        ],
+        isBook: [
+          false,
+          false,
+          false
+        ]),
     TeacherDTO(
         id: 2,
         name: 'Keryl',
@@ -141,100 +233,71 @@ class TeacherProvider extends ChangeNotifier {
             'TOEIC',
           ],
         ),
-         schedule: [
+        schedule: [
           // Calendar(day: 'Fri', index: DateTime.friday, time: '21:00'),
           // Calendar(day: 'Sat', index: DateTime.saturday, time: '19:30'),
           // Calendar(day: 'Fri', index: DateTime.friday, time: '18:00'),
           DateTime.friday, DateTime.saturday, DateTime.friday
         ],
-        time: ['21:00', '19:30',  '18:00'],
-        isBook: [false, false, false]
-      ),
-        
-    TeacherDTO(
-      id: 3,
-      name: 'Neegan',
-      avatarpath: 'asset/images/avatar.png',
-      flaticon: 'asset/images/france.png',
-      nationality: 'France',
-      rating: 3,
-      detail: TeacherDetailDTO(
-        description:
-            'I am passionate about running and fitness, I often compete in '
-            'trail/mountain running events and I love pushing myself. I am '
-            'training to one day take part in ultra-endurance events. I also '
-            'enjoy watching rugbyon the weekends, reading and watchin... ',
-        specialities: [
-          'English for kids',
-          'Conversational',
-          'TOELF',
-          'IELTS',
-          'TOEIC',
+        time: [
+          '21:00',
+          '19:30',
+          '18:00'
         ],
-      ),
-        schedule:  [
+        isBook: [
+          false,
+          false,
+          false
+        ]),
+    TeacherDTO(
+        id: 3,
+        name: 'Neegan',
+        avatarpath: 'asset/images/avatar.png',
+        flaticon: 'asset/images/france.png',
+        nationality: 'France',
+        rating: 3,
+        detail: TeacherDetailDTO(
+          description:
+              'I am passionate about running and fitness, I often compete in '
+              'trail/mountain running events and I love pushing myself. I am '
+              'training to one day take part in ultra-endurance events. I also '
+              'enjoy watching rugbyon the weekends, reading and watchin... ',
+          specialities: [
+            'English for kids',
+            'Conversational',
+            'TOELF',
+            'IELTS',
+            'TOEIC',
+          ],
+        ),
+        schedule: [
           // Calendar(day: 'Sun', index: DateTime.sunday, time: '21:00'),
           // Calendar(day: 'Tue', index: DateTime.tuesday, time: '19:30'),
           // Calendar(day: 'Mon', index: DateTime.monday, time: '18:00'),
           DateTime.sunday, DateTime.tuesday, DateTime.monday
         ],
-        time: ['21:00','19:30','18:00'],
-        isBook: [false, false, false]
-      ),
-  ];
-}
-
-class TeacherDetailProvider extends ChangeNotifier {
-  final List<TeacherDetailDTO> teacherlist = [
-    //   TeacherDetailDTO(
-    //       description:
-    //           'I am passionate about running and fitness, I often compete in '
-    //           'trail/mountain running events and I love pushing myself. I am '
-    //           'training to one day take part in ultra-endurance events. I also '
-    //           'enjoy watching rugbyon the weekends, reading and watchin... ',
-    //       specialities: [
-    //         'English for Business',
-    //         'Conversational',
-    //         'English for kids',
-    //         'IELTS',
-    //          'TOEIC',
-    //       ],
-    //       id: 1),
-    //  TeacherDetailDTO(
-    //       description:
-    //           'I am passionate about running and fitness, I often compete in '
-    //           'trail/mountain running events and I love pushing myself. I am '
-    //           'training to one day take part in ultra-endurance events. I also '
-    //           'enjoy watching rugbyon the weekends, reading and watchin... ',
-    //       specialities: [
-    //         'English for Business',
-    //         'STARTER',
-    //         'English for kids',
-    //         'IELTS',
-    //         'TOEIC',
-    //       ], id: 2),
-    //   TeacherDetailDTO(
-    //       description:
-    //           'I am passionate about running and fitness, I often compete in '
-    //           'trail/mountain running events and I love pushing myself. I am '
-    //           'training to one day take part in ultra-endurance events. I also '
-    //           'enjoy watching rugbyon the weekends, reading and watchin... ',
-    //       specialities: [
-    //         'English for kids',
-    //         'Conversational',
-    //         'TOELF',
-    //         'IELTS',
-    //          'TOEIC',
-    //       ], id: 3),
+        time: [
+          '21:00',
+          '19:30',
+          '18:00'
+        ],
+        isBook: [
+          false,
+          false,
+          false
+        ]),
   ];
 }
 
 class _MyApp extends State<MyApp> {
   final provider = AccountProvider();
   final teacherprovider = TeacherProvider();
-  final teacherdetailprovider = TeacherDetailProvider();
   final keywordprovider = KeywordProvider();
-  final datetimeprovider = DateTimeProvider();
+  final courseprovider = CourseProvider();
+  final favouriteprovider = FavouriteProvider();
+  final classinfoprovider = ClassInfoProvider();
+  final historyprovider = HistoryProvider();
+  final accountsessionprovider = AccountSessionProvider();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -242,9 +305,12 @@ class _MyApp extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (context) => provider),
         ChangeNotifierProvider(create: (context) => teacherprovider),
-        ChangeNotifierProvider(create: (context) => teacherdetailprovider),
         ChangeNotifierProvider(create: (context) => keywordprovider),
-        ChangeNotifierProvider(create: (context) => datetimeprovider)
+        ChangeNotifierProvider(create: (context) => favouriteprovider),
+        ChangeNotifierProvider(create: (context) => classinfoprovider),
+        ChangeNotifierProvider(create: (context) => historyprovider),
+        ChangeNotifierProvider(create: (context) => courseprovider),
+        ChangeNotifierProvider(create: (context) => accountsessionprovider)
       ],
       child: MaterialApp(
           theme: ThemeData(
@@ -272,7 +338,14 @@ class Home extends StatefulWidget {
 
 class _Home extends State<Home> {
   int _selectedIndex = 0;
-  static List<Widget> pages = [TeacherList(), Course(), Schedule(), History()];
+  static List<Widget> pages = [
+    TeacherList(),
+    Favourite(),
+    Course(),
+    Schedule(),
+    History(),
+    Setting(),
+  ];
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -295,6 +368,11 @@ class _Home extends State<Home> {
             backgroundColor: Colors.blue,
           ),
           BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favourite',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.book),
             label: 'Course',
             backgroundColor: Colors.blue,
@@ -307,6 +385,11 @@ class _Home extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(Icons.history),
             label: 'History',
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Setting',
             backgroundColor: Colors.blue,
           ),
         ],

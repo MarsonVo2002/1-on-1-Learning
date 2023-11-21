@@ -22,11 +22,14 @@ class _Login extends State<Login> {
   @override
   Widget build(BuildContext context) {
     AccountProvider provider = context.watch<AccountProvider>();
+    AccountSessionProvider sessionProvider = context.watch<AccountSessionProvider>();
     void _login() {
       String email = _emailController.text;
       String password = _passwordController.text;
       AccountDTO item = AccountDTO(email: email, password: password);
+
       if (provider.accountList.contains(item)) {
+        sessionProvider.setAccount(provider.accountList.firstWhere((element) => element == item));
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Home()),
@@ -52,148 +55,150 @@ class _Login extends State<Login> {
     }
 
     // TODO: implement build
-    return Container(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: [
-            const Text(
-              'Say hello to your English tutors',
-              style: TextStyle(
-                  fontSize: 30,
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold),
-            ),
-            const Text(
-              'Become fluent faster through one on '
-              'one video chat lessons tailored to '
-              'your goals.',
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Email',
-                    style: TextStyle(color: Colors.grey, fontSize: 18),
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 3, color: Colors.blue),
-                    )),
-                    controller: _emailController,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    'Password',
-                    style: TextStyle(color: Colors.grey, fontSize: 18),
-                  ),
-                  TextField(
-                    obscureText: true,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    decoration: const InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 3, color: Colors.blue),
-                    )),
-                    controller: _passwordController,
-                  )
-                ],
+    return Scaffold(
+      body: Container(
+          padding: const EdgeInsets.all(10),
+          child: ListView(
+            children: [
+              const Text(
+                'Say hello to your English tutors',
+                style: TextStyle(
+                    fontSize: 30,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold),
               ),
-            ),
-            Container(
+              const Text(
+                'Become fluent faster through one on '
+                'one video chat lessons tailored to '
+                'your goals.',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
+              Container(
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextButton(
-                        onPressed: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Email()));
-                        },
-                        child: Text(
-                          'Forgot password?',
-                          style: TextStyle(color: Colors.blue),
-                        )),
-                    SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _login,
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.blue,
-                          ),
-                          child: const Text(
-                            'LOGIN',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          ),
-                        ))
-                  ],
-                )),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text('Or continue with'),
-                    const SizedBox(
-                      height: 20,
+                    const Text(
+                      'Email',
+                      style: TextStyle(color: Colors.grey, fontSize: 18),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                            onPressed: () {},
-                            icon: Image.asset(
-                              'asset/icons/facebook.png',
-                              width: 40,
-                              height: 40,
-                            )),
-                        IconButton(
-                            onPressed: () {},
-                            icon: Image.asset(
-                              'asset/icons/google.png',
-                              width: 40,
-                              height: 40,
-                            )),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Image.asset(
-                            'asset/icons/mobilephone.png',
-                            width: 40,
-                            height: 40,
-                          ),
-                        )
-                      ],
+                    TextField(
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 3, color: Colors.blue),
+                      )),
+                      controller: _emailController,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Not a member yet?'),
-                        TextButton(
-                            onPressed: () async {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => SignUp()));
-                            },
-                            child: Text(
-                              'Sign up',
-                              style: TextStyle(color: Colors.blue),
-                            ))
-                      ],
+                    const Text(
+                      'Password',
+                      style: TextStyle(color: Colors.grey, fontSize: 18),
+                    ),
+                    TextField(
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      decoration: const InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 3, color: Colors.blue),
+                      )),
+                      controller: _passwordController,
                     )
-                  ]),
-            ),
-          ],
-        ));
+                  ],
+                ),
+              ),
+              Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton(
+                          onPressed: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Email()));
+                          },
+                          child: Text(
+                            'Forgot password?',
+                            style: TextStyle(color: Colors.blue),
+                          )),
+                      SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _login,
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.blue,
+                            ),
+                            child: const Text(
+                              'LOGIN',
+                              style: TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          ))
+                    ],
+                  )),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text('Or continue with'),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                              onPressed: () {},
+                              icon: Image.asset(
+                                'asset/icons/facebook.png',
+                                width: 40,
+                                height: 40,
+                              )),
+                          IconButton(
+                              onPressed: () {},
+                              icon: Image.asset(
+                                'asset/icons/google.png',
+                                width: 40,
+                                height: 40,
+                              )),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Image.asset(
+                              'asset/icons/mobilephone.png',
+                              width: 40,
+                              height: 40,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Not a member yet?'),
+                          TextButton(
+                              onPressed: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SignUp()));
+                              },
+                              child: Text(
+                                'Sign up',
+                                style: TextStyle(color: Colors.blue),
+                              ))
+                        ],
+                      )
+                    ]),
+              ),
+            ],
+          )),
+    );
   }
 }

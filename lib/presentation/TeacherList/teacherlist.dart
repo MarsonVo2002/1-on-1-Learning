@@ -35,8 +35,6 @@ Widget Filter(
 }
 
 class _TeacherList extends State<TeacherList> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _nationalityController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     List<String> items = [
@@ -55,7 +53,7 @@ class _TeacherList extends State<TeacherList> {
     ];
     // TODO: implement build
     TeacherProvider provider = context.watch<TeacherProvider>();
-   
+
     KeywordProvider keywordProvider = context.watch<KeywordProvider>();
     return Scaffold(
       body: Container(
@@ -63,24 +61,27 @@ class _TeacherList extends State<TeacherList> {
         child: ListView(
           children: [
             HeaderSection(),
-           
+            SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ElevatedButton(
-                  
                     onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>  SearchSection()));
+                              builder: (context) => SearchSection()));
                     },
                     child: const Text(
                       'Search',
                       style: TextStyle(color: Colors.blue),
                     )),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.white),
                     onPressed: () async {
@@ -106,6 +107,16 @@ class _TeacherList extends State<TeacherList> {
                     )),
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Recommend Tutors',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 10,
+            ),
             Container(
               height: 360,
               child: ListView.builder(
@@ -113,24 +124,22 @@ class _TeacherList extends State<TeacherList> {
                   itemCount: provider.teacherlist.length,
                   itemBuilder: (context, index) {
                     TeacherDTO curr = provider.teacherlist[index];
-                 
-                  
+
                     if (keywordProvider.keyword == 'All' ||
                         keywordProvider.keyword == '') {
                       return Padding(
                         padding: EdgeInsets.only(left: 10),
                         child: TeacherItem(
                           teacher: provider.teacherlist[index],
-                          
                         ),
                       );
                     } else {
-                      if (curr.detail.specialities.contains(keywordProvider.keyword)) {
+                      if (curr.detail.specialities
+                          .contains(keywordProvider.keyword)) {
                         return Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: TeacherItem(
                             teacher: provider.teacherlist[index],
-                           
                           ),
                         );
                       } else {

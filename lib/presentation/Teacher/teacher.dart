@@ -3,6 +3,7 @@ import 'package:lettutor/model/calendar-dto.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/presentation/Teacher/Calendar/calendar.dart';
+import 'package:lettutor/presentation/Teacher/Chat/chat.dart';
 import 'package:lettutor/presentation/Teacher/LanguagesSection/languages_section.dart';
 import 'package:lettutor/presentation/Teacher/OtherSection/other_section.dart';
 import 'package:lettutor/presentation/Teacher/SpecialtiesSection/specialties_section.dart';
@@ -111,11 +112,7 @@ class Teacher extends StatelessWidget {
           child: ListView(
             children: [
               AvatarSection(
-                name: teacher.name,
-                avatarpath: teacher.avatarpath,
-                nationality: teacher.nationality,
-                flagpath: teacher.flaticon,
-                rating: teacher.rating,
+                teacher: teacher,
               ),
               Text(teacher.detail.description),
               Row(
@@ -124,8 +121,9 @@ class Teacher extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      Icon(
-                        Icons.apps_outage_outlined,
+                      IconButton(
+                        onPressed:(){},
+                        icon: Icon(Icons.apps_outage_outlined),
                         color: Colors.blue,
                       ),
                       Text(
@@ -136,12 +134,31 @@ class Teacher extends StatelessWidget {
                   ),
                   Column(
                     children: [
-                      Icon(
-                        Icons.star,
+                      IconButton(
+                        onPressed:(){},
+                        icon: Icon(Icons.star),
                         color: Colors.blue,
                       ),
                       Text(
                         'Review',
+                        style: TextStyle(color: Colors.blue),
+                      )
+                    ],
+                  ),
+                   Column(
+                    children: [
+                      IconButton(
+                        onPressed:(){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Chat(teacher: teacher,)));
+                        },
+                        icon: Icon(Icons.chat),
+                        color: Colors.blue,
+                      ),
+                      Text(
+                        'Chat',
                         style: TextStyle(color: Colors.blue),
                       )
                     ],

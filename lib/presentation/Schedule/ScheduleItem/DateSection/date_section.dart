@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class DateSection extends StatelessWidget {
-  const DateSection({super.key});
+  final DateTime date;
+  const DateSection({super.key, required this.date});
 
   @override
   Widget build(BuildContext context) {
+    String format = DateFormat.yMMMMd().format(date);
     // TODO: implement build
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Fri, 30 Sep 22',
+         format,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        Text('1 lesson')
       ],
     );
   }

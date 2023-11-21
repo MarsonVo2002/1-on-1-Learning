@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TimeSection extends StatelessWidget {
-  const TimeSection({super.key});
+  final DateTime time;
+  const TimeSection({super.key, required this.time});
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    DateTime endTime = time.add(Duration(minutes: 25));
     return Container(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -14,7 +16,10 @@ class TimeSection extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('18:30 - 18:55'),
+                Text(
+                    '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().
+                    padLeft(2, '0')} - ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString()
+                    .padLeft(2, '0')}'),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {},
@@ -29,8 +34,12 @@ class TimeSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Request for lesson'),
-                Text('Edit Request', style: TextStyle(color: Colors.blue),),
-            ],)
+                Text(
+                  'Edit Request',
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ],
+            )
           ],
         ));
   }

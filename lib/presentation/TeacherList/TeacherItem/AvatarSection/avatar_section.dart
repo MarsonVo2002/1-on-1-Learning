@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/main.dart';
+import 'package:lettutor/model/teacher-dto.dart';
+import 'package:provider/provider.dart';
 
 Widget Rating(int rating) {
   List<Widget> list = [];
@@ -10,8 +13,7 @@ Widget Rating(int rating) {
           color: Colors.yellow,
         ),
       );
-    }
-    else{
+    } else {
       list.add(
         Icon(
           Icons.star,
@@ -27,20 +29,14 @@ Widget Rating(int rating) {
 }
 
 class AvatarSection extends StatelessWidget {
-  final String name;
-  final String avatarpath;
-  final String nationality;
-  final String flagpath;
-  final int rating;
-  const AvatarSection(
-      {super.key,
-      required this.name,
-      required this.avatarpath,
-      required this.nationality,
-      required this.flagpath,
-      required this.rating});
+  final TeacherDTO teacher;
+  const AvatarSection({required this.teacher});
   @override
   Widget build(BuildContext context) {
+    FavouriteProvider provider = context.watch<FavouriteProvider>();
+   
+    AccountSessionProvider session_provider = context.watch<AccountSessionProvider>();
+    bool isFavourite = session_provider.account.teacher_list.contains(teacher);
     // TODO: implement build
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +45,7 @@ class AvatarSection extends StatelessWidget {
         Row(
           children: [
             Image(
-              image: AssetImage(avatarpath),
+              image: AssetImage(teacher.avatarpath),
               width: 40,
               height: 40,
             ),
@@ -60,31 +56,41 @@ class AvatarSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  teacher.name,
                   style: const TextStyle(fontSize: 18),
                 ),
                 Row(
                   children: [
                     Image(
-                      image: AssetImage(flagpath),
+                      image: AssetImage(teacher.avatarpath),
                       width: 15,
                       height: 15,
                     ),
                     const SizedBox(
                       width: 5,
                     ),
-                     Text(nationality)
+                    Text(teacher.nationality)
                   ],
                 ),
-                Rating(rating)
+                Rating(teacher.rating)
               ],
             ),
           ],
         ),
         IconButton(
-            onPressed: () {},
-            icon: const Image(
-              image: AssetImage('asset/icons/love.png'),
+            onPressed: () async {
+              if (isFavourite) {
+                session_provider.removeTeacher(teacher);
+                print(isFavourite);
+              } else {
+                 session_provider.addTeacher(teacher);
+                print(isFavourite);
+              }
+            },
+            icon: Image(
+              image: isFavourite
+                  ? const AssetImage('asset/icons/fill_heart.png')
+                  : const AssetImage('asset/icons/love.png'),
               width: 20,
               height: 20,
             ))

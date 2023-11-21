@@ -13,6 +13,7 @@ class TeacherDTO
   final List<int> schedule;
   final List<String> time;
   final List<bool> isBook;
+  final List<String>chat=[];
   TeacherDTO({required this.id, required this.name, 
   required this.avatarpath, required this.flaticon, 
   required this.nationality, required this.rating,

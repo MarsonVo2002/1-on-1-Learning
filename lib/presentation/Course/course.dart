@@ -9,26 +9,8 @@ class Course extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              tabs: [
-                Tab(icon: Icon(Icons.bookmark), text: 'Course',),
-                Tab(icon: Icon(Icons.info,), text: 'Course info'),
-              ],
-            ),
-          ),
-          body:  const TabBarView(
-            children: [
-              CourseSection(),
-              CourseInfo()
-            ],
-          ),
-        ),
-      );
-    
-   
+    return Scaffold(
+      body: CourseSection(),
+    );
   }
 }

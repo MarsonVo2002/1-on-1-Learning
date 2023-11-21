@@ -30,7 +30,7 @@ class TeacherItem extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.all(20),
         width: 400,
-        height: 50,
+        height: 360,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(40),
             border: Border.all(
@@ -40,11 +40,7 @@ class TeacherItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AvatarSection(
-              name: teacher.name,
-              avatarpath: teacher.avatarpath,
-              nationality: teacher.nationality,
-              flagpath: teacher.flaticon,
-              rating: teacher.rating,
+              teacher: teacher,
             ),
             Specialities(teacher.detail.specialities),
             Text(teacher.detail.description),
