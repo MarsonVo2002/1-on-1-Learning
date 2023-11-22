@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/presentation/Login/login.dart';
+import 'package:lettutor/presentation/TeacherForm/teacherform.dart';
 import 'package:provider/provider.dart';
 Widget AvatarList(
     List<String> items, AccountSessionProvider provider, TextEditingController controller) {
@@ -113,6 +114,31 @@ class Setting extends StatelessWidget {
                 children: [
                   Text(
                     'Edit profile',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
+                  ),
+                  Icon(Icons.arrow_forward_ios, color: Colors.grey,)
+                ],
+              ),
+            ),
+          ),
+           GestureDetector(
+            onTap: () async {
+                      showDialog(
+                        context: context,
+                        builder: (context) => TeacherForm()
+                      );
+                    },
+            child: Container(
+            
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Teacher enrollment',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,

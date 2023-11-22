@@ -10,93 +10,17 @@ import 'package:lettutor/presentation/Teacher/SpecialtiesSection/specialties_sec
 import 'package:lettutor/presentation/Teacher/SuggestedCourseSection/suggested_course_section.dart';
 import 'package:lettutor/presentation/TeacherList/TeacherItem/AvatarSection/avatar_section.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-
-// class MyDataTable extends StatelessWidget {
-//   // Dummy data for demonstration
-//   final TeacherDTO teacher;
-//   MyDataTable({required this.teacher});
-  
-//   // Function to determine if a button should be shown in a specific cell
-//   bool shouldShowButton(String day, String time, int index) {
-//     Calendar result = Calendar(day: day, index: index, time: time);
-//     return teacher.schedule.contains(result);
-//   }
-//   DateTime calculateDate(int date)
-//   {
-//     DateTime today = DateTime.now();
-//     while(today.weekday!=date)
-//     {
-//       today = today.add(Duration(days: 1));
-//     }
-//     return today;
-//   }
-//   @override
-//   Widget build(BuildContext context) {
-//     final List<String> daysOfWeek = [
-//     'Mon',
-//     'Tue',
-//     'Wed',
-//     'Thu',
-//     'Fri',
-//     'Sat',
-//     'Sun'
-//   ];
-//   final List<String> timesOfDay = [
-//     '17:30',
-//     '18:00',
-//     '18:30',
-//     '19:00',
-//     '19:30',
-//     '20:00',
-//     '20:30',
-//     '21:00',
-//     '21:30',
-//     '22:00'
-//   ];
-//     return Container(
-//       height: 550,
-//       child: ListView(
-//         scrollDirection: Axis.horizontal,
-//         children: [
-//           DataTable(
-//             border: TableBorder.all(),
-//             columns: <DataColumn>[
-//               DataColumn(label: Text('Time')),
-//               for (var day in daysOfWeek) DataColumn(label: Text(day)),
-//             ],
-//             rows: List<DataRow>.generate(
-//               timesOfDay.length,
-//               (int timeIndex) => DataRow(
-//                 cells: <DataCell>[
-                 
-//                   DataCell(Text(timesOfDay[timeIndex])), // Row header (time)
-//                   for (var dayIndex in daysOfWeek.asMap().keys)
-//                     DataCell(
-   
-//                       // Conditionally show a button based on the shouldShowButton function
-//                       shouldShowButton(
-//                               daysOfWeek[dayIndex], timesOfDay[timeIndex], dayIndex + 1)
-//                           ? ElevatedButton(
-//                               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-//                               onPressed: () {
-//                                 DateTime lesson = calculateDate(dayIndex + 1);
-//                                 // Action for the button in the specific cell
-//                                 print(
-//                                     'Button pressed for ${timesOfDay[timeIndex]} on ${lesson.day} ${lesson.month} ${lesson.year}');
-//                               },
-//                               child: Text('Book', style: TextStyle(color: Colors.white)),
-//                             )
-//                           : Container(), // Empty container for cells without a button
-//                     ),
-//                 ],
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
+Widget ReviewSection(TeacherDTO teacher) {
+  List<Text> list=[];
+  for(int i = 0; i < teacher.review.length; i++)
+  {
+    list.add(Text(teacher.review[i]));
+  }
+  return Container(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: list));
+}
 
 class Teacher extends StatelessWidget {
   final TeacherDTO teacher;
@@ -122,7 +46,7 @@ class Teacher extends StatelessWidget {
                   Column(
                     children: [
                       IconButton(
-                        onPressed:(){},
+                        onPressed: () {},
                         icon: Icon(Icons.apps_outage_outlined),
                         color: Colors.blue,
                       ),
@@ -135,7 +59,26 @@ class Teacher extends StatelessWidget {
                   Column(
                     children: [
                       IconButton(
-                        onPressed:(){},
+                        onPressed: () async {
+                          showDialog(
+                            context: context,
+                            builder: (context) =>  AlertDialog(
+                                scrollable: true,
+                                title: const Text("Review"),
+                                content:
+                                    ReviewSection(teacher),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              ),
+                            
+                          );
+                        },
                         icon: Icon(Icons.star),
                         color: Colors.blue,
                       ),
@@ -145,14 +88,16 @@ class Teacher extends StatelessWidget {
                       )
                     ],
                   ),
-                   Column(
+                  Column(
                     children: [
                       IconButton(
-                        onPressed:(){
+                        onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => Chat(teacher: teacher,)));
+                                  builder: (context) => Chat(
+                                        teacher: teacher,
+                                      )));
                         },
                         icon: Icon(Icons.chat),
                         color: Colors.blue,
@@ -166,21 +111,21 @@ class Teacher extends StatelessWidget {
                 ],
               ),
               Image(
-                image: AssetImage('asset/images/video.jpg'),
+                image: AssetImage(teacher.video),
                 width: 200,
                 height: 102,
               ),
-              LanguagesSection(),
-              SpecialtiesSection(),
+              LanguagesSection(items: teacher.languages),
+              SpecialtiesSection(items:teacher.detail.specialities),
               SuggestedCourseSection(),
               OtherSection(
                   title: 'Interests',
                   content:
-                      'I love the weather, the scenery and the laid-back lifestyle of the locals'),
+                      teacher.interests),
               OtherSection(
                   title: 'Teaching experience',
                   content:
-                      'I have more than 10 years of teaching English experience'),
+                      teacher.experience),
               Calendar(teacher: teacher)
             ],
           )),

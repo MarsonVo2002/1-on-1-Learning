@@ -178,6 +178,23 @@ class CourseProvider extends ChangeNotifier {
 class TeacherProvider extends ChangeNotifier {
   final List<TeacherDTO> teacherlist = [
     TeacherDTO(
+        video: 'asset/images/video.jpg',
+        experience: 'I have more than 10 years of teaching English experience',
+        interests:
+            'I love the weather, the scenery and the laid-back lifestyle of the locals',
+        languages: ['English'],
+        suggested_course: [
+          'Basic Conversation Topics',
+          'Life in the Internet Age'
+        ],
+        review: [
+          'Very good',
+          'great teacher',
+          'He is a good teacher',
+          'Very good',
+          'great teacher',
+          'He is a good teacher'
+        ],
         id: 1,
         name: 'Keegan',
         avatarpath: 'asset/images/avatar.png',
@@ -203,16 +220,19 @@ class TeacherProvider extends ChangeNotifier {
           // Calendar(day: 'Wed', index: DateTime.wednesday, time: '17:30'),
           DateTime.thursday, DateTime.wednesday
         ],
-        time: [
-          '18:00',
-          '17:30'
-        ],
-        isBook: [
-          false,
-          false,
-          false
-        ]),
+        time: ['18:00', '17:30'],
+        isBook: [false, false, false]),
     TeacherDTO(
+        video: 'asset/images/video.jpg',
+        experience: 'I have more than 10 years of teaching English experience',
+        interests:
+            'I love the weather, the scenery and the laid-back lifestyle of the locals',
+        languages: ['English'],
+        suggested_course: [
+          'Basic Conversation Topics',
+          'Life in the Internet Age'
+        ],
+        review: [],
         id: 2,
         name: 'Keryl',
         avatarpath: 'asset/images/avatar.png',
@@ -239,18 +259,20 @@ class TeacherProvider extends ChangeNotifier {
           // Calendar(day: 'Fri', index: DateTime.friday, time: '18:00'),
           DateTime.friday, DateTime.saturday, DateTime.friday
         ],
-        time: [
-          '21:00',
-          '19:30',
-          '18:00'
-        ],
-        isBook: [
-          false,
-          false,
-          false
-        ]),
+        time: ['21:00', '19:30', '18:00'],
+        isBook: [false, false, false]),
     TeacherDTO(
+        video: 'asset/images/video.jpg',
+        experience: 'I have more than 10 years of teaching English experience',
+        interests:
+            'I love the weather, the scenery and the laid-back lifestyle of the locals',
+        languages: ['English'],
+        suggested_course: [
+          'Basic Conversation Topics',
+          'Life in the Internet Age'
+        ],
         id: 3,
+        review: [],
         name: 'Neegan',
         avatarpath: 'asset/images/avatar.png',
         flaticon: 'asset/images/france.png',
@@ -276,17 +298,13 @@ class TeacherProvider extends ChangeNotifier {
           // Calendar(day: 'Mon', index: DateTime.monday, time: '18:00'),
           DateTime.sunday, DateTime.tuesday, DateTime.monday
         ],
-        time: [
-          '21:00',
-          '19:30',
-          '18:00'
-        ],
-        isBook: [
-          false,
-          false,
-          false
-        ]),
+        time: ['21:00', '19:30', '18:00'],
+        isBook: [false, false, false]),
   ];
+  void add(TeacherDTO obj) {
+    teacherlist.add(obj);
+    notifyListeners();
+  }
 }
 
 class _MyApp extends State<MyApp> {

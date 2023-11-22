@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
-
+Widget Specialities(List<String> item) {
+  List<Widget> list = [];
+  for (int i = 0; i < item.length; i++) {
+    list.add(
+      ElevatedButton(
+          style: ElevatedButton.styleFrom(primary: Colors.blue),
+          onPressed: () {},
+          child: Text(
+            item[i],
+            style: const TextStyle(color: Colors.white),
+          )),
+    );
+  }
+  return Wrap(direction: Axis.horizontal, spacing: 2, children: list);
+}
 class SpecialtiesSection extends StatelessWidget {
-  const SpecialtiesSection({super.key});
+  final List<String>items;
+  const SpecialtiesSection({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -17,47 +32,7 @@ class SpecialtiesSection extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Wrap(
-                direction: Axis.horizontal,
-                spacing: 2,
-                children: [
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.blue),
-                      onPressed: () {},
-                      child: const Text(
-                        'English for Business',
-                        style: TextStyle(color: Colors.white),
-                      )),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.blue),
-                      onPressed: () {},
-                      child: const Text(
-                        'Conversational',
-                        style: TextStyle(color: Colors.white),
-                      )),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.blue),
-                      onPressed: () {},
-                      child: const Text(
-                        'English for kids',
-                        style: TextStyle(color: Colors.white),
-                      )),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.blue),
-                      onPressed: () {},
-                      child: const Text(
-                        'IELTS',
-                        style: TextStyle(color: Colors.white),
-                      )),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(primary: Colors.blue),
-                      onPressed: () {},
-                      child: const Text(
-                        'TOEIC',
-                        style: TextStyle(color: Colors.white),
-                      )),
-                ],
-              ),
+              child:Specialities(items),
             )
           ],
         ));
