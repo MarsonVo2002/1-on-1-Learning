@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/model/calendar-dto.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
+import 'package:lettutor/model/tutor/tutor.dart';
+import 'package:lettutor/model/tutor/tutor_info.dart';
 import 'package:lettutor/presentation/Teacher/Calendar/calendar.dart';
 import 'package:lettutor/presentation/Teacher/Chat/chat.dart';
 import 'package:lettutor/presentation/Teacher/LanguagesSection/languages_section.dart';
@@ -23,9 +25,9 @@ Widget ReviewSection(TeacherDTO teacher) {
 }
 
 class Teacher extends StatelessWidget {
-  final TeacherDTO teacher;
-
-  const Teacher({super.key, required this.teacher});
+  final Tutor teacher;
+  final TutorInfo info;
+  const Teacher({super.key, required this.teacher, required this.info});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class Teacher extends StatelessWidget {
               AvatarSection(
                 teacher: teacher,
               ),
-              Text(teacher.detail.description),
+              Text(info.bio!),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -60,24 +62,24 @@ class Teacher extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () async {
-                          showDialog(
-                            context: context,
-                            builder: (context) =>  AlertDialog(
-                                scrollable: true,
-                                title: const Text("Review"),
-                                content:
-                                    ReviewSection(teacher),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("OK"),
-                                  ),
-                                ],
-                              ),
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (context) =>  AlertDialog(
+                          //       scrollable: true,
+                          //       title: const Text("Review"),
+                          //       content:
+                          //           ReviewSection(teacher),
+                          //       actions: <Widget>[
+                          //         TextButton(
+                          //           onPressed: () {
+                          //             Navigator.of(context).pop();
+                          //           },
+                          //           child: const Text("OK"),
+                          //         ),
+                          //       ],
+                          //     ),
                             
-                          );
+                          // );
                         },
                         icon: Icon(Icons.star),
                         color: Colors.blue,
@@ -92,12 +94,12 @@ class Teacher extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Chat(
-                                        teacher: teacher,
-                                      )));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => Chat(
+                          //               teacher: teacher,
+                          //             )));
                         },
                         icon: Icon(Icons.chat),
                         color: Colors.blue,
@@ -110,23 +112,23 @@ class Teacher extends StatelessWidget {
                   ),
                 ],
               ),
-              Image(
-                image: AssetImage(teacher.video),
-                width: 200,
-                height: 102,
-              ),
-              LanguagesSection(items: teacher.languages),
-              SpecialtiesSection(items:teacher.detail.specialities),
-              SuggestedCourseSection(),
+              // Image(
+              //   image: AssetImage(teacher.video),
+              //   width: 200,
+              //   height: 102,
+              // ),
+              LanguagesSection(items: info.languages!.split(',')),
+              SpecialtiesSection(items:info.specialties!.split(',')),
+              // SuggestedCourseSection(),
               OtherSection(
                   title: 'Interests',
                   content:
-                      teacher.interests),
+                      info.interests!),
               OtherSection(
                   title: 'Teaching experience',
                   content:
-                      teacher.experience),
-              Calendar(teacher: teacher)
+                      info.experience!),
+              // Calendar(teacher: teacher)
             ],
           )),
     );

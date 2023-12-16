@@ -105,10 +105,10 @@ class _SearchSection extends State<SearchSection> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(left: 10),
-                    child: TeacherItem(
-                      teacher: list[index],
+                    // child: TeacherItem(
+                    //   teacher: list[index],
                       
-                    ),
+                    // ),
                   );
                 }),
           ),

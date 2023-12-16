@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
+import 'package:lettutor/model/tutor/tutor.dart';
 import 'package:lettutor/presentation/Teacher/teacher.dart';
 import 'package:lettutor/presentation/TeacherList/HeaderSection/header_section.dart';
 import 'package:lettutor/presentation/TeacherList/SearchSection/search_section.dart';
 import 'package:lettutor/presentation/TeacherList/TeacherItem/teacher_item.dart';
+import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
 
 class TeacherList extends StatefulWidget {
@@ -35,8 +38,12 @@ Widget Filter(
 }
 
 class _TeacherList extends State<TeacherList> {
+   int pageStart = 1;
+  int pageEnd = 7;
+
   @override
   Widget build(BuildContext context) {
+    
     List<String> items = [
       'All',
       'English for kids',
@@ -52,8 +59,7 @@ class _TeacherList extends State<TeacherList> {
       'TOEIC',
     ];
     // TODO: implement build
-    TeacherProvider provider = context.watch<TeacherProvider>();
-
+    AccountSessionProvider tutor = context.watch<AccountSessionProvider>();
     KeywordProvider keywordProvider = context.watch<KeywordProvider>();
     return Scaffold(
       body: Container(
@@ -79,7 +85,7 @@ class _TeacherList extends State<TeacherList> {
                       'Search',
                       style: TextStyle(color: Colors.blue),
                     )),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 ElevatedButton(
@@ -107,39 +113,38 @@ class _TeacherList extends State<TeacherList> {
                     )),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               'Recommend Tutors',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
               height: 360,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: provider.teacherlist.length,
+                  itemCount: tutor.tutor_list.length,
                   itemBuilder: (context, index) {
-                    TeacherDTO curr = provider.teacherlist[index];
+                    Tutor curr = tutor.tutor_list[index];
 
                     if (keywordProvider.keyword == 'All' ||
                         keywordProvider.keyword == '') {
                       return Padding(
                         padding: EdgeInsets.only(left: 10),
                         child: TeacherItem(
-                          teacher: provider.teacherlist[index],
+                          teacher: tutor.tutor_list[index],
                         ),
                       );
                     } else {
-                      if (curr.detail.specialities
-                          .contains(keywordProvider.keyword)) {
+                      if (curr.specialties!.contains(keywordProvider.keyword)) {
                         return Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: TeacherItem(
-                            teacher: provider.teacherlist[index],
+                            teacher: tutor.tutor_list[index],
                           ),
                         );
                       } else {
@@ -147,6 +152,36 @@ class _TeacherList extends State<TeacherList> {
                       }
                     }
                   }),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: () async {
+                      if (pageStart > 1) {
+                        setState(() {
+                          pageStart = pageStart - 1;
+                        });
+                        List<Tutor> tutor_list = await TutorService.GetListTutors(accessToken, pageStart);
+                        tutor.setTutorList(tutor_list);
+                      }
+                    },
+                    icon: const Icon(Icons.navigate_before)),
+                Text('$pageStart/$pageEnd'),
+                IconButton(
+                    onPressed: () async {
+                      if (pageStart != pageEnd) {
+                        setState(() {
+                          pageStart = pageStart + 1;
+                        });
+                        List<Tutor> tutor_list = await TutorService.GetListTutors(accessToken, pageStart);
+                        tutor.setTutorList(tutor_list);
+                      }
+                       
+                    },
+                    
+                    icon: const Icon(Icons.navigate_next)),
+              ],
             )
           ],
         ),

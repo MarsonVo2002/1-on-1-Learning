@@ -15,8 +15,8 @@ class Favourite extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: EdgeInsets.all(10),
-                  child: TeacherItem(teacher: session.account.teacher_list[index],
-                  ));
+                  // child: TeacherItem(teacher: session.account.teacher_list[index],)
+                  );
               }),
         );
   }

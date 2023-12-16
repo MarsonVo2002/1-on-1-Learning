@@ -63,10 +63,10 @@ class Setting extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Image(
-                      image: AssetImage(provider.account.avatarpath),
-                      width: 40,
+                    Image.network(
+                      provider.user.avatar!,
                       height: 40,
+                      width: 40,
                     ),
                     const SizedBox(
                       width: 10,
@@ -75,10 +75,10 @@ class Setting extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          provider.account.name,
+                          provider.user.name!,
                           style: const TextStyle(fontSize: 18),
                         ),
-                        Text(provider.account.email)
+                        Text(provider.user.email!)
                       ],
                     ),
                   ],

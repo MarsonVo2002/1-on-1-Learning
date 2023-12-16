@@ -1,11 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/account-dto.dart';
+import 'package:lettutor/model/course/course.dart';
+import 'package:lettutor/model/tutor/tutor.dart';
+import 'package:lettutor/model/user/user.dart';
 import 'package:lettutor/presentation/Login/AlternativeMethodSection/alternative_method_section.dart';
 import 'package:lettutor/presentation/Login/ButtonSection/button_section.dart';
 import 'package:lettutor/presentation/Login/TextFieldSection/textfield_section.dart';
 import 'package:lettutor/presentation/ResetPassword/email.dart';
 import 'package:lettutor/presentation/Signup/signup.dart';
+import 'package:lettutor/services/course_service.dart';
+import 'package:lettutor/services/login_service.dart';
+import 'package:lettutor/services/tutor_service.dart';
+import 'package:lettutor/services/user_info_service.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -21,15 +31,26 @@ class _Login extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    AccountProvider provider = context.watch<AccountProvider>();
-    AccountSessionProvider sessionProvider = context.watch<AccountSessionProvider>();
-    void _login() {
+    AccountSessionProvider sessionProvider =
+        context.watch<AccountSessionProvider>();
+    void _login() async {
       String email = _emailController.text;
       String password = _passwordController.text;
       AccountDTO item = AccountDTO(email: email, password: password);
-
-      if (provider.accountList.contains(item)) {
-        sessionProvider.setAccount(provider.accountList.firstWhere((element) => element == item));
+      LoginService service = LoginService(account: item);
+      var reponse = await service.login();
+      Map<String, dynamic> jsonData = json.decode(reponse.body);
+      setState(() {
+        accessToken = jsonData['tokens']['access']['token'];
+      });
+      User user = await UserInfoService.GetUserData(accessToken);
+      List<Tutor> tutor = await TutorService.GetListTutors(accessToken, 1);
+      List<Course> course = await CourseService.GetCourseList(accessToken);
+      if (reponse.statusCode == 200) {
+        sessionProvider.setUser(user);
+        sessionProvider.setAccount(item);
+        sessionProvider.setTutorList(tutor);
+        sessionProvider.SetCourseList(course);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Home()),
@@ -134,7 +155,8 @@ class _Login extends State<Login> {
                             ),
                             child: const Text(
                               'LOGIN',
-                              style: TextStyle(color: Colors.white, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
                             ),
                           ))
                     ],

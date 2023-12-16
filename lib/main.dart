@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/model/class-info.dart';
 import 'package:lettutor/model/course-dto.dart';
+import 'package:lettutor/model/course/course.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
+import 'package:lettutor/model/tutor/tutor.dart';
+import 'package:lettutor/model/user/user.dart';
 import 'package:lettutor/presentation/Course/course.dart';
 import 'package:lettutor/presentation/Favourite/favourite.dart';
 import 'package:lettutor/presentation/History/history.dart';
@@ -57,13 +60,28 @@ class AccountProvider extends ChangeNotifier {
 
 class AccountSessionProvider extends ChangeNotifier {
   AccountDTO account = AccountDTO(email: '', password: '');
-
+  User user = User();
+  List<Tutor> tutor_list = [];
+  List<Course> course_list = [];
   void addHistory(ClassInfo info) {
     account.history_list.add(info);
     print('add to favourite');
     notifyListeners();
   }
-
+  void setUser(User u)
+  {
+    user = u;
+    notifyListeners();
+  }
+  void SetCourseList(List<Course> course)
+  {
+    course_list = course;
+  }
+  void setTutorList(List<Tutor> tutor)
+  {
+    tutor_list = tutor;
+    notifyListeners();
+  }
   void addTeacher(TeacherDTO teacher) {
     account.teacher_list.add(teacher);
     print('add to favourite');
@@ -109,7 +127,6 @@ class AccountSessionProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
-
 class ClassInfoProvider extends ChangeNotifier {
   List<ClassInfo> list = [];
   int totalLessonTime = 0;
@@ -359,7 +376,7 @@ class _Home extends State<Home> {
   static List<Widget> pages = [
     TeacherList(),
     Favourite(),
-    Course(),
+    Course_UI(),
     Schedule(),
     History(),
     Setting(),

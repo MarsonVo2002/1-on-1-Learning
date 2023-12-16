@@ -1,6 +1,8 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/teacher-dto.dart';
+import 'package:lettutor/model/tutor/tutor.dart';
 import 'package:provider/provider.dart';
 
 Widget Rating(int rating) {
@@ -29,13 +31,14 @@ Widget Rating(int rating) {
 }
 
 class AvatarSection extends StatelessWidget {
-  final TeacherDTO teacher;
+  final Tutor teacher;
   const AvatarSection({required this.teacher});
   @override
   Widget build(BuildContext context) {
     FavouriteProvider provider = context.watch<FavouriteProvider>();
-   
-    AccountSessionProvider session_provider = context.watch<AccountSessionProvider>();
+
+    AccountSessionProvider session_provider =
+        context.watch<AccountSessionProvider>();
     bool isFavourite = session_provider.account.teacher_list.contains(teacher);
     // TODO: implement build
     return Row(
@@ -44,11 +47,16 @@ class AvatarSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Image(
-              image: AssetImage(teacher.avatarpath),
-              width: 40,
-              height: 40,
-            ),
+            teacher.avatar == null
+                ? Container()
+                : Image.network(
+                    teacher.avatar!,
+                    errorBuilder: (context, exception, stackTrace) {
+                      return Container();
+                    },
+                    width: 40,
+                    height: 40,
+                  ),
             const SizedBox(
               width: 20,
             ),
@@ -56,23 +64,25 @@ class AvatarSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  teacher.name,
+                  teacher.name!,
                   style: const TextStyle(fontSize: 18),
                 ),
                 Row(
                   children: [
-                    Image(
-                      image: AssetImage(teacher.flaticon),
-                      width: 15,
+                    CountryFlag.fromCountryCode(
+                      teacher.country == null ? '' : teacher.country!,
                       height: 15,
+                      width: 20,
                     ),
                     const SizedBox(
                       width: 5,
                     ),
-                    Text(teacher.nationality)
+                    Text(
+                      teacher.country == null ? '' : teacher.country!,
+                    )
                   ],
                 ),
-                Rating(teacher.rating)
+                Rating(teacher.rating == null ? 0 : teacher.rating!.round())
               ],
             ),
           ],
@@ -80,10 +90,10 @@ class AvatarSection extends StatelessWidget {
         IconButton(
             onPressed: () async {
               if (isFavourite) {
-                session_provider.removeTeacher(teacher);
+                //session_provider.removeTeacher(teacher as TeacherDTO);
                 print(isFavourite);
               } else {
-                 session_provider.addTeacher(teacher);
+                //session_provider.addTeacher(teacher as TeacherDTO);
                 print(isFavourite);
               }
             },

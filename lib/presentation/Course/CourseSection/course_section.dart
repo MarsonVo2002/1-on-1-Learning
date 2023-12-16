@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/course-dto.dart';
+import 'package:lettutor/model/course/course.dart';
 import 'package:lettutor/presentation/CourseInfo/course_info.dart';
 import 'package:provider/provider.dart';
 
-Widget CourseItem(CourseInformation info, BuildContext context) {
+Widget CourseItem(Course info, BuildContext context) {
   return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -14,20 +16,23 @@ Widget CourseItem(CourseInformation info, BuildContext context) {
           )),
       child: Column(
         children: [
-          Image(
-            image: AssetImage(info.image),
+          Image.network(
+            info.imageUrl!,
+            errorBuilder: (context, exception, stackTrace) {
+              return Container();
+            },
             width: 300,
             height: 200,
           ),
           Text(
-            info.topic,
+            info.name!,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           Text(
-            info.short_description,
+            info.description!,
           ),
           Text(
-            '${info.level} - ${info.length} lessons',
+            '${levels[info.level]} - ${info.topics!.length} lessons',
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -36,10 +41,10 @@ Widget CourseItem(CourseInformation info, BuildContext context) {
                   style: ElevatedButton.styleFrom(
                       side: const BorderSide(width: 3, color: Colors.blue)),
                   onPressed: () {
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CourseInfo(course: info)));
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => CourseInfo(course: info)));
                   },
                   child: Text(
                     'See detail',
@@ -56,7 +61,7 @@ class CourseSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CourseProvider provider = context.watch<CourseProvider>();
+    AccountSessionProvider provider = context.watch<AccountSessionProvider>();
     // TODO: implement build
     return Container(
         padding: const EdgeInsets.all(20),
@@ -94,12 +99,13 @@ class CourseSection extends StatelessWidget {
             Container(
               height: 300,
               child: ListView.builder(
-                itemCount: provider.list.length,
-                itemBuilder: (context, index)
-                {
-                  return CourseItem(provider.list[index], context);
-                }
-              ),
+                  itemCount: provider.course_list.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CourseItem(provider.course_list[index], context),
+                    );
+                  }),
             )
           ],
         ));
