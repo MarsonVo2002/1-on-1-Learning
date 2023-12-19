@@ -1,16 +1,11 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:lettutor/model/tutor/tutor.dart';
 
 class TeacherSection extends StatelessWidget {
-  final String name;
-  final String avatarpath;
-  final String nationality;
-  final String flagpath;
+  final Tutor info;
   const TeacherSection(
-      {super.key,
-      required this.name,
-      required this.avatarpath,
-      required this.nationality,
-      required this.flagpath});
+      {super.key, required this.info,});
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +16,8 @@ class TeacherSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Image(
-              image: AssetImage(avatarpath),
+            Image.network(
+              info.avatar!,
               width: 40,
               height: 40,
             ),
@@ -33,20 +28,20 @@ class TeacherSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  info.name!,
                   style: const TextStyle(fontSize: 18),
                 ),
                 Row(
                   children: [
-                    Image(
-                      image: AssetImage(flagpath),
-                      width: 15,
+                     CountryFlag.fromCountryCode(
+                      info.country == null ? '' : info.country!,
                       height: 15,
+                      width: 20,
                     ),
                     const SizedBox(
                       width: 5,
                     ),
-                    const Text('France')
+                    Text(info.country!)
                   ],
                 ),
                 const Row(

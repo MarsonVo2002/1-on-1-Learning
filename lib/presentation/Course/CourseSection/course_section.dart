@@ -41,10 +41,10 @@ Widget CourseItem(Course info, BuildContext context) {
                   style: ElevatedButton.styleFrom(
                       side: const BorderSide(width: 3, color: Colors.blue)),
                   onPressed: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => CourseInfo(course: info)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CourseInfo(course: info)));
                   },
                   child: Text(
                     'See detail',

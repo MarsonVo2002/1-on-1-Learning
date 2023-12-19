@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lettutor/model/course-dto.dart';
+import 'package:lettutor/const.dart';
+import 'package:lettutor/model/course/course.dart';
+import 'package:lettutor/presentation/Course/lesson.dart';
 import 'package:lettutor/presentation/CourseInfo/OverviewSection/overview_section.dart';
-
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 class CourseInfo extends StatelessWidget {
-  final CourseInformation course;
+  final Course course;
   const CourseInfo({super.key, required this.course});
   
   @override
@@ -17,19 +19,23 @@ class CourseInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                course.topic,
+                course.name!,
                 style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               )
             ],
           ),
-           Image(
-            image: AssetImage(course.image),
+           Image.network(
+            course.imageUrl!,
+            errorBuilder: (context, error, stackTrace) 
+            {
+              return Container();
+            },
             width: 300,
             height: 200,
           ),
           OverviewSection(course: course,),
           Text(
-            course.level,
+           ' ${levels[course.level!]}',
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const Padding(padding: EdgeInsets.all(10), child: Text('Beginner')),
@@ -37,11 +43,16 @@ class CourseInfo extends StatelessWidget {
             'Course length',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          Padding(padding: EdgeInsets.all(10), child: Text('${course.length} topic(s)')),
+          Padding(padding: EdgeInsets.all(10), child: Text('${course.topics!.length} topic(s)')),
           SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                   Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Lesson(topics: course.topics??[],)));
+                },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
                 ),

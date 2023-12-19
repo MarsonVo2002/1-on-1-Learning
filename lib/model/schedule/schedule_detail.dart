@@ -1,5 +1,5 @@
 import 'booking_info.dart';
-import 'schedule.dart';
+import 'schedule_info.dart';
 
 class ScheduleDetail {
   int? startPeriodTimestamp;
@@ -12,7 +12,7 @@ class ScheduleDetail {
   String? updatedAt;
   List<BookingInfo>? bookingInfo;
   bool? isBooked;
-  Schedule? scheduleInfo;
+  ScheduleInfo? scheduleInfo;
 
   ScheduleDetail({
     this.startPeriodTimestamp,
@@ -44,7 +44,7 @@ class ScheduleDetail {
       });
     }
     isBooked = json['isBooked'];
-    scheduleInfo = json['scheduleInfo'] != null ? Schedule.fromJson(json['scheduleInfo']) : null;
+    scheduleInfo = json['scheduleInfo'] != null ? ScheduleInfo.fromJson(json['scheduleInfo']) : null;
   }
 
   Map<String, dynamic> toJson() {

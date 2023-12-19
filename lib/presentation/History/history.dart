@@ -45,14 +45,14 @@ class History extends StatelessWidget {
                         SizedBox(
                           height: 10,
                         ),
-                        TeacherSection(
-                            name: session.account.history_list[index].teacher.name,
-                            avatarpath:
-                                session.account.history_list[index].teacher.avatarpath,
-                            nationality:
-                                session.account.history_list[index].teacher.nationality,
-                            flagpath:
-                                session.account.history_list[index].teacher.flaticon),
+                        // TeacherSection(
+                        //     name: session.account.history_list[index].teacher.name,
+                        //     avatarpath:
+                        //         session.account.history_list[index].teacher.avatarpath,
+                        //     nationality:
+                        //         session.account.history_list[index].teacher.nationality,
+                        //     flagpath:
+                        //         session.account.history_list[index].teacher.flaticon),
                         ReviewSection( date: session.account.history_list[index].selectedDay)
                       ],
                     ),

@@ -54,11 +54,11 @@ class AvatarSection extends StatelessWidget {
                     errorBuilder: (context, exception, stackTrace) {
                       return Container();
                     },
-                    width: 40,
-                    height: 40,
+                    width: 80,
+                    height: 80,
                   ),
             const SizedBox(
-              width: 20,
+              width: 10,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,7 +1,7 @@
 import '../tutor/tutor.dart';
 import 'schedule_detail.dart';
 
-class Schedule {
+class ScheduleInfo {
   String? id;
   String? tutorId;
   String? startTime;
@@ -13,7 +13,7 @@ class Schedule {
   List<ScheduleDetail>? scheduleDetails;
   Tutor? tutorInfo;
 
-  Schedule({
+  ScheduleInfo({
     this.id,
     this.tutorId,
     this.startTime,
@@ -26,7 +26,7 @@ class Schedule {
     this.tutorInfo,
   });
 
-  Schedule.fromJson(Map<String, dynamic> json) {
+  ScheduleInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     tutorId = json['tutorId'];
     startTime = json['startTime'];

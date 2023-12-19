@@ -3,6 +3,7 @@ import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/model/class-info.dart';
 import 'package:lettutor/model/course-dto.dart';
 import 'package:lettutor/model/course/course.dart';
+import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
@@ -63,9 +64,19 @@ class AccountSessionProvider extends ChangeNotifier {
   User user = User();
   List<Tutor> tutor_list = [];
   List<Course> course_list = [];
+  List<BookingInfo> booked_class = [];
   void addHistory(ClassInfo info) {
     account.history_list.add(info);
     print('add to favourite');
+    notifyListeners();
+  }
+  void setBookedClass(List<BookingInfo> info)
+  {
+    booked_class= info;
+    notifyListeners();
+  }
+  void deleteBookedClass()
+  {
     notifyListeners();
   }
   void setUser(User u)

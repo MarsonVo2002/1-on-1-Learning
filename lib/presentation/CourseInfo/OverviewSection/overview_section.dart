@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/model/course-dto.dart';
+import 'package:lettutor/model/course/course.dart';
 
 class OverviewSection extends StatelessWidget {
-  final CourseInformation course;
+  final Course course;
   const OverviewSection({super.key, required this.course});
 
   @override
@@ -21,7 +22,7 @@ class OverviewSection extends StatelessWidget {
         ),
         Padding(
           padding:  EdgeInsets.all(10),
-          child: Text(course.why)
+          child: Text(course.reason!)
         ),
         const Text(
           'What will you be able to do',
@@ -29,7 +30,7 @@ class OverviewSection extends StatelessWidget {
         ),
         Padding(
           padding:  EdgeInsets.all(10),
-          child: Text(course.what)
+          child: Text(course.purpose!)
         )
 
       ],

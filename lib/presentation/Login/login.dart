@@ -5,6 +5,7 @@ import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/model/course/course.dart';
+import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
 import 'package:lettutor/model/user/user.dart';
 import 'package:lettutor/presentation/Login/AlternativeMethodSection/alternative_method_section.dart';
@@ -12,6 +13,7 @@ import 'package:lettutor/presentation/Login/ButtonSection/button_section.dart';
 import 'package:lettutor/presentation/Login/TextFieldSection/textfield_section.dart';
 import 'package:lettutor/presentation/ResetPassword/email.dart';
 import 'package:lettutor/presentation/Signup/signup.dart';
+import 'package:lettutor/services/booking_service.dart';
 import 'package:lettutor/services/course_service.dart';
 import 'package:lettutor/services/login_service.dart';
 import 'package:lettutor/services/tutor_service.dart';
@@ -46,11 +48,13 @@ class _Login extends State<Login> {
       User user = await UserInfoService.GetUserData(accessToken);
       List<Tutor> tutor = await TutorService.GetListTutors(accessToken, 1);
       List<Course> course = await CourseService.GetCourseList(accessToken);
+       List<BookingInfo> info = await BookingService.GetBookedClass(accessToken);
       if (reponse.statusCode == 200) {
         sessionProvider.setUser(user);
         sessionProvider.setAccount(item);
         sessionProvider.setTutorList(tutor);
         sessionProvider.SetCourseList(course);
+        sessionProvider.setBookedClass(info);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Home()),

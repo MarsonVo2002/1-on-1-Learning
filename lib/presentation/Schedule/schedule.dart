@@ -20,12 +20,12 @@ class Schedule extends StatelessWidget {
           Container(
             height: 400,
             child: ListView.builder(
-              itemCount: provider.account.lesson_list.length,
+              itemCount: provider.booked_class.length,
               itemBuilder: (context ,index)
               {
                 return Padding(
                   padding: EdgeInsets.all(10),
-                  child: ScheduleItem(info: provider.account.lesson_list[index]),
+                  child: ScheduleItem(info: provider.booked_class[index]),
                 );
               }
             ),

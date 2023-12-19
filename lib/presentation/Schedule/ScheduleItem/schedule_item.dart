@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/model/class-info.dart';
+import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:lettutor/presentation/Schedule/ScheduleItem/DateSection/date_section.dart';
 import 'package:lettutor/presentation/Schedule/ScheduleItem/TeacherSection/teacher_section.dart';
 import 'package:lettutor/presentation/Schedule/ScheduleItem/TimeSection/time_section.dart';
 
 class ScheduleItem extends StatelessWidget {
-  final ClassInfo info;
+  final BookingInfo info;
   const ScheduleItem({super.key, required this.info});
   
   @override
@@ -19,16 +20,14 @@ class ScheduleItem extends StatelessWidget {
         child:  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DateSection(date:info.selectedDay),
+            DateSection(date:DateTime.fromMillisecondsSinceEpoch(info.scheduleDetailInfo!.startPeriodTimestamp??0)),
             SizedBox(
               height: 10,
             ),
             TeacherSection(
-                name: info.teacher.name,
-                avatarpath: info.teacher.avatarpath,
-                nationality: info.teacher.nationality,
-                flagpath: info.teacher.flaticon),
-            TimeSection(time: info.selectedDay),
+              info: info.scheduleDetailInfo!.scheduleInfo!.tutorInfo!
+            ),
+            TimeSection(info:info),
           ],
         ));
   }

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:lettutor/model/schedule/booking_info.dart';
 
 class TimeSection extends StatelessWidget {
-  final DateTime time;
-  const TimeSection({super.key, required this.time});
+  final BookingInfo info;
+  const TimeSection({super.key, required this.info});
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    DateTime endTime = time.add(Duration(minutes: 25));
+
     return Container(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -17,9 +19,11 @@ class TimeSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                    '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().
-                    padLeft(2, '0')} - ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString()
-                    .padLeft(2, '0')}'),
+                    '${DateFormat.Hm().format
+                    (DateTime.fromMillisecondsSinceEpoch
+                    (info.scheduleDetailInfo!.startPeriodTimestamp ?? 0))} - ${DateFormat.Hm().
+                    format(DateTime.fromMillisecondsSinceEpoch(
+                    info.scheduleDetailInfo!.endPeriodTimestamp ?? 0))}'),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {},
