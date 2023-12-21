@@ -29,7 +29,8 @@ class BookingService {
   }
   static Future<List<BookingInfo>> GetBookedClass( String token) async
   {
-     String apiUrl = 'https://sandbox.api.lettutor.com/booking/list/student?page=1&perPage=20&dateTimeLte=${DateTime.now().millisecondsSinceEpoch}&orderBy=meeting&sortBy=desc';
+    final now = DateTime.now().millisecondsSinceEpoch;
+    String apiUrl = 'https://sandbox.api.lettutor.com/booking/list/student?page=1&perPage=20&dateTimeLte=$now&orderBy=meeting&sortBy=desc';
     final response = await http.get(
       Uri.parse(apiUrl),
 
@@ -61,5 +62,22 @@ class BookingService {
         },
       ),
     );
+  }
+  static Future<List<BookingInfo>> GetHistory( String token) async
+  {
+    final now = DateTime.now().subtract(const Duration(minutes: 35)).millisecondsSinceEpoch;
+     String apiUrl = 'https://sandbox.api.lettutor.com/booking/list/student?page=1&perPage=20&dateTimeLte=$now&orderBy=meeting&sortBy=desc';
+    final response = await http.get(
+      Uri.parse(apiUrl),
+
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+    final body = json.decode(response.body);
+    print(body);
+    final List booked_class = body['data']['rows'];
+     return booked_class.map((e) => BookingInfo.fromJson(e)).toList();
   }
 }

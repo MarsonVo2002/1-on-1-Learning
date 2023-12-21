@@ -124,12 +124,11 @@ Widget Date(
 }
 
 class Teacher extends StatelessWidget {
-  final Tutor teacher;
+
   final TutorInfo info;
   final List<ScheduleInfo> schedules;
   const Teacher(
       {super.key,
-      required this.teacher,
       required this.info,
       required this.schedules});
 
@@ -155,7 +154,7 @@ class Teacher extends StatelessWidget {
           child: ListView(
             children: [
               AvatarSection(
-                teacher: teacher,
+                teacher: info,
               ),
               Text(info.bio!),
               Row(

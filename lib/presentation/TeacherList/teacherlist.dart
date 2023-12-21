@@ -4,6 +4,7 @@ import 'package:lettutor/main.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
+import 'package:lettutor/model/tutor/tutor_info.dart';
 import 'package:lettutor/presentation/Teacher/teacher.dart';
 import 'package:lettutor/presentation/TeacherList/HeaderSection/header_section.dart';
 import 'package:lettutor/presentation/TeacherList/SearchSection/search_section.dart';
@@ -38,12 +39,11 @@ Widget Filter(
 }
 
 class _TeacherList extends State<TeacherList> {
-   int pageStart = 1;
+  int pageStart = 1;
   int pageEnd = 7;
 
   @override
   Widget build(BuildContext context) {
-    
     List<String> items = [
       'All',
       'English for kids',
@@ -124,12 +124,12 @@ class _TeacherList extends State<TeacherList> {
               height: 10,
             ),
             Container(
-              height: 360,
+              height:360,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: tutor.tutor_list.length,
                   itemBuilder: (context, index) {
-                    Tutor curr = tutor.tutor_list[index];
+                    TutorInfo curr = tutor.tutor_list[index];
 
                     if (keywordProvider.keyword == 'All' ||
                         keywordProvider.keyword == '') {
@@ -158,28 +158,54 @@ class _TeacherList extends State<TeacherList> {
               children: [
                 IconButton(
                     onPressed: () async {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          });
                       if (pageStart > 1) {
                         setState(() {
                           pageStart = pageStart - 1;
                         });
-                        List<Tutor> tutor_list = await TutorService.GetListTutors(accessToken, pageStart);
-                        tutor.setTutorList(tutor_list);
+                        List<Tutor> tutor_list =
+                            await TutorService.GetListTutors(
+                                accessToken, pageStart);
+                        List<TutorInfo> tutorinfo = await Future.wait(
+                            tutor_list.map((tutor) => TutorService.GetTutorData(
+                                accessToken, tutor.userId!)));
+
+                        tutor.setTutorList(tutorinfo);
                       }
+                      Navigator.of(context).pop();
                     },
                     icon: const Icon(Icons.navigate_before)),
                 Text('$pageStart/$pageEnd'),
                 IconButton(
                     onPressed: () async {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          });
                       if (pageStart != pageEnd) {
                         setState(() {
                           pageStart = pageStart + 1;
                         });
-                        List<Tutor> tutor_list = await TutorService.GetListTutors(accessToken, pageStart);
-                        tutor.setTutorList(tutor_list);
+                        List<Tutor> tutor_list =
+                            await TutorService.GetListTutors(
+                                accessToken, pageStart);
+                        List<TutorInfo> tutorinfo = await Future.wait(
+                            tutor_list.map((tutor) => TutorService.GetTutorData(
+                                accessToken, tutor.userId!)));
+
+                        tutor.setTutorList(tutorinfo);
+                        Navigator.of(context).pop();
                       }
-                       
                     },
-                    
                     icon: const Icon(Icons.navigate_next)),
               ],
             )

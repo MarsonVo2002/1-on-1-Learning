@@ -26,31 +26,29 @@ Widget Specialities(List<String> item) {
   }
   return Wrap(direction: Axis.horizontal, spacing: 2, children: list);
 }
-class TeacherItem extends StatefulWidget
-{
-   final Tutor teacher;
+
+class TeacherItem extends StatefulWidget {
+  final TutorInfo teacher;
 
   const TeacherItem({super.key, required this.teacher});
-  
+
   @override
   State<TeacherItem> createState() => _TeacherItem();
-
 }
-class _TeacherItem extends State<TeacherItem> {
 
- @override
+class _TeacherItem extends State<TeacherItem> {
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-  
     // TODO: implement build
     return Container(
         padding: const EdgeInsets.all(20),
         width: 500,
-        height: 500,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(40),
             border: Border.all(
@@ -62,8 +60,16 @@ class _TeacherItem extends State<TeacherItem> {
             AvatarSection(
               teacher: widget.teacher,
             ),
-            Specialities(widget.teacher.specialties!.split(',')),
-            Flexible(child: Text(widget.teacher.bio == null ? '':widget.teacher.bio!,overflow: TextOverflow.fade,)),
+            Container(height: 150,child: Specialities(widget.teacher.specialties!.split(','))),
+           
+            SizedBox(
+              height: 48,
+              child: Flexible(
+                      child: Text(
+                          widget.teacher.bio == null ? '' : widget.teacher.bio!,
+                          overflow: TextOverflow.fade,
+                          maxLines: 3)),
+            ),
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -72,20 +78,28 @@ class _TeacherItem extends State<TeacherItem> {
                     style: ElevatedButton.styleFrom(
                         side: const BorderSide(width: 3, color: Colors.blue)),
                     onPressed: () async {
-                     showDialog(context: context, builder: (context)
-                     {
-                      return const Center(child: CircularProgressIndicator(),);
-                     });
-                      TutorInfo info = await TutorService.GetTutorData(accessToken, widget.teacher.userId!);
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          });
+                      TutorInfo info = await TutorService.GetTutorData(
+                          accessToken, widget.teacher.user!.id!);
                       const CircularProgressIndicator();
-                      List<ScheduleInfo> schedules = await BookingService.GetTutorScheduleById(accessToken, widget.teacher.userId!);
-                    
+                      List<ScheduleInfo> schedules =
+                          await BookingService.GetTutorScheduleById(
+                              accessToken, widget.teacher.user!.id!);
+
                       Navigator.of(context).pop();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Teacher(teacher: widget.teacher, info: info, schedules: schedules,)));
-                      
+                              builder: (context) => Teacher(
+                                    info: info,
+                                    schedules: schedules,
+                                  )));
                     },
                     child: const Text(
                       'Book',

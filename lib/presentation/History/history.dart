@@ -13,9 +13,8 @@ class History extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider session = context.watch<AccountSessionProvider>();
-    HistoryProvider historyProvider = context.watch<HistoryProvider>();
-    session.account.history_list
-        .sort(((a, b) => a.selectedDay.compareTo(b.selectedDay)));
+
+    
     // TODO: implement build
     return Container(
       padding: const EdgeInsets.all(10),
@@ -28,7 +27,7 @@ class History extends StatelessWidget {
             height: 400,
             padding: const EdgeInsets.all(10),
             child: ListView.builder(
-              itemCount: session.account.history_list.length,
+              itemCount: session.history.length,
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding: const EdgeInsets.all(10),
@@ -41,19 +40,15 @@ class History extends StatelessWidget {
                     child: Column(
                       children: [
                         DateSection(
-                            date: session.account.history_list[index].selectedDay),
+                            date: DateTime.fromMillisecondsSinceEpoch
+                            (session.history[index].scheduleDetailInfo!.startPeriodTimestamp??0)),
                         SizedBox(
                           height: 10,
                         ),
-                        // TeacherSection(
-                        //     name: session.account.history_list[index].teacher.name,
-                        //     avatarpath:
-                        //         session.account.history_list[index].teacher.avatarpath,
-                        //     nationality:
-                        //         session.account.history_list[index].teacher.nationality,
-                        //     flagpath:
-                        //         session.account.history_list[index].teacher.flaticon),
-                        ReviewSection( date: session.account.history_list[index].selectedDay)
+                        TeacherSection(
+                            info: session.history[index].scheduleDetailInfo!.scheduleInfo!.tutorInfo!),
+                        ReviewSection(date: DateTime.fromMillisecondsSinceEpoch
+                            (session.history[index].scheduleDetailInfo!.endPeriodTimestamp??0))
                       ],
                     ),
                   ),

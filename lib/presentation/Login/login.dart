@@ -7,6 +7,7 @@ import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/model/course/course.dart';
 import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
+import 'package:lettutor/model/tutor/tutor_info.dart';
 import 'package:lettutor/model/user/user.dart';
 import 'package:lettutor/presentation/Login/AlternativeMethodSection/alternative_method_section.dart';
 import 'package:lettutor/presentation/Login/ButtonSection/button_section.dart';
@@ -39,8 +40,7 @@ class _Login extends State<Login> {
       String email = _emailController.text;
       String password = _passwordController.text;
       AccountDTO item = AccountDTO(email: email, password: password);
-      LoginService service = LoginService(account: item);
-      var reponse = await service.login();
+      var reponse = await LoginService.login(item);
       Map<String, dynamic> jsonData = json.decode(reponse.body);
       setState(() {
         accessToken = jsonData['tokens']['access']['token'];
@@ -48,13 +48,21 @@ class _Login extends State<Login> {
       User user = await UserInfoService.GetUserData(accessToken);
       List<Tutor> tutor = await TutorService.GetListTutors(accessToken, 1);
       List<Course> course = await CourseService.GetCourseList(accessToken);
-       List<BookingInfo> info = await BookingService.GetBookedClass(accessToken);
+      List<BookingInfo> info = await BookingService.GetBookedClass(accessToken);
+      List<BookingInfo> history = await BookingService.GetBookedClass(accessToken);
+      List<TutorInfo> tutorinfo = [];
+        for(int i = 0; i < tutor.length; i++)
+        {
+          TutorInfo t = await TutorService.GetTutorData(accessToken, tutor[i].userId!);
+          tutorinfo.add(t);
+        }
       if (reponse.statusCode == 200) {
         sessionProvider.setUser(user);
         sessionProvider.setAccount(item);
-        sessionProvider.setTutorList(tutor);
+        sessionProvider.setTutorList(tutorinfo);
         sessionProvider.SetCourseList(course);
         sessionProvider.setBookedClass(info);
+        sessionProvider.setHistory(history);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Home()),

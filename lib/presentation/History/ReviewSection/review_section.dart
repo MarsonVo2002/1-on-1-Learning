@@ -7,7 +7,7 @@ class ReviewSection extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-     DateTime endTime = date.add(Duration(minutes: 25));
+     DateTime endTime = date;
     // TODO: implement build
     return Container(
       padding: const EdgeInsets.all(10),

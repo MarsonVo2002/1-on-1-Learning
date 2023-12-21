@@ -7,6 +7,7 @@ import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
+import 'package:lettutor/model/tutor/tutor_info.dart';
 import 'package:lettutor/model/user/user.dart';
 import 'package:lettutor/presentation/Course/course.dart';
 import 'package:lettutor/presentation/Favourite/favourite.dart';
@@ -62,17 +63,29 @@ class AccountProvider extends ChangeNotifier {
 class AccountSessionProvider extends ChangeNotifier {
   AccountDTO account = AccountDTO(email: '', password: '');
   User user = User();
-  List<Tutor> tutor_list = [];
+  List<TutorInfo> tutor_list = [];
   List<Course> course_list = [];
+  List<TutorInfo> favorite =[];
   List<BookingInfo> booked_class = [];
+  List<BookingInfo> history = [];
   void addHistory(ClassInfo info) {
     account.history_list.add(info);
     print('add to favourite');
     notifyListeners();
   }
+  void setHistory(List<BookingInfo> info)
+  {
+    history = info;
+    notifyListeners();
+  } 
   void setBookedClass(List<BookingInfo> info)
   {
     booked_class= info;
+    notifyListeners();
+  }
+  void setFavoriteList(List<TutorInfo> tutor)
+  {
+    favorite = tutor;
     notifyListeners();
   }
   void deleteBookedClass()
@@ -88,7 +101,7 @@ class AccountSessionProvider extends ChangeNotifier {
   {
     course_list = course;
   }
-  void setTutorList(List<Tutor> tutor)
+  void setTutorList(List<TutorInfo> tutor)
   {
     tutor_list = tutor;
     notifyListeners();

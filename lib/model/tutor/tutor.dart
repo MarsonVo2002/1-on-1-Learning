@@ -163,7 +163,6 @@ class Tutor {
     data['timezone'] = timezone;
     data['phoneAuth'] = phoneAuth;
     data['isPhoneAuthActivated'] = isPhoneAuthActivated;
-    // data['studySchedule'] = studySchedule;
     data['canSendMessage'] = canSendMessage;
     data['isPublicRecord'] = isPublicRecord;
     data['caredByStaffId'] = caredByStaffId;

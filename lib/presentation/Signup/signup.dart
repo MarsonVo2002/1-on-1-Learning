@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/presentation/Login/login.dart';
+import 'package:lettutor/services/login_service.dart';
 import 'package:provider/provider.dart';
 
 class SignUp extends StatefulWidget {
@@ -20,16 +21,29 @@ class _SignUp extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     AccountProvider provider = context.watch<AccountProvider>();
-    void _signup() {
+    void _signup() async {
       String email = _emailController.text;
       String password = _passwordController.text;
       String confirmpassword = _confirmpasswordController.text;
       if (password == confirmpassword) {
-        AccountDTO item = AccountDTO(email: email, password: password);
-        provider.add(item);
-        Navigator.pop(
-          context,
-        );
+        try {
+          await LoginService.Register(email, password);
+          (
+            email: _emailController.text,
+            password: _passwordController.text,
+          );
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Please check your email')),
+            );
+            Navigator.pop(context);
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error Register: ${e.toString()}')),
+          );
+        }
       } else {
         showDialog(
           context: context,

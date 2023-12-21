@@ -5,8 +5,7 @@ import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/model/user/user.dart';
 
 class LoginService {
-  final AccountDTO account;
-  Future<http.Response> login() async {
+  static Future<http.Response> login(AccountDTO account) async {
     String apiUrl =
         'https://sandbox.api.lettutor.com/auth/login'; // Replace with your API endpoint
 
@@ -23,8 +22,15 @@ class LoginService {
     return response;
   }
 
-  
- 
-  LoginService({required this.account});
-  
+  static Future<void> Register(
+      String email, String password) async {
+     final response = await http.post(
+      Uri.parse("https://sandbox.api.lettutor.com/auth/register"),
+      body: {
+        'email': email,
+        'password': password,
+        "source": 'null',
+      },
+    );
+  }
 }

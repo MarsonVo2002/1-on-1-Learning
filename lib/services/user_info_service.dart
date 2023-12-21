@@ -17,25 +17,45 @@ class UserInfoService
 
     return User.fromJson(body['user']);
   }
-  static Future<List<BookingInfo>> getAllUpcomingClasses({
-    required String token,
-    required int page,
-    required int perPage,
-  }) async {
-    final now = DateTime.now().millisecondsSinceEpoch;
-    final response = await http.get(
-      Uri.parse(
-          'https://sandbox.api.lettutor.com/booking/list/student?page=$page&perPage=$perPage&dateTimeGte=$now&orderBy=meeting&sortBy=asc'),
-      headers: {
-        'Content-type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+  // static Future<List<BookingInfo>> GetUpcomingClasses({
+  //   required String token,
+  //   required int page,
+  //   required int perPage,
+  // }) async {
+  //   final now = DateTime.now().millisecondsSinceEpoch;
+  //   final response = await http.get(
+  //     Uri.parse(
+  //         'https://sandbox.api.lettutor.com/booking/list/student?page=$page&perPage=$perPage&dateTimeGte=$now&orderBy=meeting&sortBy=asc'),
+  //     headers: {
+  //       'Content-type': 'application/json',
+  //       'Authorization': 'Bearer $token',
+  //     },
+  //   );
 
-    final body = json.decode(response.body);
-    print(body);
-    final List classes = body['data']['rows'];
-    return classes.map((schedule) => BookingInfo.fromJson(schedule)).toList();
+  //   final body = json.decode(response.body);
+  //   print(body);
+  //   final List classes = body['data']['rows'];
+  //   return classes.map((schedule) => BookingInfo.fromJson(schedule)).toList();
+  // }
+  // static Future<List<BookingInfo>> GetHistory({
+  //   required String token,
+  //   required int page,
+  //   required int perPage,
+  // }) async {
+  //   final now = DateTime.now().millisecondsSinceEpoch;
+  //   final response = await http.get(
+  //     Uri.parse(
+  //         'https://sandbox.api.lettutor.com/booking/list/student?page=$page&perPage=$perPage&dateTimeGte=$now&orderBy=meeting&sortBy=asc'),
+  //     headers: {
+  //       'Content-type': 'application/json',
+  //       'Authorization': 'Bearer $token',
+  //     },
+  //   );
 
-  }
+  //   final body = json.decode(response.body);
+  //   print(body);
+  //   final List classes = body['data']['rows'];
+  //   return classes.map((schedule) => BookingInfo.fromJson(schedule)).toList();
+
+  // }
 }
