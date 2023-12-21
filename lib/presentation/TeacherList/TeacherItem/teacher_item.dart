@@ -60,15 +60,13 @@ class _TeacherItem extends State<TeacherItem> {
             AvatarSection(
               teacher: widget.teacher,
             ),
-            Container(height: 150,child: Specialities(widget.teacher.specialties!.split(','))),
-           
+            Container(
+                height: 150,
+                child: Specialities(widget.teacher.specialties!.split(','))),
             SizedBox(
               height: 48,
-              child: Flexible(
-                      child: Text(
-                          widget.teacher.bio == null ? '' : widget.teacher.bio!,
-                          overflow: TextOverflow.fade,
-                          maxLines: 3)),
+              child: Text(widget.teacher.bio == null ? '' : widget.teacher.bio!,
+                  overflow: TextOverflow.fade, maxLines: 3),
             ),
             Row(
               mainAxisSize: MainAxisSize.max,

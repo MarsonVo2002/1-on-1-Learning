@@ -49,20 +49,23 @@ class _Login extends State<Login> {
       List<Tutor> tutor = await TutorService.GetListTutors(accessToken, 1);
       List<Course> course = await CourseService.GetCourseList(accessToken);
       List<BookingInfo> info = await BookingService.GetBookedClass(accessToken);
-      List<BookingInfo> history = await BookingService.GetBookedClass(accessToken);
-      List<TutorInfo> tutorinfo = [];
-        for(int i = 0; i < tutor.length; i++)
-        {
-          TutorInfo t = await TutorService.GetTutorData(accessToken, tutor[i].userId!);
-          tutorinfo.add(t);
-        }
+      List<BookingInfo> history =
+          await BookingService.GetBookedClass(accessToken);
+      List<TutorInfo> tutorinfo = await Future.wait(tutor.map(
+          (tutor) => TutorService.GetTutorData(accessToken, tutor.userId!)));
+
       if (reponse.statusCode == 200) {
+       
         sessionProvider.setUser(user);
         sessionProvider.setAccount(item);
         sessionProvider.setTutorList(tutorinfo);
         sessionProvider.SetCourseList(course);
         sessionProvider.setBookedClass(info);
         sessionProvider.setHistory(history);
+         List<TutorInfo> favorite = sessionProvider.tutor_list
+            .where((element) => element.isFavorite == true)
+            .toList();
+        sessionProvider.setFavoriteList(favorite);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Home()),

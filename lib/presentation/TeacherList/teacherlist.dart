@@ -123,8 +123,8 @@ class _TeacherList extends State<TeacherList> {
             const SizedBox(
               height: 10,
             ),
-            Container(
-              height:360,
+            SizedBox(
+              height: 360,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: tutor.tutor_list.length,

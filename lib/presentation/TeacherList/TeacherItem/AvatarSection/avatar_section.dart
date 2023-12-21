@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
 import 'package:lettutor/model/tutor/tutor_info.dart';
+import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
 
 Widget Rating(int rating) {
@@ -39,7 +41,7 @@ class AvatarSection extends StatelessWidget {
   Widget build(BuildContext context) {
     AccountSessionProvider session_provider =
         context.watch<AccountSessionProvider>();
-    bool isFavourite = session_provider.favorite.contains(teacher);
+    bool isFavorite = session_provider.favorite.contains(teacher);
     // TODO: implement build
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,16 +100,13 @@ class AvatarSection extends StatelessWidget {
         ),
         IconButton(
             onPressed: () async {
-              if (isFavourite) {
-                //session_provider.removeTeacher(teacher as TeacherDTO);
-                print(isFavourite);
-              } else {
-                //session_provider.addTeacher(teacher as TeacherDTO);
-                print(isFavourite);
+              if (isFavorite == false) {
+                 session_provider.addFavorite(teacher);
+                 await TutorService.AddFavorite(accessToken, teacher.user!.id!);
               }
             },
             icon: Image(
-              image: teacher.isFavorite!
+              image: isFavorite
                   ? const AssetImage('asset/icons/fill_heart.png')
                   : const AssetImage('asset/icons/love.png'),
               width: 20,

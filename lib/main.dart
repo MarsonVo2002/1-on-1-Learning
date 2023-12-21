@@ -83,9 +83,14 @@ class AccountSessionProvider extends ChangeNotifier {
     booked_class= info;
     notifyListeners();
   }
-  void setFavoriteList(List<TutorInfo> tutor)
+  void setFavoriteList(List<TutorInfo> tutors)
   {
-    favorite = tutor;
+    favorite = tutors;
+    notifyListeners();
+  }
+  void addFavorite(TutorInfo tutor)
+  {
+    favorite.add(tutor);
     notifyListeners();
   }
   void deleteBookedClass()
