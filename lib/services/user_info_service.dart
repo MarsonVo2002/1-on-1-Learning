@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lettutor/model/schedule/booking_info.dart';
+import 'package:lettutor/model/user/learn_topic.dart';
+import 'package:lettutor/model/user/test_preparation.dart';
 import 'package:lettutor/model/user/user.dart';
-class UserInfoService
-{
+
+class UserInfoService {
   static Future<User> GetUserData(String token) async {
     String apiUrl = 'https://sandbox.api.lettutor.com/user/info';
     final response = await http.get(
@@ -58,4 +60,35 @@ class UserInfoService
   //   return classes.map((schedule) => BookingInfo.fromJson(schedule)).toList();
 
   // }
+  static Future<List<LearnTopic>> GetLearningTopic(String token) async {
+    final response = await http.get(
+      Uri.parse('https://sandbox.api.lettutor.com/learn-topic'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    final body = json.decode(response.body) as List;
+    if (response.statusCode != 200) {
+      throw Exception(json.decode(response.body)['message']);
+    }
+    return body.map((e) => LearnTopic.fromJson(e)).toList();
+  }
+
+  static Future<List<TestPreparation>> GetTestPreparation(String token) async {
+    final response = await http.get(
+      Uri.parse('https://sandbox.api.lettutor.com/test-preparation'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    final body = json.decode(response.body) as List;
+    if (response.statusCode != 200) {
+      throw Exception(json.decode(response.body)['message']);
+    }
+    return body.map((e) => TestPreparation.fromJson(e)).toList();
+  }
 }

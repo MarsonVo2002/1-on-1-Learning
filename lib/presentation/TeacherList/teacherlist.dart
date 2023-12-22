@@ -59,7 +59,7 @@ class _TeacherList extends State<TeacherList> {
       'TOEIC',
     ];
     // TODO: implement build
-    AccountSessionProvider tutor = context.watch<AccountSessionProvider>();
+    AccountSessionProvider provider = context.watch<AccountSessionProvider>();
     KeywordProvider keywordProvider = context.watch<KeywordProvider>();
     return Scaffold(
       body: Container(
@@ -75,7 +75,23 @@ class _TeacherList extends State<TeacherList> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          });
+                      int count = await TutorService.GetTutorCount(
+                          accessToken, pageStart, 1);
+                      List<Tutor> tutor = await TutorService.GetListTutors(
+                          accessToken, pageStart, count);
+                      List<TutorInfo> tutorinfo = await Future.wait(tutor.map(
+                          (tutor) => TutorService.GetTutorData(
+                              accessToken, tutor.userId!)));
+                      provider.setSearchList(tutorinfo);
+                      Navigator.pop(context);
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -124,31 +140,39 @@ class _TeacherList extends State<TeacherList> {
               height: 10,
             ),
             SizedBox(
-              height: 360,
+              height: 410,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: tutor.tutor_list.length,
+                  itemCount: provider.tutor_list.length,
                   itemBuilder: (context, index) {
-                    TutorInfo curr = tutor.tutor_list[index];
-
+                    TutorInfo curr = provider.tutor_list[index];
+                    String s = '';
+                    
                     if (keywordProvider.keyword == 'All' ||
                         keywordProvider.keyword == '') {
                       return Padding(
                         padding: EdgeInsets.only(left: 10),
                         child: TeacherItem(
-                          teacher: tutor.tutor_list[index],
+                          teacher: provider.tutor_list[index],
                         ),
                       );
                     } else {
-                      if (curr.specialties!.contains(keywordProvider.keyword)) {
+                      if(specialties.containsKey(keywordProvider.keyword))
+                      {
+                          s = specialties[keywordProvider.keyword];
+                      }
+                      if (curr.specialties!.contains(s)) {
                         return Padding(
                           padding: EdgeInsets.only(left: 10),
                           child: TeacherItem(
-                            teacher: tutor.tutor_list[index],
+                            teacher: provider.tutor_list[index],
                           ),
                         );
                       } else {
+                        print( curr.specialties?.split(','));
+                        print(specialties);
                         return Container();
+                        
                       }
                     }
                   }),
@@ -171,14 +195,14 @@ class _TeacherList extends State<TeacherList> {
                         });
                         List<Tutor> tutor_list =
                             await TutorService.GetListTutors(
-                                accessToken, pageStart);
+                                accessToken, pageStart, 9);
                         List<TutorInfo> tutorinfo = await Future.wait(
                             tutor_list.map((tutor) => TutorService.GetTutorData(
                                 accessToken, tutor.userId!)));
 
-                        tutor.setTutorList(tutorinfo);
+                        provider.setTutorList(tutorinfo);
                       }
-                      Navigator.of(context).pop();
+                      Navigator.pop(context);
                     },
                     icon: const Icon(Icons.navigate_before)),
                 Text('$pageStart/$pageEnd'),
@@ -197,12 +221,12 @@ class _TeacherList extends State<TeacherList> {
                         });
                         List<Tutor> tutor_list =
                             await TutorService.GetListTutors(
-                                accessToken, pageStart);
+                                accessToken, pageStart, 9);
                         List<TutorInfo> tutorinfo = await Future.wait(
                             tutor_list.map((tutor) => TutorService.GetTutorData(
                                 accessToken, tutor.userId!)));
 
-                        tutor.setTutorList(tutorinfo);
+                        provider.setTutorList(tutorinfo);
                         Navigator.of(context).pop();
                       }
                     },

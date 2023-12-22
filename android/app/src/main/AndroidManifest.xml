@@ -1,4 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.lettutor"
+xmlns:tools="http://schemas.android.com/tools">
     <application
         android:label="lettutor"
         android:name="${applicationName}"

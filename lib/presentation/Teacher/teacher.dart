@@ -36,24 +36,44 @@ Widget Time(List<ScheduleInfo> items, BuildContext context, AccountSessionProvid
     list.add(ElevatedButton(
         style: ElevatedButton.styleFrom(primary: Colors.white70),
         onPressed: () {
+           items[i].isBooked! ?
+           showDialog(
+              context: context,
+              builder: (context) =>  AlertDialog(
+                scrollable: true,
+                title: const Text("Notice"),
+                content: const Center(child: Text('Already booked')),
+                actions: [
+                  TextButton(
+                    onPressed: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("OK"),),
+                    
+                ],)
+                ):
            showDialog(
               context: context,
               builder: (context) => AlertDialog(
                 scrollable: true,
-                title: const Text("Time"),
+                title: const Text("Booking confirm"),
                 content: Text('You are booking class on ${DateTime.fromMillisecondsSinceEpoch(items[i].startTimestamp!)}'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
+                     
                       Navigator.of(context).pop();
                     },
                     child: const Text("Back"),
                   ),
                   TextButton(
                     onPressed: () async{
-                      BookingService.BookClass([items[i].scheduleDetails?.first.id ?? ''], '', accessToken);
-                      
-                     
+                      print(items[i].scheduleDetails?.first.id);
+                      await BookingService.BookClass([items[i].scheduleDetails?.first.id ?? ''], '', accessToken);
+                      items[i].isBooked = true;
+                      List<BookingInfo> booking_info = await BookingService.GetBookedClass(accessToken);
+                      tutor.setBookedClass(booking_info);
+                      tutor.sortBookedClasses();
                       Navigator.of(context).pop();
                     },
                     child: const Text("OK"),
@@ -115,7 +135,7 @@ Widget Date(
             );
           },
           child: Text(
-            '${item[i].day}/${item[i].month}/${item[i].year}',
+            DateFormat('yyyy-MM-dd').format(item[i]),
             style: const TextStyle(color: Colors.white),
           )),
     );
@@ -241,18 +261,20 @@ class Teacher extends StatelessWidget {
                   title: 'Teaching experience', content: info.experience!),
               Container(
                 padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: const Text(
+                        'Booking',
+                        style:
+                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+              ),
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Booking',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
+                    
                     Date(timetable, context, schedules, tutor)
                   ],
                 ),
-              )
+              
             ],
           )),
     );

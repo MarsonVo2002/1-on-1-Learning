@@ -8,6 +8,8 @@ import 'package:lettutor/model/course/course.dart';
 import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
 import 'package:lettutor/model/tutor/tutor_info.dart';
+import 'package:lettutor/model/user/learn_topic.dart';
+import 'package:lettutor/model/user/test_preparation.dart';
 import 'package:lettutor/model/user/user.dart';
 import 'package:lettutor/presentation/Login/AlternativeMethodSection/alternative_method_section.dart';
 import 'package:lettutor/presentation/Login/ButtonSection/button_section.dart';
@@ -46,26 +48,30 @@ class _Login extends State<Login> {
         accessToken = jsonData['tokens']['access']['token'];
       });
       User user = await UserInfoService.GetUserData(accessToken);
-      List<Tutor> tutor = await TutorService.GetListTutors(accessToken, 1);
+      List<Tutor> tutor = await TutorService.GetListTutors(accessToken, 1,9);
       List<Course> course = await CourseService.GetCourseList(accessToken);
       List<BookingInfo> info = await BookingService.GetBookedClass(accessToken);
       List<BookingInfo> history =
           await BookingService.GetBookedClass(accessToken);
       List<TutorInfo> tutorinfo = await Future.wait(tutor.map(
           (tutor) => TutorService.GetTutorData(accessToken, tutor.userId!)));
-
+      List<TestPreparation> test  = await UserInfoService.GetTestPreparation(accessToken);
+      List<LearnTopic> topic = await UserInfoService.GetLearningTopic(accessToken);
       if (reponse.statusCode == 200) {
        
         sessionProvider.setUser(user);
         sessionProvider.setAccount(item);
         sessionProvider.setTutorList(tutorinfo);
-        sessionProvider.SetCourseList(course);
+        sessionProvider.setTests(test);
+        sessionProvider.setTopics(topic);
+        sessionProvider.setCourseList(course);
         sessionProvider.setBookedClass(info);
         sessionProvider.setHistory(history);
          List<TutorInfo> favorite = sessionProvider.tutor_list
             .where((element) => element.isFavorite == true)
             .toList();
         sessionProvider.setFavoriteList(favorite);
+        sessionProvider.sortBookedClasses();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Home()),

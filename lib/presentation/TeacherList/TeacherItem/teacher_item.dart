@@ -10,6 +10,7 @@ import 'package:lettutor/presentation/Teacher/teacher.dart';
 import 'package:lettutor/presentation/TeacherList/TeacherItem/AvatarSection/avatar_section.dart';
 import 'package:lettutor/services/booking_service.dart';
 import 'package:lettutor/services/tutor_service.dart';
+import 'package:provider/provider.dart';
 
 Widget Specialities(List<String> item) {
   List<Widget> list = [];
@@ -45,6 +46,14 @@ class _TeacherItem extends State<TeacherItem> {
 
   @override
   Widget build(BuildContext context) {
+    AccountSessionProvider session_provider = context.watch<AccountSessionProvider>();
+    final learnTopics = session_provider.topic
+          .where((topic) => widget.teacher.specialties?.split(',').contains(topic.key) ?? false)
+          .map((e) => e.name ?? 'null');
+      final testPreparations = session_provider.test
+          .where((test) => widget.teacher.specialties?.split(',').contains(test.key) ?? false)
+          .map((e) => e.name ?? 'null');
+    List<String> specialties = [...learnTopics, ...testPreparations];
     // TODO: implement build
     return Container(
         padding: const EdgeInsets.all(20),
@@ -61,8 +70,8 @@ class _TeacherItem extends State<TeacherItem> {
               teacher: widget.teacher,
             ),
             Container(
-                height: 150,
-                child: Specialities(widget.teacher.specialties!.split(','))),
+                height: 200,
+                child: Specialities(specialties)),
             SizedBox(
               height: 48,
               child: Text(widget.teacher.bio == null ? '' : widget.teacher.bio!,

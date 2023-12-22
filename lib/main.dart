@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/model/class-info.dart';
@@ -8,6 +10,8 @@ import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
 import 'package:lettutor/model/tutor/tutor_info.dart';
+import 'package:lettutor/model/user/learn_topic.dart';
+import 'package:lettutor/model/user/test_preparation.dart';
 import 'package:lettutor/model/user/user.dart';
 import 'package:lettutor/presentation/Course/course.dart';
 import 'package:lettutor/presentation/Favourite/favourite.dart';
@@ -17,9 +21,8 @@ import 'package:lettutor/presentation/Schedule/schedule.dart';
 import 'package:lettutor/presentation/Setting/setting.dart';
 import 'package:lettutor/presentation/TeacherList/teacherlist.dart';
 import 'package:provider/provider.dart';
-
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -64,10 +67,25 @@ class AccountSessionProvider extends ChangeNotifier {
   AccountDTO account = AccountDTO(email: '', password: '');
   User user = User();
   List<TutorInfo> tutor_list = [];
+  List<TutorInfo> search_tutor = [];
   List<Course> course_list = [];
   List<TutorInfo> favorite =[];
   List<BookingInfo> booked_class = [];
   List<BookingInfo> history = [];
+  List<TestPreparation> test = [];
+  List<LearnTopic> topic = [];
+  void setTests(List<TestPreparation> list)
+  {
+    test.clear();
+    test = list;
+    notifyListeners();
+  }
+  void setTopics(List<LearnTopic> list)
+  {
+    topic.clear();
+    topic = list;
+    notifyListeners();
+  }
   void addHistory(ClassInfo info) {
     account.history_list.add(info);
     print('add to favourite');
@@ -75,16 +93,47 @@ class AccountSessionProvider extends ChangeNotifier {
   }
   void setHistory(List<BookingInfo> info)
   {
+    history.clear();
     history = info;
     notifyListeners();
   } 
   void setBookedClass(List<BookingInfo> info)
   {
+    booked_class.clear();
     booked_class= info;
+    notifyListeners();
+  }
+  void sortBookedClasses()
+  {
+    booked_class.sort(
+      (a, b) {
+        DateTime dateTimeA = DateTime.fromMillisecondsSinceEpoch(
+            a.scheduleDetailInfo!.startPeriodTimestamp ?? 0);
+        DateTime dateTimeB = DateTime.fromMillisecondsSinceEpoch(
+            b.scheduleDetailInfo!.startPeriodTimestamp ?? 0);
+        int dateComparison = dateTimeB.year.compareTo(dateTimeA.year);
+        if (dateComparison == 0) {
+          dateComparison = dateTimeB.month.compareTo(dateTimeA.month);
+          if (dateComparison == 0) {
+            dateComparison = dateTimeB.day.compareTo(dateTimeA.day);
+          }
+        }
+
+        if (dateComparison == 0) {
+          int timeComparison = dateTimeA.hour.compareTo(dateTimeB.hour);
+          if (timeComparison == 0) {
+            timeComparison = dateTimeA.minute.compareTo(dateTimeB.minute);
+          }
+          return timeComparison;
+        }
+        return dateComparison;
+      },
+    );
     notifyListeners();
   }
   void setFavoriteList(List<TutorInfo> tutors)
   {
+    favorite.clear();
     favorite = tutors;
     notifyListeners();
   }
@@ -102,13 +151,22 @@ class AccountSessionProvider extends ChangeNotifier {
     user = u;
     notifyListeners();
   }
-  void SetCourseList(List<Course> course)
+  void setCourseList(List<Course> course)
   {
+    course_list.clear();
     course_list = course;
+    notifyListeners();
   }
   void setTutorList(List<TutorInfo> tutor)
   {
+    tutor_list.clear();
     tutor_list = tutor;
+    notifyListeners();
+  }
+   void setSearchList(List<TutorInfo> tutor)
+  {
+    search_tutor.clear();
+    search_tutor = tutor;
     notifyListeners();
   }
   void addTeacher(TeacherDTO teacher) {

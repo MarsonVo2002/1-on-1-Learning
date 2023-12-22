@@ -21,7 +21,7 @@ class Favourite extends StatelessWidget {
       ),
       body: session.favorite.isNotEmpty? Center(
         child: SizedBox(
-          height: 380,
+          height: 430,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: session.favorite.length,
