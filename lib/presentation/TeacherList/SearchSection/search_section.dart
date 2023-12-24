@@ -66,7 +66,7 @@ class _SearchSection extends State<SearchSection> {
             height: 10,
           ),
           Container(
-            height: 360,
+            height: 410,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: result.length,

@@ -77,4 +77,49 @@ class TutorService {
       ),
     );
   }
+  static Future<void> WriteFeedback(String content, String bookingId, String userId, int rate, String token) async {
+    final response = await http.post(
+      Uri.parse("https://sandbox.api.lettutor.com/user/feedbackTutor"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-type": "application/json;encoding=utf-8",
+      },
+      body: json.encode({
+        "content": content,
+        "bookingId": bookingId,
+        "userId": userId,
+        "rating": rate,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      
+      final body = json.decode(response.body);
+      print(body["message"]);
+    }
+  }
+  static Future<void> reportTutor(
+     String token,
+     String userId,
+     String content,
+  ) async {
+    final response = await http.post(
+      Uri.parse('https://sandbox.api.lettutor.com/report'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode(
+        {
+          'tutorId': userId,
+          'content': content,
+        },
+      ),
+    );
+
+    final body = json.decode(response.body);
+    if (response.statusCode != 200) {
+      throw Exception(body(['message']));
+    }
+  }
 }

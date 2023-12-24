@@ -14,11 +14,9 @@ class History extends StatelessWidget {
   Widget build(BuildContext context) {
     AccountSessionProvider session = context.watch<AccountSessionProvider>();
 
-    
     // TODO: implement build
-    return Container(
-      padding: const EdgeInsets.all(10),
-      child: ListView(children: [
+    return Scaffold(
+      body: ListView(children: [
         const HistoryTitleSection(),
         const SizedBox(
           height: 20,
@@ -40,15 +38,25 @@ class History extends StatelessWidget {
                     child: Column(
                       children: [
                         DateSection(
-                            date: DateTime.fromMillisecondsSinceEpoch
-                            (session.history[index].scheduleDetailInfo!.startPeriodTimestamp??0)),
+                            date: DateTime.fromMillisecondsSinceEpoch(session
+                                    .history[index]
+                                    .scheduleDetailInfo!
+                                    .startPeriodTimestamp ??
+                                0)),
                         SizedBox(
                           height: 10,
                         ),
                         TeacherSection(
-                            info: session.history[index].scheduleDetailInfo!.scheduleInfo!.tutorInfo!),
-                        ReviewSection(date: DateTime.fromMillisecondsSinceEpoch
-                            (session.history[index].scheduleDetailInfo!.endPeriodTimestamp??0))
+                            info: session.history[index].scheduleDetailInfo!
+                                .scheduleInfo!.tutorInfo!),
+                        ReviewSection(
+                          date: DateTime.fromMillisecondsSinceEpoch(session
+                                  .history[index]
+                                  .scheduleDetailInfo!
+                                  .endPeriodTimestamp ??
+                              0),
+                          info: session.history[index],
+                        )
                       ],
                     ),
                   ),
