@@ -42,6 +42,10 @@ dependencies:
   country_flags: ^2.2.0
   syncfusion_flutter_pdfviewer: ^23.2.7
   cached_network_image: ^3.3.0
+  country_picker: ^2.0.23
+  image_picker: ^1.0.5
+  async: ^2.11.0
+  path: ^1.8.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

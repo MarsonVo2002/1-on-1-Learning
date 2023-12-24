@@ -27,8 +27,30 @@ class BookingService {
     }).toList();
     return schedules;
   }
-  static Future<List<BookingInfo>> GetBookedClass( String token) async
-  {
+
+  static Future<void> cancelBookedClass(
+    List<String> scheduleDetailIds,
+    String token,
+  ) async {
+    final response = await http.delete(
+      Uri.parse('https://sandbox.api.lettutor.com/booking'),
+      headers: {
+        'Content-Type': 'application/json;encoding=utf-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode(
+        {
+          'scheduleDetailIds': scheduleDetailIds,
+        },
+      ),
+    );
+
+    if (response.statusCode != 200) {
+      print(json.decode(response.body)['message']);
+    }
+  }
+
+  static Future<List<BookingInfo>> GetBookedClass(String token) async {
     // final now = DateTime.now().subtract(const Duration(minutes: 35)).millisecondsSinceEpoch;
     // String apiUrl = 'https://sandbox.api.lettutor.com/booking/list/student?page=1&perPage=20&dateTimeLte=$now&orderBy=meeting&sortBy=desc';
     // final response = await http.get(
@@ -58,7 +80,8 @@ class BookingService {
     }
 
     final List<dynamic> data = jsonDecode['data'];
-    List<BookingInfo> lessons = data.map((e) => BookingInfo.fromJson(e)).toList();
+    List<BookingInfo> lessons =
+        data.map((e) => BookingInfo.fromJson(e)).toList();
     return lessons;
     // // Sort lessons by timestamp increasingly
     // lessons.sort((a, b) {
@@ -86,6 +109,7 @@ class BookingService {
     //   throw Exception('Error: Cannot get next lesson info');
     // }
   }
+
   static Future<void> BookClass(
     List<String> scheduleDetailIds,
     String note,
@@ -109,13 +133,15 @@ class BookingService {
       throw Exception(jsonDecode['message']);
     }
   }
-  static Future<List<BookingInfo>> GetHistory( String token) async
-  {
-    final now = DateTime.now().subtract(const Duration(minutes: 35)).millisecondsSinceEpoch;
-     String apiUrl = 'https://sandbox.api.lettutor.com/booking/list/student?page=1&perPage=20&dateTimeLte=$now&orderBy=meeting&sortBy=desc';
+
+  static Future<List<BookingInfo>> GetHistory(String token) async {
+    final now = DateTime.now()
+        .subtract(const Duration(minutes: 35))
+        .millisecondsSinceEpoch;
+    String apiUrl =
+        'https://sandbox.api.lettutor.com/booking/list/student?page=1&perPage=20&dateTimeLte=$now&orderBy=meeting&sortBy=desc';
     final response = await http.get(
       Uri.parse(apiUrl),
-
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token'
@@ -124,6 +150,6 @@ class BookingService {
     final body = json.decode(response.body);
     print(body);
     final List booked_class = body['data']['rows'];
-     return booked_class.map((e) => BookingInfo.fromJson(e)).toList();
+    return booked_class.map((e) => BookingInfo.fromJson(e)).toList();
   }
 }
