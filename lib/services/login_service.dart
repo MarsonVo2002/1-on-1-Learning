@@ -21,7 +21,40 @@ class LoginService {
     final jsonDecode = json.decode(response.body);
     return response;
   }
+  static Future<http.Response> GoogleLogin(
+    String accessToken,
+    
+  ) async {
+    final response = await http.post(
+      Uri.parse("https://sandbox.api.lettutor.com/auth/google"),
+      body: {
+        'access_token': accessToken,
+      },
+    );
 
+    final jsonDecode = json.decode(response.body);
+    if (response.statusCode != 200) {
+      throw Exception(jsonDecode['message']);
+    }
+    return response;
+  }
+  static Future<http.Response> FacebookLogin(
+     String accessToken,
+   
+  ) async {
+    final response = await http.post(
+      Uri.parse("https://sandbox.api.lettutor.com/auth/facebook"),
+      body: {
+        'access_token': accessToken,
+      },
+    );
+
+    final jsonDecode = json.decode(response.body);
+    if (response.statusCode != 200) {
+      throw Exception(jsonDecode['message']);
+    }
+    return response;
+  }
   static Future<void> Register(
       String email, String password) async {
      final response = await http.post(

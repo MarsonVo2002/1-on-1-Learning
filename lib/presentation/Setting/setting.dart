@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/presentation/Login/login.dart';
 import 'package:lettutor/presentation/TeacherForm/teacherform.dart';
@@ -49,6 +50,7 @@ class Setting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
+    final _googleSignIn = GoogleSignIn();
     List<String> items = [
       'asset/images/avatar.png',
       'asset/images/france.png',
@@ -169,6 +171,7 @@ class Setting extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
+                 _googleSignIn.signOut();
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => const Login()));
                 },
