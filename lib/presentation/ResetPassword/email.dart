@@ -1,27 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/presentation/ResetPassword/password_reset.dart';
+import 'package:lettutor/services/login_service.dart';
 import 'package:provider/provider.dart';
-class Email extends StatefulWidget
-{
+
+class Email extends StatefulWidget {
   const Email({super.key});
 
- 
   @override
   State<Email> createState() => _Email();
 }
-class _Email extends State<Email>{
+
+class _Email extends State<Email> {
   final TextEditingController _emailController = TextEditingController();
+  String email_error = '';
+  String password_error = '';
+  bool isValid = false;
   @override
   Widget build(BuildContext context) {
+    void _validation() {
+      final emailRegExp = RegExp(
+          r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+      if (_emailController.text.isEmpty) {
+        email_error = 'Email is empty';
+        isValid = false;
+      } else if (!emailRegExp.hasMatch(_emailController.text)) {
+        email_error = 'Email is invalid';
+        isValid = false;
+      } else {
+        email_error = '';
+        isValid = true;
+      }
+      setState(() {});
+    }
+
     AccountProvider provider = context.watch<AccountProvider>();
-    void _findEmail()
-    {
+    void _SendEmail() async {
+      try {
+        await LoginService.ForgotPassword(_emailController.text);
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Email send success')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error Reset Password: ${e.toString()}')),
+        );
+      }
+    }
+
+    void _findEmail() {
       String email = _emailController.text;
       if (provider.accountList.any((element) => element.email == email)) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ResetPassword(email: email,)),
+          MaterialPageRoute(
+              builder: (context) => ResetPassword(
+                    email: email,
+                  )),
         );
       } else {
         showDialog(
@@ -41,6 +79,7 @@ class _Email extends State<Email>{
         );
       }
     }
+
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
@@ -67,13 +106,16 @@ class _Email extends State<Email>{
                   style: TextStyle(color: Colors.grey, fontSize: 18),
                 ),
                 TextField(
-                  decoration: const InputDecoration(
+                  decoration:  InputDecoration(
+                     errorText: email_error.isEmpty ? null:email_error,
                       enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(width: 3, color: Colors.blue),
                   )),
                   controller: _emailController,
+                  onChanged: (value) {
+                    _validation();
+                  },
                 ),
-               
               ],
             ),
             SizedBox(
@@ -99,7 +141,7 @@ class _Email extends State<Email>{
                     )),
                     SizedBox(
                         child: ElevatedButton(
-                      onPressed: _findEmail,
+                      onPressed: isValid? _SendEmail:null,
                       style: ElevatedButton.styleFrom(
                         primary: Colors.blue,
                       ),
@@ -115,5 +157,4 @@ class _Email extends State<Email>{
       ),
     );
   }
-
 }

@@ -18,6 +18,7 @@ class LoginService {
       body: json.encode(requestBody),
       headers: {'Content-Type': 'application/json'},
     );
+    final jsonDecode = json.decode(response.body);
     return response;
   }
 
@@ -36,6 +37,20 @@ class LoginService {
      final jsonDecode = json.decode(response.body);
     if (response.statusCode != 201) {
       throw Exception(jsonDecode['message']);
+    }
+  }
+   static Future<void> ForgotPassword(String email) async {
+    //https://sandbox.app.lettutor.com/password?....
+    final response = await http.post(
+      Uri.parse("https://sandbox.api.lettutor.com/user/forgotPassword"),
+      body: {
+        'email': email,
+      },
+    );
+
+    final body = json.decode(response.body);
+    if (response.statusCode != 200) {
+      throw Exception(body['message']);
     }
   }
 }
