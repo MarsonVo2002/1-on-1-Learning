@@ -1,7 +1,10 @@
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
+import 'package:video_player/video_player.dart';
+import 'package:chewie/chewie.dart';
 import 'package:lettutor/model/calendar-dto.dart';
 import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:lettutor/model/schedule/schedule_info.dart';
@@ -143,7 +146,7 @@ Widget Date(
   return Wrap(direction: Axis.horizontal, spacing: 5, children: list);
 }
 
-class Teacher extends StatelessWidget {
+class Teacher extends StatefulWidget {
 
   final TutorInfo info;
   final List<ScheduleInfo> schedules;
@@ -153,9 +156,34 @@ class Teacher extends StatelessWidget {
       required this.schedules});
 
   @override
+  State<Teacher> createState() => _TeacherState();
+}
+
+class _TeacherState extends State<Teacher> {
+  VideoPlayerController? VideoController;
+  ChewieController? controller;
+  @override
+  void initState()
+  {
+    super.initState();
+    setState(() {
+      VideoController = VideoPlayerController.networkUrl(Uri.parse(widget.info.video ?? ''));
+        controller = ChewieController(
+          videoPlayerController: VideoController!,
+          autoPlay: true,
+        );
+    });
+  }
+  @override
+  void dispose() {
+    VideoController?.dispose();
+    controller?.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     AccountSessionProvider tutor = context.watch<AccountSessionProvider>();
-    List<DateTime> timetable = schedules
+    List<DateTime> timetable = widget.schedules
         .map((e) => DateTime.fromMillisecondsSinceEpoch(e.startTimestamp ?? 0))
         .toList();
     timetable = timetable
@@ -174,9 +202,9 @@ class Teacher extends StatelessWidget {
           child: ListView(
             children: [
               AvatarSection(
-                teacher: info,
+                teacher: widget.info,
               ),
-              Text(info.bio!),
+              Text(widget.info.bio!),
               Row(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -248,17 +276,30 @@ class Teacher extends StatelessWidget {
                   ),
                 ],
               ),
-              // Image(
-              //   image: AssetImage(teacher.video),
-              //   width: 200,
-              //   height: 102,
-              // ),
-              LanguagesSection(items: info.languages!.split(',')),
-              SpecialtiesSection(items: info.specialties!.split(',')),
+              Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    height: 300,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.blue, width: 2),
+                        borderRadius: const BorderRadius.all(Radius.circular(10))),
+                    child: controller == null
+                        ? Text(
+                            'No Introduction Video',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blue[700],
+                            ),
+                          )
+                        : Chewie(controller: controller!),
+                  ),
+              LanguagesSection(items: widget.info.languages!.split(',')),
+              SpecialtiesSection(items: widget.info.specialties!.split(',')),
               // SuggestedCourseSection(),
-              OtherSection(title: 'Interests', content: info.interests!),
+              OtherSection(title: 'Interests', content: widget.info.interests!),
               OtherSection(
-                  title: 'Teaching experience', content: info.experience!),
+                  title: 'Teaching experience', content: widget.info.experience!),
               Container(
                 padding: const EdgeInsets.all(10),
                 child: const Text(
@@ -271,10 +312,30 @@ class Teacher extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     
-                    Date(timetable, context, schedules, tutor)
+                    Date(timetable, context, widget.schedules, tutor)
                   ],
                 ),
-              
+               Container(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                        child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.blue,
+                      ),
+                      child: const Text(
+                        'Back',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    )),
+                  
+                  ],
+                ))
             ],
           )),
     );

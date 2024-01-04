@@ -49,6 +49,10 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   google_sign_in: ^6.1.6
   flutter_facebook_auth: ^6.0.3
+  video_player: ^2.8.1
+  chewie: ^1.7.4
+  jitsi_meet_flutter_sdk: ^0.1.9
+  jwt_decoder: ^2.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

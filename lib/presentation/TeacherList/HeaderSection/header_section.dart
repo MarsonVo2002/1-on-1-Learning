@@ -3,6 +3,8 @@ import 'package:lettutor/main.dart';
 import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart';
 
 class HeaderSection extends StatefulWidget {
   @override
@@ -13,16 +15,22 @@ class _HeaderSection extends State<HeaderSection> {
   String date = '';
   DateTime upcoming = DateTime.now();
   int index = 0;
-  List <BookingInfo> upcoming_classes =[];
+  List<BookingInfo> upcoming_classes = [];
+  final jitsiMeet = JitsiMeet();
+  void join(String room, String token) {
+    var options = JitsiMeetConferenceOptions(
+        serverURL: "https://meet.lettutor.com", room: room, token: token);
+    jitsiMeet.join(options);
+  }
+
   @override
   Widget build(BuildContext context) {
- 
-    HistoryProvider historyprovider = context.watch<HistoryProvider>();
-    ClassInfoProvider classinfoprovider = context.watch<ClassInfoProvider>();
     AccountSessionProvider session = context.watch<AccountSessionProvider>();
     var now = DateTime.now().millisecondsSinceEpoch;
-    upcoming_classes = session.booked_class.where(
-        (element) => element.scheduleDetailInfo!.startPeriodTimestamp! >= now).toList();
+    upcoming_classes = session.booked_class
+        .where((element) =>
+            element.scheduleDetailInfo!.startPeriodTimestamp! >= now)
+        .toList();
     if (upcoming_classes.isEmpty || index == upcoming_classes.length - 1) {
       return Container(
         alignment: Alignment.center,
@@ -35,8 +43,9 @@ class _HeaderSection extends State<HeaderSection> {
         ),
       );
     } else {
-      upcoming = DateTime.fromMillisecondsSinceEpoch(upcoming_classes[index].scheduleDetailInfo!.startPeriodTimestamp ??
-          0);
+      upcoming = DateTime.fromMillisecondsSinceEpoch(
+          upcoming_classes[index].scheduleDetailInfo!.startPeriodTimestamp ??
+              0);
       date = DateFormat('yyyy-MM-dd – H:mm').format(upcoming);
       return Container(
         color: Colors.blue,
@@ -56,15 +65,23 @@ class _HeaderSection extends State<HeaderSection> {
             ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.white),
                 onPressed: () {
+                   String token =
+                      upcoming_classes[index].studentMeetingLink?.split('token=')[1] ?? '';
+                  Map<String, dynamic> jwtDecoded =
+                      JwtDecoder.decode(token);
+                   String room = jwtDecoded['room'];
+                  join(room, token);
                   setState(() {
                     index++;
-                    upcoming = DateTime.fromMillisecondsSinceEpoch(upcoming_classes[index]
-                            .scheduleDetailInfo!
-                            .startPeriodTimestamp ??
-                        0);
-                    date =
-                        DateFormat('yyyy-MM-dd – H:mm').format(upcoming);
                   });
+                  // index++;
+                  // upcoming = DateTime.fromMillisecondsSinceEpoch(upcoming_classes[index]
+                  //         .scheduleDetailInfo!
+                  //         .startPeriodTimestamp ??
+                  //     0);
+                  // date =
+                  //     DateFormat('yyyy-MM-dd – H:mm').format(upcoming);
+
                   // session.addHistory(session.account.lesson_list[0]);
                   // session.removeLesson(session.account.lesson_list[0]);
                   // historyprovider.add(classinfoprovider.list[0]);
