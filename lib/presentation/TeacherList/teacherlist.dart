@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
@@ -41,7 +43,7 @@ Widget Filter(
 class _TeacherList extends State<TeacherList> {
   int pageStart = 1;
   int pageEnd = 7;
-
+  bool _isLoading = false;
   @override
   Widget build(BuildContext context) {
     List<String> items = [
@@ -147,7 +149,7 @@ class _TeacherList extends State<TeacherList> {
                   itemBuilder: (context, index) {
                     TutorInfo curr = provider.tutor_list[index];
                     String s = '';
-                    
+
                     if (keywordProvider.keyword == 'All' ||
                         keywordProvider.keyword == '') {
                       return Padding(
@@ -157,9 +159,8 @@ class _TeacherList extends State<TeacherList> {
                         ),
                       );
                     } else {
-                      if(specialties.containsKey(keywordProvider.keyword))
-                      {
-                          s = specialties[keywordProvider.keyword];
+                      if (specialties.containsKey(keywordProvider.keyword)) {
+                        s = specialties[keywordProvider.keyword];
                       }
                       if (curr.specialties!.contains(s)) {
                         return Padding(
@@ -169,10 +170,9 @@ class _TeacherList extends State<TeacherList> {
                           ),
                         );
                       } else {
-                        print( curr.specialties?.split(','));
+                        print(curr.specialties?.split(','));
                         print(specialties);
                         return Container();
-                        
                       }
                     }
                   }),
@@ -182,17 +182,30 @@ class _TeacherList extends State<TeacherList> {
               children: [
                 IconButton(
                     onPressed: () async {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          });
+                       if(mounted)
+                     {
+                       setState(() {
+                        _isLoading = true;
+                      });
+                     }
+                      if (_isLoading) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            });
+                        await Future.delayed(const Duration(seconds: 3));
+                        Navigator.pop(context);
+                      }
                       if (pageStart > 1) {
-                        setState(() {
-                          pageStart = pageStart - 1;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            pageStart = pageStart - 1;
+                          });
+                        }
+
                         List<Tutor> tutor_list =
                             await TutorService.GetListTutors(
                                 accessToken, pageStart, 9);
@@ -201,24 +214,41 @@ class _TeacherList extends State<TeacherList> {
                                 accessToken, tutor.userId!)));
 
                         provider.setTutorList(tutorinfo);
+                        if (mounted) {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
                       }
-                      Navigator.pop(context);
                     },
                     icon: const Icon(Icons.navigate_before)),
                 Text('$pageStart/$pageEnd'),
                 IconButton(
                     onPressed: () async {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          });
+                     if(mounted)
+                     {
+                       setState(() {
+                        _isLoading = true;
+                      });
+                     }
+                      if (_isLoading) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            });
+                        await Future.delayed(const Duration(seconds: 3));
+                        Navigator.pop(context);
+                      }
                       if (pageStart != pageEnd) {
-                        setState(() {
-                          pageStart = pageStart + 1;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            pageStart = pageStart + 1;
+                          });
+                        }
+
                         List<Tutor> tutor_list =
                             await TutorService.GetListTutors(
                                 accessToken, pageStart, 9);
@@ -227,7 +257,11 @@ class _TeacherList extends State<TeacherList> {
                                 accessToken, tutor.userId!)));
 
                         provider.setTutorList(tutorinfo);
-                        Navigator.of(context).pop();
+                        if (mounted) {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
                       }
                     },
                     icon: const Icon(Icons.navigate_next)),

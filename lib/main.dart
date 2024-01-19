@@ -74,10 +74,17 @@ class AccountSessionProvider extends ChangeNotifier {
   List<BookingInfo> history = [];
   List<TestPreparation> test = [];
   List<LearnTopic> topic = [];
+  List<BookingInfo> upcoming_classes = [];
   void setTests(List<TestPreparation> list)
   {
     test.clear();
     test = list;
+    notifyListeners();
+  }
+  void setUpcomingClasses(List<BookingInfo> upcoming)
+  {
+    upcoming_classes.clear();
+    upcoming_classes = upcoming;
     notifyListeners();
   }
   void setTopics(List<LearnTopic> list)
@@ -106,6 +113,34 @@ class AccountSessionProvider extends ChangeNotifier {
   void sortBookedClasses()
   {
     booked_class.sort(
+      (a, b) {
+        DateTime dateTimeA = DateTime.fromMillisecondsSinceEpoch(
+            a.scheduleDetailInfo!.startPeriodTimestamp ?? 0);
+        DateTime dateTimeB = DateTime.fromMillisecondsSinceEpoch(
+            b.scheduleDetailInfo!.startPeriodTimestamp ?? 0);
+        int dateComparison = dateTimeB.year.compareTo(dateTimeA.year);
+        if (dateComparison == 0) {
+          dateComparison = dateTimeB.month.compareTo(dateTimeA.month);
+          if (dateComparison == 0) {
+            dateComparison = dateTimeB.day.compareTo(dateTimeA.day);
+          }
+        }
+
+        if (dateComparison == 0) {
+          int timeComparison = dateTimeA.hour.compareTo(dateTimeB.hour);
+          if (timeComparison == 0) {
+            timeComparison = dateTimeA.minute.compareTo(dateTimeB.minute);
+          }
+          return timeComparison;
+        }
+        return dateComparison;
+      },
+    );
+    notifyListeners();
+  }
+   void sortUpcomingClasses()
+  {
+    upcoming_classes.sort(
       (a, b) {
         DateTime dateTimeA = DateTime.fromMillisecondsSinceEpoch(
             a.scheduleDetailInfo!.startPeriodTimestamp ?? 0);

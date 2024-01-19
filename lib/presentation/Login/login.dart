@@ -70,7 +70,7 @@ class _Login extends State<Login> {
     void _loadData(String accessToken) async {
       User user = await UserInfoService.GetUserData(accessToken);
       List<Tutor> tutor = await TutorService.GetListTutors(accessToken, 1, 9);
-      List<Course> course = await CourseService.GetCourseList(accessToken);
+      List<Course> course = await CourseService.GetCourseList(accessToken,1, 8);
       List<BookingInfo> info = await BookingService.GetBookedClass(accessToken);
       List<BookingInfo> history =
           await BookingService.GetBookedClass(accessToken);
@@ -80,18 +80,22 @@ class _Login extends State<Login> {
           await UserInfoService.GetTestPreparation(accessToken);
       List<LearnTopic> topic =
           await UserInfoService.GetLearningTopic(accessToken);
+      List<BookingInfo> upcoming = await BookingService.GetAllUpcomingClasses(accessToken);
+      List<BookingInfo> booked_class = List.from(upcoming + info);
       sessionProvider.setUser(user);
       sessionProvider.setTutorList(tutorinfo);
       sessionProvider.setTests(test);
       sessionProvider.setTopics(topic);
       sessionProvider.setCourseList(course);
-      sessionProvider.setBookedClass(info);
+      sessionProvider.setBookedClass(booked_class);
       sessionProvider.setHistory(history);
+      sessionProvider.setUpcomingClasses(upcoming);
       List<TutorInfo> favorite = sessionProvider.tutor_list
           .where((element) => element.isFavorite == true)
           .toList();
       sessionProvider.setFavoriteList(favorite);
       sessionProvider.sortBookedClasses();
+      sessionProvider.sortUpcomingClasses();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Home()),

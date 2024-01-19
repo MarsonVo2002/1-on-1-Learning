@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/schedule/booking_info.dart';
+import 'package:lettutor/services/booking_service.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -12,26 +14,22 @@ class HeaderSection extends StatefulWidget {
 }
 
 class _HeaderSection extends State<HeaderSection> {
+
   String date = '';
   DateTime upcoming = DateTime.now();
   int index = 0;
-  List<BookingInfo> upcoming_classes = [];
   final jitsiMeet = JitsiMeet();
   void join(String room, String token) {
     var options = JitsiMeetConferenceOptions(
         serverURL: "https://meet.lettutor.com", room: room, token: token);
     jitsiMeet.join(options);
   }
-
+  @override
+  
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider session = context.watch<AccountSessionProvider>();
-    var now = DateTime.now().millisecondsSinceEpoch;
-    upcoming_classes = session.booked_class
-        .where((element) =>
-            element.scheduleDetailInfo!.startPeriodTimestamp! >= now)
-        .toList();
-    if (upcoming_classes.isEmpty || index == upcoming_classes.length - 1) {
+    if (session.upcoming_classes.isEmpty || index == session.upcoming_classes.length - 1) {
       return Container(
         alignment: Alignment.center,
         color: Colors.blue,
@@ -44,7 +42,7 @@ class _HeaderSection extends State<HeaderSection> {
       );
     } else {
       upcoming = DateTime.fromMillisecondsSinceEpoch(
-          upcoming_classes[index].scheduleDetailInfo!.startPeriodTimestamp ??
+          session.upcoming_classes[index].scheduleDetailInfo!.startPeriodTimestamp ??
               0);
       date = DateFormat('yyyy-MM-dd – H:mm').format(upcoming);
       return Container(
@@ -66,7 +64,7 @@ class _HeaderSection extends State<HeaderSection> {
                 style: ElevatedButton.styleFrom(primary: Colors.white),
                 onPressed: () {
                    String token =
-                      upcoming_classes[index].studentMeetingLink?.split('token=')[1] ?? '';
+                      session.upcoming_classes[index].studentMeetingLink?.split('token=')[1] ?? '';
                   Map<String, dynamic> jwtDecoded =
                       JwtDecoder.decode(token);
                    String room = jwtDecoded['room'];

@@ -33,61 +33,65 @@ Widget ReviewSection(TeacherDTO teacher) {
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: list));
 }
 
-Widget Time(List<ScheduleInfo> items, BuildContext context, AccountSessionProvider tutor) {
+Widget Time(List<ScheduleInfo> items, BuildContext context,
+    AccountSessionProvider tutor) {
   List<Widget> list = [];
   for (int i = 0; i < items.length; i++) {
     list.add(ElevatedButton(
         style: ElevatedButton.styleFrom(primary: Colors.white70),
         onPressed: () {
-           items[i].isBooked! ?
-           showDialog(
-              context: context,
-              builder: (context) =>  AlertDialog(
-                scrollable: true,
-                title: const Text("Notice"),
-                content: const Center(child: Text('Already booked')),
-                actions: [
-                  TextButton(
-                    onPressed: (){
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("OK"),),
-                    
-                ],)
-                ):
-           showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                scrollable: true,
-                title: const Text("Booking confirm"),
-                content: Text('You are booking class on ${DateTime.fromMillisecondsSinceEpoch(items[i].startTimestamp!)}'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                     
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("Back"),
+          items[i].isBooked!
+              ? showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        scrollable: true,
+                        title: const Text("Notice"),
+                        content: const Center(child: Text('Already booked')),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("OK"),
+                          ),
+                        ],
+                      ))
+              : showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    scrollable: true,
+                    title: const Text("Booking confirm"),
+                    content: Text(
+                        'You are booking class on ${DateTime.fromMillisecondsSinceEpoch(items[i].startTimestamp!)}'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Back"),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          print(items[i].scheduleDetails?.first.id);
+                          await BookingService.BookClass(
+                              [items[i].scheduleDetails?.first.id ?? ''],
+                              '',
+                              accessToken);
+                          items[i].isBooked = true;
+                          List<BookingInfo> booking_info =
+                              await BookingService.GetBookedClass(accessToken);
+                          tutor.setBookedClass(booking_info);
+                          tutor.sortBookedClasses();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("OK"),
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () async{
-                      print(items[i].scheduleDetails?.first.id);
-                      await BookingService.BookClass([items[i].scheduleDetails?.first.id ?? ''], '', accessToken);
-                      items[i].isBooked = true;
-                      List<BookingInfo> booking_info = await BookingService.GetBookedClass(accessToken);
-                      tutor.setBookedClass(booking_info);
-                      tutor.sortBookedClasses();
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("OK"),
-                  ),
-                ],
-              ),
-            );
+                );
         },
         child: Text(
-          '${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(items[i].startTimestamp ?? 0))} - ${
-            DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(items[i].endTimestamp ?? 0))}',
+          '${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(items[i].startTimestamp ?? 0))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(items[i].endTimestamp ?? 0))}',
           style: const TextStyle(color: Colors.black),
         )));
   }
@@ -97,8 +101,8 @@ Widget Time(List<ScheduleInfo> items, BuildContext context, AccountSessionProvid
   );
 }
 
-Widget Date(
-    List<DateTime> item, BuildContext context, List<ScheduleInfo> schedules, AccountSessionProvider tutor) {
+Widget Date(List<DateTime> item, BuildContext context,
+    List<ScheduleInfo> schedules, AccountSessionProvider tutor) {
   List<Widget> list = [];
   for (int i = 0; i < item.length; i++) {
     list.add(
@@ -147,13 +151,9 @@ Widget Date(
 }
 
 class Teacher extends StatefulWidget {
-
   final TutorInfo info;
   final List<ScheduleInfo> schedules;
-  const Teacher(
-      {super.key,
-      required this.info,
-      required this.schedules});
+  const Teacher({super.key, required this.info, required this.schedules});
 
   @override
   State<Teacher> createState() => _TeacherState();
@@ -162,24 +162,32 @@ class Teacher extends StatefulWidget {
 class _TeacherState extends State<Teacher> {
   VideoPlayerController? VideoController;
   ChewieController? controller;
+  bool hasError = false;
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
     setState(() {
-      VideoController = VideoPlayerController.networkUrl(Uri.parse(widget.info.video ?? ''));
+      
+        VideoController = VideoPlayerController.networkUrl(
+            Uri.parse(widget.info.video ?? ''));
         controller = ChewieController(
           videoPlayerController: VideoController!,
           autoPlay: true,
+          errorBuilder: (context, errorMessage) {
+            return Container();
+          },
         );
+     
     });
   }
+
   @override
   void dispose() {
     VideoController?.dispose();
     controller?.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider tutor = context.watch<AccountSessionProvider>();
@@ -277,65 +285,57 @@ class _TeacherState extends State<Teacher> {
                 ],
               ),
               Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    height: 300,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue, width: 2),
-                        borderRadius: const BorderRadius.all(Radius.circular(10))),
-                    child: controller == null
-                        ? Text(
-                            'No Introduction Video',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.blue[700],
-                            ),
-                          )
-                        : Chewie(controller: controller!),
-                  ),
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                height: 300,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue, width: 2),
+                    borderRadius: const BorderRadius.all(Radius.circular(10))),
+                child: controller == null
+                    ? const Text(
+                        "No introduction video",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    : Chewie(controller: controller!),
+              ),
               LanguagesSection(items: widget.info.languages!.split(',')),
               SpecialtiesSection(items: widget.info.specialties!.split(',')),
               // SuggestedCourseSection(),
               OtherSection(title: 'Interests', content: widget.info.interests!),
               OtherSection(
-                  title: 'Teaching experience', content: widget.info.experience!),
+                  title: 'Teaching experience',
+                  content: widget.info.experience!),
               Container(
                 padding: const EdgeInsets.all(10),
                 child: const Text(
-                        'Booking',
-                        style:
-                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
+                  'Booking',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
               Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    
-                    Date(timetable, context, widget.schedules, tutor)
-                  ],
-                ),
-               Container(
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                        child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue,
-                      ),
-                      child: const Text(
-                        'Back',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      ),
-                    )),
-                  
-                  ],
-                ))
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [Date(timetable, context, widget.schedules, tutor)],
+              ),
+              Container(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.blue,
+                        ),
+                        child: const Text(
+                          'Back',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      )),
+                    ],
+                  ))
             ],
           )),
     );
