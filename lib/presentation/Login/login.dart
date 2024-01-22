@@ -71,9 +71,9 @@ class _Login extends State<Login> {
       User user = await UserInfoService.GetUserData(accessToken);
       List<Tutor> tutor = await TutorService.GetListTutors(accessToken, 1, 9);
       List<Course> course = await CourseService.GetCourseList(accessToken,1, 8);
-      List<BookingInfo> info = await BookingService.GetBookedClass(accessToken);
+      List<BookingInfo> info = await BookingService.GetBookedClass(accessToken,1,20);
       List<BookingInfo> history =
-          await BookingService.GetBookedClass(accessToken);
+          await BookingService.GetBookedClass(accessToken,1,20);
       List<TutorInfo> tutorinfo = await Future.wait(tutor.map(
           (tutor) => TutorService.GetTutorData(accessToken, tutor.userId!)));
       List<TestPreparation> test =
@@ -81,13 +81,13 @@ class _Login extends State<Login> {
       List<LearnTopic> topic =
           await UserInfoService.GetLearningTopic(accessToken);
       List<BookingInfo> upcoming = await BookingService.GetAllUpcomingClasses(accessToken);
-      List<BookingInfo> booked_class = List.from(upcoming + info);
       sessionProvider.setUser(user);
+      sessionProvider.setReview(tutor);
       sessionProvider.setTutorList(tutorinfo);
       sessionProvider.setTests(test);
       sessionProvider.setTopics(topic);
       sessionProvider.setCourseList(course);
-      sessionProvider.setBookedClass(booked_class);
+      sessionProvider.setBookedClass(info);
       sessionProvider.setHistory(history);
       sessionProvider.setUpcomingClasses(upcoming);
       List<TutorInfo> favorite = sessionProvider.tutor_list

@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
@@ -23,14 +25,43 @@ import 'package:lettutor/services/booking_service.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-Widget ReviewSection(TeacherDTO teacher) {
-  List<Text> list = [];
-  for (int i = 0; i < teacher.review.length; i++) {
-    list.add(Text(teacher.review[i]));
-  }
-  return Container(
-      child:
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: list));
+Widget ReviewSection(String url, String content, int rating, String name) {
+  return Row(
+    children: [
+      CachedNetworkImage(
+        height: 40,
+        width: 40,
+        imageUrl: url,
+        fit: BoxFit.cover,
+        errorWidget: (context, error, stackTrace) => const Icon(
+          Icons.error_outline_rounded,
+          color: Colors.red,
+          size: 32,
+        ),
+      ),
+      const SizedBox(
+        width: 5,
+      ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(name),
+          RatingBar.builder(
+              initialRating: rating.toDouble(),
+              minRating: 0,
+              maxRating: 5,
+              allowHalfRating: false,
+              direction: Axis.horizontal,
+              itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+              onRatingUpdate: (rating) {}),
+          Text(content)
+        ],
+      )
+    ],
+  );
 }
 
 Widget Time(List<ScheduleInfo> items, BuildContext context,
@@ -78,10 +109,11 @@ Widget Time(List<ScheduleInfo> items, BuildContext context,
                               '',
                               accessToken);
                           items[i].isBooked = true;
-                          List<BookingInfo> booking_info =
-                              await BookingService.GetBookedClass(accessToken);
-                          tutor.setBookedClass(booking_info);
-                          tutor.sortBookedClasses();
+                          List<BookingInfo> upcoming_classes =
+                              await BookingService.GetAllUpcomingClasses(
+                                  accessToken);
+                          tutor.setUpcomingClasses(upcoming_classes);
+                          tutor.sortUpcomingClasses();
                           Navigator.of(context).pop();
                         },
                         child: const Text("OK"),
@@ -152,6 +184,7 @@ Widget Date(List<DateTime> item, BuildContext context,
 
 class Teacher extends StatefulWidget {
   final TutorInfo info;
+
   final List<ScheduleInfo> schedules;
   const Teacher({super.key, required this.info, required this.schedules});
 
@@ -167,17 +200,15 @@ class _TeacherState extends State<Teacher> {
   void initState() {
     super.initState();
     setState(() {
-      
-        VideoController = VideoPlayerController.networkUrl(
-            Uri.parse(widget.info.video ?? ''));
-        controller = ChewieController(
-          videoPlayerController: VideoController!,
-          autoPlay: true,
-          errorBuilder: (context, errorMessage) {
-            return Container();
-          },
-        );
-     
+      VideoController =
+          VideoPlayerController.networkUrl(Uri.parse(widget.info.video ?? ''));
+      controller = ChewieController(
+        videoPlayerController: VideoController!,
+        autoPlay: true,
+        errorBuilder: (context, errorMessage) {
+          return Container();
+        },
+      );
     });
   }
 
@@ -191,6 +222,8 @@ class _TeacherState extends State<Teacher> {
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider tutor = context.watch<AccountSessionProvider>();
+    Tutor review = tutor.review
+        .firstWhere((element) => element.userId == widget.info.user!.id);
     List<DateTime> timetable = widget.schedules
         .map((e) => DateTime.fromMillisecondsSinceEpoch(e.startTimestamp ?? 0))
         .toList();
@@ -314,7 +347,34 @@ class _TeacherState extends State<Teacher> {
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [Date(timetable, context, widget.schedules, tutor)],
+                children: [
+                  widget.schedules.isNotEmpty?
+                  Date(timetable, context, widget.schedules, tutor):Center(child: Text("No classes available"),)
+                ],
+              ),
+               Container(
+                padding: const EdgeInsets.all(10),
+                child: const Text(
+                  'Review',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                height: 300,
+                child: review.feedbacks!.isNotEmpty
+                    ? ListView.builder(
+                      itemCount: review.feedbacks!.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.all(10),
+                          child: ReviewSection(
+                              review.feedbacks![index].firstInfo!.avatar!,
+                              review.feedbacks![index].content!,
+                              review.feedbacks![index].rating!,
+                              review.feedbacks![index].firstInfo!.name!),
+                        );
+                      })
+                    : Center(child: Text("No review yet")),
               ),
               Container(
                   padding: const EdgeInsets.all(10),
@@ -335,7 +395,7 @@ class _TeacherState extends State<Teacher> {
                         ),
                       )),
                     ],
-                  ))
+                  )),
             ],
           )),
     );

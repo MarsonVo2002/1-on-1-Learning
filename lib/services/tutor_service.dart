@@ -47,9 +47,9 @@ class TutorService {
   }
 
   static Future<List<Tutor>> GetFavoriteListTutors(
-      String token, int pageStart) async {
+      String token, int pageStart, int perPage) async {
     String apiUrl =
-        'https://sandbox.api.lettutor.com/tutor/more?perPage=9&page=$pageStart';
+        'https://sandbox.api.lettutor.com/tutor/more?perPage=$perPage&page=$pageStart';
     final response = await http.get(
       Uri.parse(apiUrl),
       headers: {

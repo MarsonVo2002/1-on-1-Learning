@@ -30,7 +30,6 @@ Widget Specialities(List<String> item) {
 
 class TeacherItem extends StatefulWidget {
   final TutorInfo teacher;
-
   const TeacherItem({super.key, required this.teacher});
 
   @override
@@ -92,8 +91,7 @@ class _TeacherItem extends State<TeacherItem> {
                               child: CircularProgressIndicator(),
                             );
                           });
-                      TutorInfo info = await TutorService.GetTutorData(
-                          accessToken, widget.teacher.user!.id!);
+                     
                       const CircularProgressIndicator();
                       List<ScheduleInfo> schedules =
                           await BookingService.GetTutorScheduleById(
@@ -104,7 +102,7 @@ class _TeacherItem extends State<TeacherItem> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => Teacher(
-                                    info: info,
+                                    info: widget.teacher,
                                     schedules: schedules,
                                   )));
                     },

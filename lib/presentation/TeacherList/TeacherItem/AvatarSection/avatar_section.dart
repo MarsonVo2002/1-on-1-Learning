@@ -34,14 +34,22 @@ Widget Rating(int rating) {
   );
 }
 
-class AvatarSection extends StatelessWidget {
+class AvatarSection extends StatefulWidget {
   final TutorInfo teacher;
+
   const AvatarSection({required this.teacher});
+
+  @override
+  State<AvatarSection> createState() => _AvatarSectionState();
+}
+
+class _AvatarSectionState extends State<AvatarSection> {
+ 
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider session_provider =
         context.watch<AccountSessionProvider>();
-    bool isFavorite = session_provider.favorite.contains(teacher);
+      print(session_provider.favorite.contains(widget.teacher));
     // TODO: implement build
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +57,7 @@ class AvatarSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            teacher.user!.avatar == null
+            widget.teacher.user!.avatar == null
                 ? Container()
                 : Container(
                     width: 72,
@@ -59,7 +67,7 @@ class AvatarSection extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: CachedNetworkImage(
-                      imageUrl: teacher.user!.avatar ?? '',
+                      imageUrl: widget.teacher.user!.avatar ?? '',
                       fit: BoxFit.cover,
                       errorWidget: (context, error, stackTrace) => const Icon(
                         Icons.error_outline_rounded,
@@ -75,13 +83,15 @@ class AvatarSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  teacher.user!.name!,
+                  widget.teacher.user!.name!,
                   style: const TextStyle(fontSize: 18),
                 ),
                 Row(
                   children: [
                     CountryFlag.fromCountryCode(
-                      teacher.user!.country == null ? '' :  teacher.user!.country!,
+                      widget.teacher.user!.country == null
+                          ? ''
+                          : widget.teacher.user!.country!,
                       height: 15,
                       width: 20,
                     ),
@@ -89,24 +99,40 @@ class AvatarSection extends StatelessWidget {
                       width: 5,
                     ),
                     Text(
-                       teacher.user!.country == null ? '' :  teacher.user!.country!,
+                      widget.teacher.user!.country == null
+                          ? ''
+                          : widget.teacher.user!.country!,
                     )
                   ],
                 ),
-                Rating(teacher.rating == null ? 0 : teacher.rating!.round())
+                Rating(widget.teacher.rating == null
+                    ? 0
+                    : widget.teacher.rating!.round())
               ],
             ),
           ],
         ),
         IconButton(
             onPressed: () async {
-              if (isFavorite == false) {
-                 session_provider.addFavorite(teacher);
-                 await TutorService.AddFavorite(accessToken, teacher.user!.id!);
+             
+             
+                if (!session_provider.favorite.contains(widget.teacher)) {
+                  session_provider.addFavorite(widget.teacher);
+                  await TutorService.AddFavorite(
+                      accessToken, widget.teacher.user!.id!);
+                }
+               else {
+                setState(() {
+                  widget.teacher.isFavorite = false;
+                  
+                });
+                 session_provider.deleteFavorite(widget.teacher);
+                    await TutorService.AddFavorite(
+                      accessToken, widget.teacher.user!.id!);
               }
             },
             icon: Image(
-              image: isFavorite
+              image: session_provider.favorite.contains(widget.teacher)
                   ? const AssetImage('asset/icons/fill_heart.png')
                   : const AssetImage('asset/icons/love.png'),
               width: 20,

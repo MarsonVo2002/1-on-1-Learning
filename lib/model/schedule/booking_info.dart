@@ -1,3 +1,5 @@
+import 'package:lettutor/model/tutor/tutor_feedback.dart';
+
 import 'class_review.dart';
 import 'schedule_detail.dart';
 
@@ -18,7 +20,7 @@ class BookingInfo {
   bool? isDeleted;
   ScheduleDetail? scheduleDetailInfo;
   ClassReview? classReview;
-
+  List<TutorFeedback>? feedbacks;
   BookingInfo({
     this.createdAtTimeStamp,
     this.updatedAtTimeStamp,
@@ -36,6 +38,7 @@ class BookingInfo {
     this.isDeleted,
     this.scheduleDetailInfo,
     this.classReview,
+    this.feedbacks,
   });
 
   BookingInfo.fromJson(Map<String, dynamic> json) {
@@ -59,6 +62,12 @@ class BookingInfo {
     classReview = json['classReview'] != null
         ? ClassReview.fromJson(json['classReview'])
         : null;
+    if (json['feedbacks'] != null) {
+      feedbacks = <TutorFeedback>[];
+      json['feedbacks'].forEach((v) {
+        feedbacks!.add(TutorFeedback.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -82,6 +91,9 @@ class BookingInfo {
     }
     if (classReview != null) {
       data['classReview'] = classReview!.toJson();
+    }
+     if (feedbacks != null) {
+      data['feedbacks'] = feedbacks!.map((v) => v.toJson()).toList();
     }
     return data;
   }

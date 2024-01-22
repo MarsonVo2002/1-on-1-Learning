@@ -75,6 +75,7 @@ class AccountSessionProvider extends ChangeNotifier {
   List<TestPreparation> test = [];
   List<LearnTopic> topic = [];
   List<BookingInfo> upcoming_classes = [];
+  List<Tutor> review = [];
   void setTests(List<TestPreparation> list)
   {
     test.clear();
@@ -92,6 +93,11 @@ class AccountSessionProvider extends ChangeNotifier {
     topic.clear();
     topic = list;
     notifyListeners();
+  }
+  void setReview(List<Tutor> tutor)
+  {
+    review = tutor; 
+     notifyListeners();
   }
   void addHistory(ClassInfo info) {
     account.history_list.add(info);
@@ -146,11 +152,11 @@ class AccountSessionProvider extends ChangeNotifier {
             a.scheduleDetailInfo!.startPeriodTimestamp ?? 0);
         DateTime dateTimeB = DateTime.fromMillisecondsSinceEpoch(
             b.scheduleDetailInfo!.startPeriodTimestamp ?? 0);
-        int dateComparison = dateTimeB.year.compareTo(dateTimeA.year);
+        int dateComparison = dateTimeA.year.compareTo(dateTimeB.year);
         if (dateComparison == 0) {
-          dateComparison = dateTimeB.month.compareTo(dateTimeA.month);
+          dateComparison = dateTimeA.month.compareTo(dateTimeB.month);
           if (dateComparison == 0) {
-            dateComparison = dateTimeB.day.compareTo(dateTimeA.day);
+            dateComparison = dateTimeA.day.compareTo(dateTimeB.day);
           }
         }
 
@@ -175,6 +181,11 @@ class AccountSessionProvider extends ChangeNotifier {
   void addFavorite(TutorInfo tutor)
   {
     favorite.add(tutor);
+    notifyListeners();
+  }
+  void deleteFavorite(TutorInfo tutor)
+  {
+    favorite.remove(tutor);
     notifyListeners();
   }
   void deleteBookedClass()

@@ -15,7 +15,8 @@ class HeaderSection extends StatefulWidget {
 
 class _HeaderSection extends State<HeaderSection> {
 
-  String date = '';
+  String start = '';
+  String end = '';
   DateTime upcoming = DateTime.now();
   int index = 0;
   final jitsiMeet = JitsiMeet();
@@ -24,7 +25,7 @@ class _HeaderSection extends State<HeaderSection> {
         serverURL: "https://meet.lettutor.com", room: room, token: token);
     jitsiMeet.join(options);
   }
-  @override
+
   
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,11 @@ class _HeaderSection extends State<HeaderSection> {
       upcoming = DateTime.fromMillisecondsSinceEpoch(
           session.upcoming_classes[index].scheduleDetailInfo!.startPeriodTimestamp ??
               0);
-      date = DateFormat('yyyy-MM-dd – H:mm').format(upcoming);
+      print(upcoming);
+      start = DateFormat('yyyy-MM-dd – H:mm').format(upcoming);
+      end = DateFormat('H:mm').format(DateTime.fromMillisecondsSinceEpoch(
+          session.upcoming_classes[index].scheduleDetailInfo!.endPeriodTimestamp ??
+              0));
       return Container(
         color: Colors.blue,
         padding: const EdgeInsets.all(5),
@@ -57,7 +62,7 @@ class _HeaderSection extends State<HeaderSection> {
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             Text(
-              date,
+              "$start - $end",
               style: const TextStyle(fontSize: 15, color: Colors.white),
             ),
             ElevatedButton(

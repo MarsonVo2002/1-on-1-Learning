@@ -70,9 +70,9 @@ class BookingService {
         data.map((e) => BookingInfo.fromJson(e)).toList();
     return lessons;
   }
-  static Future<List<BookingInfo>> GetBookedClass(String token) async {
-    final now = DateTime.now().millisecondsSinceEpoch;
-    String apiUrl = 'https://sandbox.api.lettutor.com/booking/list/student?page=1&perPage=20&dateTimeLte=$now&orderBy=meeting&sortBy=desc';
+  static Future<List<BookingInfo>> GetBookedClass(String token,int page, int perPage) async {
+    final now = DateTime.now().subtract(const Duration(minutes: 35)).millisecondsSinceEpoch;
+    String apiUrl = 'https://sandbox.api.lettutor.com/booking/list/student?page=$page&perPage=$perPage&dateTimeLte=$now&orderBy=meeting&sortBy=desc';
     final response = await http.get(
       Uri.parse(apiUrl),
 

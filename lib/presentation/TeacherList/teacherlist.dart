@@ -214,6 +214,7 @@ class _TeacherList extends State<TeacherList> {
                                 accessToken, tutor.userId!)));
 
                         provider.setTutorList(tutorinfo);
+                        provider.setReview(tutor_list);
                         if (mounted) {
                           setState(() {
                             _isLoading = false;
@@ -257,6 +258,7 @@ class _TeacherList extends State<TeacherList> {
                                 accessToken, tutor.userId!)));
 
                         provider.setTutorList(tutorinfo);
+                         provider.setReview(tutor_list);
                         if (mounted) {
                           setState(() {
                             _isLoading = false;

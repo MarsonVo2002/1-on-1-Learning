@@ -44,11 +44,10 @@ class TimeSection extends StatelessWidget {
                                   [info.id ?? ''],
                                   accessToken,
                                 );
-                                List<BookingInfo> update =
-                                    await BookingService.GetBookedClass(
-                                        accessToken);
-                                provider.setBookedClass(update);
-                                provider.sortBookedClasses();
+                                List<BookingInfo> upcoming =
+                                    await BookingService.GetAllUpcomingClasses(accessToken);
+                                provider.setUpcomingClasses(upcoming);
+                                provider.sortUpcomingClasses();
                                 Navigator.pop(context);
                               },
                               child: const Text('YES'),

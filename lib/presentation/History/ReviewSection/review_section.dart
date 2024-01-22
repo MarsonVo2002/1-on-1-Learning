@@ -8,9 +8,10 @@ import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
 
 class ReviewSection extends StatefulWidget {
-  final DateTime date;
+  final DateTime startTime;
+  final DateTime endTime;
   final BookingInfo info;
-  ReviewSection({super.key, required this.date, required this.info});
+  ReviewSection({super.key,  required this.info, required this.startTime, required this.endTime});
 
   @override
   State<ReviewSection> createState() => _ReviewSectionState();
@@ -23,12 +24,17 @@ class _ReviewSectionState extends State<ReviewSection> {
   @override
   void initState() {
     // TODO: implement initState
-    review = widget.info.tutorReview??'';
+    if(widget.info.feedbacks!.isNotEmpty)
+    {
+      review = widget.info.feedbacks![0].content??'';
+    }
+        
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    DateTime endTime = widget.date;
+    DateTime endTime = widget.endTime;
+    DateTime startTime = widget.startTime;
     TextEditingController controller = TextEditingController();
     TextEditingController controller1 = TextEditingController();
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
@@ -44,7 +50,7 @@ class _ReviewSectionState extends State<ReviewSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                  'Lesson Time: ${widget.date.hour.toString().padLeft(2, '0')}:${widget.date.minute.toString().padLeft(2, '0')} - ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}'),
+                  'Lesson Time: ${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')} - ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}'),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Colors.blue),
                   onPressed: () {},
@@ -181,6 +187,7 @@ class _ReviewSectionState extends State<ReviewSection> {
                                   setState(() {
                                     review = controller.text;
                                   });
+                                  print(review);
                                   await TutorService.WriteFeedback(
                                       review,
                                       widget.info.id!,

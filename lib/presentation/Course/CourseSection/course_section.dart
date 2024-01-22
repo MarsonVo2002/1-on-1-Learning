@@ -233,11 +233,6 @@ class _CourseSectionState extends State<CourseSection> {
                             accessToken, pageStart, perPage);
                         
                         if (mounted) {
-                          
-                          
-                      
-
-                       
                         print(pageStart);
                         if(course.isNotEmpty)
                         {
