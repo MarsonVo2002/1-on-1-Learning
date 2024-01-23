@@ -9,7 +9,9 @@ final levels = {
   '6': 'Advanced',
   '7': 'Proficiency'
 };
-Map specialties = {
+List<String> items = ["Foreign Tutor", "Vietnamese Tutor"];
+Map<String,String> specialties = {
+  'All':'',
   'English for kids': 'english-for-kids',
   'English for Business': 'business-english',
   'Conversational': 'conversational-english',
