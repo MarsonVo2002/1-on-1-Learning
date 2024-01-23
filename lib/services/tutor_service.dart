@@ -17,6 +17,41 @@ class TutorService {
     final body = json.decode(response.body);
     return TutorInfo.fromJson(body);
   }
+   static Future<List<Tutor>> SearchTutor(
+    String token,
+    String search,
+     int page,
+     int perPage,
+     Map<String, bool> nationality,
+     List<String> specialties,
+  ) async {
+    final response = await http.post(
+      Uri.parse('https://sandbox.api.lettutor.com/tutor/search'),
+      headers: {
+        'Content-Type': 'application/json;encoding=utf-8',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({
+        'page': page,
+        'perPage': perPage,
+        'search': search,
+        'filters': {
+          'specialties': specialties,
+          'nationality': nationality,
+        },
+      }),
+    );
+
+    final body = json.decode(response.body);
+
+    if (response.statusCode != 200) {
+      throw Exception(body['message']);
+    }
+
+    final List<dynamic> tutors = body['rows'];
+
+    return  tutors.map((tutor) => Tutor.fromJson(tutor)).toList();
+  }
   static Future<int> GetTutorCount(String token, int pageStart,int perPage) async {
     String apiUrl =
         'https://sandbox.api.lettutor.com/tutor/more?perPage=$perPage&page=$pageStart';

@@ -44,12 +44,11 @@ class AvatarSection extends StatefulWidget {
 }
 
 class _AvatarSectionState extends State<AvatarSection> {
- 
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider session_provider =
         context.watch<AccountSessionProvider>();
-      print(session_provider.favorite.contains(widget.teacher));
+    print(session_provider.favorite.contains(widget.teacher));
     // TODO: implement build
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,21 +113,22 @@ class _AvatarSectionState extends State<AvatarSection> {
         ),
         IconButton(
             onPressed: () async {
-             
-             
-                if (!session_provider.favorite.contains(widget.teacher)) {
-                  session_provider.addFavorite(widget.teacher);
-                  await TutorService.AddFavorite(
-                      accessToken, widget.teacher.user!.id!);
-                }
-               else {
+              if (widget.teacher.isFavorite = false) {
+                await TutorService.AddFavorite(
+                    accessToken, widget.teacher.user!.id!);
+                setState(() {
+                  widget.teacher.isFavorite = true;
+                });
+                session_provider.addFavorite(widget.teacher);
+              } else {
+                await TutorService.AddFavorite(
+                    accessToken, widget.teacher.user!.id!);
                 setState(() {
                   widget.teacher.isFavorite = false;
-                  
-                });
-                 session_provider.deleteFavorite(widget.teacher);
-                    await TutorService.AddFavorite(
-                      accessToken, widget.teacher.user!.id!);
+                });             
+                await TutorService.AddFavorite(
+                    accessToken, widget.teacher.user!.id!);
+                session_provider.deleteFavorite(widget.teacher);
               }
             },
             icon: Image(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/teacher-detail-dto.dart';
 import 'package:lettutor/model/teacher-dto.dart';
@@ -7,6 +8,7 @@ import 'package:lettutor/model/tutor/tutor_info.dart';
 import 'package:lettutor/presentation/ResetPassword/email.dart';
 import 'package:lettutor/presentation/Signup/signup.dart';
 import 'package:lettutor/presentation/TeacherList/TeacherItem/teacher_item.dart';
+import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
 
 class SearchSection extends StatefulWidget {
@@ -17,13 +19,68 @@ class SearchSection extends StatefulWidget {
 class _SearchSection extends State<SearchSection> {
   List<TeacherDTO> list = [];
   List<TeacherDetailDTO> list_detail = [];
+
   final TextEditingController name = TextEditingController();
   final TextEditingController nationality = TextEditingController();
-  List<TutorInfo> result = [];
+  List<TutorInfo> search_result = [];
+  String selectedIndex = specialties.keys.first;
+  String s = items.first;
+  int page = 1;
+  bool isLoading = true;
+  bool isVietnamese = false;
+  List<Tutor> tutors = [];
+  String keyword = '';
+  List<TutorInfo> favorite = [];
+  String _specialties = '';
+  Future<void> SearchTutors(String accessToken, String name, bool isVietnamese,
+      String specialties, AccountSessionProvider provider) async {
+    List<String> list = [];
+    if (specialties != '') {
+      list = [specialties];
+    }
+    else{
+      list.clear();
+    }
+    final data = await TutorService.SearchTutor(
+      accessToken,
+      name,
+      page,
+      9,
+      {'isVietNamese': isVietnamese},
+      list,
+    );
+    List<TutorInfo> tutorinfo = await Future.wait(data
+        .map((tutor) => TutorService.GetTutorData(accessToken, tutor.userId!)));
+    favorite =
+        tutorinfo.where((element) => element.isFavorite == true).toList();
+    provider.setFavoriteList(favorite);
+    setState(() {
+      search_result = tutorinfo;
+
+      isLoading = false;
+    });
+
+    // if (_countryController.text.isEmpty) {
+    //   _tutors = result;
+    // } else {
+    //   _tutors.clear();
+    //   for (var tutor in result) {
+    //     if (countryList[tutor.country] != null) {
+    //       if (countryList[tutor.country]!.toLowerCase().contains(_countryController.text)) {
+    //         _tutors.add(tutor);
+    //       }
+    //     }
+    //   }
+    // }
+  }
+
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
     // TODO: implement build
+    if (isLoading) {
+      SearchTutors(accessToken, name.text, isVietnamese, _specialties, provider);
+    }
     return Scaffold(
       appBar: AppBar(title: Text('Search')),
       body: Container(
@@ -33,9 +90,8 @@ class _SearchSection extends State<SearchSection> {
             controller: name,
             onChanged: (value) {
               setState(() {
-                result = provider.search_tutor
-                    .where((element) => element.user!.name!=null && element.user!.name!.contains(name.text))
-                    .toList();
+                keyword = name.text;
+                isLoading = true;
               });
             },
             decoration: const InputDecoration(
@@ -47,37 +103,68 @@ class _SearchSection extends State<SearchSection> {
           SizedBox(
             height: 10,
           ),
-          TextField(
-              controller: nationality,
-              onChanged: (value) {
-                setState(() {
-                  result = provider.search_tutor
-                      .where((element) =>
-                       element.user!.country!=null && element.user!.country!.contains(nationality.text))
-                      .toList();
-                });
-              },
-              decoration: const InputDecoration(
-                  hintText: 'Nationality',
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 3, color: Colors.blue)),
-                  suffixIcon: Icon(Icons.flag))),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              DropdownButton<String>(
+                value: s,
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      s = newValue;
+                      if (s == 'Vietnamese Tutor') {
+                        isVietnamese = true;
+                      } else {
+                        isVietnamese = false;
+                      }
+                      isLoading = true;
+                    });
+                  }
+                },
+                items: items.map((String key) {
+                  return DropdownMenuItem<String>(
+                    value: key,
+                    child: Text(key),
+                  );
+                }).toList(),
+              ),
+              DropdownButton<String>(
+                value: selectedIndex,
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      selectedIndex = newValue;
+                      _specialties = specialties[selectedIndex]!;
+                      print(_specialties);
+                      isLoading = true;
+                    });
+                  }
+                },
+                items: specialties.keys.map((String key) {
+                  return DropdownMenuItem<String>(
+                    value: key,
+                    child: Text(key),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
           SizedBox(
             height: 10,
           ),
           Container(
             height: 410,
-            child: ListView.builder(
+            child: isLoading? const Center(child: CircularProgressIndicator()): search_result.isNotEmpty? ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: result.length,
+                itemCount: search_result.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(left: 10),
                     child: TeacherItem(
-                      teacher: result[index],
+                      teacher: search_result[index],
                     ),
                   );
-                }),
+                }): const Center(child: Text('Sorry we can not find any tutor with this keywords')),
           ),
         ]),
       ),

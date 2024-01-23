@@ -27,6 +27,13 @@ class TimeSection extends StatelessWidget {
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {
+                      DateTime time = DateTime.fromMillisecondsSinceEpoch(
+                              info.scheduleDetailInfo!.startPeriodTimestamp ??
+                                  0)
+                          .subtract(const Duration(hours: 2));
+                      //Test
+                      // DateTime test = DateTime(2024, 1, 22, 21);
+                      (DateTime.now().isAfter(time) || time.isAtSameMomentAs(DateTime.now()))?
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -45,7 +52,8 @@ class TimeSection extends StatelessWidget {
                                   accessToken,
                                 );
                                 List<BookingInfo> upcoming =
-                                    await BookingService.GetAllUpcomingClasses(accessToken);
+                                    await BookingService.GetAllUpcomingClasses(
+                                        accessToken);
                                 provider.setUpcomingClasses(upcoming);
                                 provider.sortUpcomingClasses();
                                 Navigator.pop(context);
@@ -54,7 +62,21 @@ class TimeSection extends StatelessWidget {
                             ),
                           ],
                         ),
-                      );
+                      ):showDialog( context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Cancel class'),
+                          content:
+                              const Text('You can only cancel the meeting before 2 hours!'),
+                          actions: [
+                            
+                            TextButton(
+                              onPressed: ()  {
+                                
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Back'),
+                            ),
+                          ]));
                     },
                     child: const Text(
                       'Cancel',
