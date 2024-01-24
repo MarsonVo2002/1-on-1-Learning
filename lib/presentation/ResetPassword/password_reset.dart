@@ -16,8 +16,25 @@ class _ResetPassword extends State<ResetPassword> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmpasswordController =
       TextEditingController();
+   bool isValid = false;
+  String password_error = '';
   @override
   Widget build(BuildContext context) {
+    void _validation() {
+      final emailRegExp = RegExp(
+          r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+      if (_passwordController.text.isEmpty) {
+        password_error = 'Email is empty';
+        isValid = false;
+      } else if (!emailRegExp.hasMatch(_confirmpasswordController.text)) {
+        password_error = 'Email is invalid';
+        isValid = false;
+      } else {
+        password_error = '';
+        isValid = true;
+      }
+      setState(() {});
+    }
     AccountProvider provider = context.watch<AccountProvider>();
     void _reset() {
       String password = _passwordController.text;
@@ -78,11 +95,15 @@ class _ResetPassword extends State<ResetPassword> {
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
-                  decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
+                  decoration:  InputDecoration(
+                    errorText: password_error,
+                      enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(width: 3, color: Colors.blue),
                   )),
                   controller: _passwordController,
+                  onChanged: (value) {
+                    _validation();
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -95,11 +116,16 @@ class _ResetPassword extends State<ResetPassword> {
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
-                  decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
+                  decoration:  InputDecoration(
+                    errorText: password_error,
+                      enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(width: 3, color: Colors.blue),
                   )),
                   controller: _confirmpasswordController,
+                  onChanged: (value)
+                  {
+                    _validation();
+                  },
                 ),
               ],
             ),

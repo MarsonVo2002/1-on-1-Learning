@@ -17,9 +17,39 @@ class _SignUp extends State<SignUp> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmpasswordController =
       TextEditingController();
-
+  String email_error = '';
+  String password_error = '';
+  bool isLoading = false;
+  bool isValid = false;
   @override
   Widget build(BuildContext context) {
+    void _validation() {
+      final emailRegExp = RegExp(
+          r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+      if (_emailController.text.isEmpty) {
+        email_error = 'Email is empty';
+        isValid = false;
+      } else if (!emailRegExp.hasMatch(_emailController.text)) {
+        email_error = 'Email is invalid';
+        isValid = false;
+      } else {
+        email_error = '';
+        isValid = true;
+      }
+
+      if (_passwordController.text.isEmpty) {
+        password_error = 'Password is empty';
+        isValid = false;
+      } else if (_passwordController.text.length < 6) {
+        password_error = 'Password is to short';
+        isValid = false;
+      } else {
+        password_error = '';
+        isValid = true;
+      }
+      setState(() {});
+    }
+
     AccountProvider provider = context.watch<AccountProvider>();
     void _signup() async {
       String email = _emailController.text;
@@ -89,11 +119,16 @@ class _SignUp extends State<SignUp> {
                   style: TextStyle(color: Colors.grey, fontSize: 18),
                 ),
                 TextField(
-                  decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
+                  decoration:  InputDecoration(
+                    errorText: email_error,
+                      enabledBorder: const OutlineInputBorder(
+                      
                     borderSide: BorderSide(width: 3, color: Colors.blue),
                   )),
                   controller: _emailController,
+                  onChanged: (value) {
+                    _validation();
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -106,11 +141,15 @@ class _SignUp extends State<SignUp> {
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
-                  decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
+                  decoration:  InputDecoration(
+                    errorText: password_error,
+                      enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(width: 3, color: Colors.blue),
                   )),
                   controller: _passwordController,
+                  onChanged: (value) {
+                    _validation();
+                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -123,11 +162,15 @@ class _SignUp extends State<SignUp> {
                   obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
-                  decoration: const InputDecoration(
-                      enabledBorder: OutlineInputBorder(
+                  decoration:  InputDecoration(
+                    errorText: password_error,
+                      enabledBorder: const OutlineInputBorder(
                     borderSide: BorderSide(width: 3, color: Colors.blue),
                   )),
                   controller: _confirmpasswordController,
+                    onChanged: (value) {
+                    _validation();
+                  },
                 ),
               ],
             ),
