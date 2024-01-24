@@ -53,6 +53,7 @@ dependencies:
   chewie: ^1.7.4
   jitsi_meet_flutter_sdk: ^0.1.9
   jwt_decoder: ^2.0.1
+  language_code: ^0.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

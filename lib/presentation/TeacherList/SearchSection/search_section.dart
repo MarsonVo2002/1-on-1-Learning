@@ -135,7 +135,6 @@ class _SearchSection extends State<SearchSection> {
                     setState(() {
                       selectedIndex = newValue;
                       _specialties = specialties[selectedIndex]!;
-                      print(_specialties);
                       isLoading = true;
                     });
                   }
@@ -166,6 +165,90 @@ class _SearchSection extends State<SearchSection> {
                   );
                 }): const Center(child: Text('Sorry we can not find any tutor with this keywords')),
           ),
+           isLoading? Container(): Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: () async {
+                      // if (mounted) {
+                      //   setState(() {
+                      //     _isLoading = true;
+                      //   });
+                      // }
+                      // if (_isLoading) {
+                      //   showDialog(
+                      //       context: context,
+                      //       builder: (context) {
+                      //         return const Center(
+                      //           child: CircularProgressIndicator(),
+                      //         );
+                      //       });
+                      //   await Future.delayed(const Duration(seconds: 3));
+                      //   Navigator.pop(context);
+                      // }
+                      if (page > 1) {
+                        if (mounted) {
+                          setState(() {
+                            page= page - 1;
+                            isLoading = true;
+                          });
+                        }
+
+                        // List<Course> course = await CourseService.GetCourseList(
+                        //     accessToken, pageStart, perPage);
+                        // print(pageStart);
+                        // provider.setCourseList(course);
+                        // if (mounted) {
+                        //   setState(() {
+                        //     _isLoading = false;
+                        //   });
+                        // }
+                      }
+                    },
+                    icon: const Icon(Icons.navigate_before)),
+                Text('$page'),
+                IconButton(
+                    onPressed: () async {
+                      // if (mounted) {
+                      //   setState(() {
+                      //     _isLoading = true;
+                      //   });
+                      // }
+                      // if (_isLoading) {
+                      //   showDialog(
+                      //       context: context,
+                      //       builder: (context) {
+                      //         return const Center(
+                      //           child: CircularProgressIndicator(),
+                      //         );
+                      //       });
+                      //   await Future.delayed(const Duration(seconds: 3));
+                      //   Navigator.pop(context);
+                      // }
+                      //  List<Course> course = await CourseService.GetCourseList(
+                      //       accessToken, pageStart, perPage);
+
+                      //   if (mounted) {
+                      //   print(pageStart);
+                      // if(course.isNotEmpty)
+                      // {
+                      setState(() {
+                        page = page + 1;
+                        isLoading = true;
+                      });
+                      //    provider.setCourseList(course);
+                      // }
+
+                      // if (mounted) {
+                      //   setState(() {
+                      //     _isLoading = false;
+                      //   });
+                      // }
+                      // }
+                    },
+                    icon: const Icon(Icons.navigate_next)),
+              ],
+            )
         ]),
       ),
     );

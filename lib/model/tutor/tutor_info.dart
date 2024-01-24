@@ -79,3 +79,14 @@ class TutorInfo {
     return data;
   }
 }
+class SecondInfo {
+   TutorInfo? tutorInfo;
+
+  SecondInfo({
+    required this.tutorInfo,
+  });
+
+   SecondInfo.fromJson(Map<String, dynamic> json) {
+    tutorInfo = TutorInfo.fromJson(json['tutorInfo']) ;
+  }
+}

@@ -52,6 +52,28 @@ class _TeacherList extends State<TeacherList> {
   List<Tutor> tutor_list = [];
   List<TutorInfo> tutorinfo = [];
   String selectedIndex = '';
+  int itemsPerPage = 9;
+  int currentPage = 0;
+  void nextPage() {
+    final provider =
+        Provider.of<AccountSessionProvider>(context, listen: false);
+        print(provider.tutor_list.length);
+    if (currentPage <
+        (provider.tutor_list.length / itemsPerPage).ceil() - 1) {
+      setState(() {
+        currentPage++;
+      });
+    }
+  }
+
+
+  void previousPage() {
+    if (currentPage > 0) {
+      setState(() {
+        currentPage--;
+      });
+    }
+  }
   Future<void> FetchData(AccountSessionProvider provider) async {
     print(pageStart);
     final data = await TutorService.GetListTutors(accessToken, pageStart, 9);
@@ -60,10 +82,7 @@ class _TeacherList extends State<TeacherList> {
     if (data.isNotEmpty) {
       provider.setReview(data);
       provider.setTutorList(result);
-      final favorite = provider.tutor_list
-          .where((element) => element.isFavorite == true)
-          .toList();
-      provider.setFavoriteList(favorite);
+      provider.sortTutorList();
       setState(() {
         isEmpty = false;
       });
@@ -83,17 +102,18 @@ class _TeacherList extends State<TeacherList> {
     });
     super.initState();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
     KeywordProvider keywordProvider = context.watch<KeywordProvider>();
-
-    if (_isLoading) {
-      print("Fetching");
-      FetchData(provider);
-    }
+    final startIndex = currentPage * itemsPerPage;
+    final endIndex = (currentPage + 1) * itemsPerPage;
+    // if (_isLoading) {
+    //   print("Fetching");
+    //   FetchData(provider);
+    // }
     return Scaffold(
       body: Container(
         padding: EdgeInsets.all(10),
@@ -116,14 +136,14 @@ class _TeacherList extends State<TeacherList> {
                               child: CircularProgressIndicator(),
                             );
                           });
-                      int count = await TutorService.GetTutorCount(
-                          accessToken, pageStart, 1);
-                      List<Tutor> tutor = await TutorService.GetListTutors(
-                          accessToken, pageStart, count);
-                      List<TutorInfo> tutorinfo = await Future.wait(tutor.map(
-                          (tutor) => TutorService.GetTutorData(
-                              accessToken, tutor.userId!)));
-                      provider.setSearchList(tutorinfo);
+                      // int count = await TutorService.GetTutorCount(
+                      //     accessToken, pageStart, 1);
+                      // List<Tutor> tutor = await TutorService.GetListTutors(
+                      //     accessToken, pageStart, count);
+                      // List<TutorInfo> tutorinfo = await Future.wait(tutor.map(
+                      //     (tutor) => TutorService.GetTutorData(
+                      //         accessToken, tutor.userId!)));
+                      // provider.setSearchList(tutorinfo);
                       Navigator.pop(context);
                       Navigator.push(
                           context,
@@ -137,7 +157,7 @@ class _TeacherList extends State<TeacherList> {
                 const SizedBox(
                   width: 10,
                 ),
-               
+
                 // ElevatedButton(
                 //     style:
                 //         ElevatedButton.styleFrom(primary: Colors.white),
@@ -181,109 +201,113 @@ class _TeacherList extends State<TeacherList> {
                   ? const Center(
                       child: Text("No tutors are available"),
                     )
-                  : _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: provider.tutor_list.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: TeacherItem(
-                                teacher: provider.tutor_list[index],
-                              ),
-                            );
-                          }),
+                  // : _isLoading
+                  //     ? const Center(
+                  //         child: CircularProgressIndicator(),
+                  //       )
+                  : ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount:provider.tutor_list.sublist(
+                              startIndex,
+                              endIndex.clamp(
+                                  0, provider.tutor_list.length))
+                          .length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: TeacherItem(
+                            teacher: provider.tutor_list[index + startIndex],
+                          ),
+                        );
+                      }),
             ),
-            _isLoading
-                ? Container()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            // if (mounted) {
-                            //   setState(() {
-                            //     _isLoading = true;
-                            //   });
-                            // }
-                            // if (_isLoading) {
-                            //   showDialog(
-                            //       context: context,
-                            //       builder: (context) {
-                            //         return const Center(
-                            //           child: CircularProgressIndicator(),
-                            //         );
-                            //       });
-                            //   await Future.delayed(const Duration(seconds: 3));
-                            //   Navigator.pop(context);
-                            // }
-                            if (pageStart > 1) {
-                              // if (mounted) {
-                              print("first");
-                              setState(() {
-                                pageStart = pageStart - 1;
-                                _isLoading = true;
-                              });
-                              // }
-                              // provider.setTutorList(tutorinfo);
-                              // provider.setReview(tutor_list);
-                              // if (mounted) {
-                              //   setState(() {
-                              //     _isLoading = false;
-                              //   });
-                              // }
-                            }
-                          },
-                          icon: const Icon(Icons.navigate_before)),
-                      Text('$pageStart'),
-                      IconButton(
-                          onPressed: () {
-                            // if (mounted) {
-                            //   setState(() {
-                            //     _isLoading = true;
-                            //   });
-                            // }
-                            // if (_isLoading) {
-                            //   showDialog(
-                            //       context: context,
-                            //       builder: (context) {
-                            //         return const Center(
-                            //           child: CircularProgressIndicator(),
-                            //         );
-                            //       });
-                            //   await Future.delayed(const Duration(seconds: 3));
-                            //   Navigator.pop(context);
-                            // }
-                            // if (pageStart != pageEnd) {
-                            // if (mounted) {
-                            setState(() {
-                              pageStart = pageStart + 1;
-                              _isLoading = true;
-                            });
-                            // }
+            // _isLoading
+            //     ? Container()
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: previousPage,//() {
+                    //   // if (mounted) {
+                    //   //   setState(() {
+                    //   //     _isLoading = true;
+                    //   //   });
+                    //   // }
+                    //   // if (_isLoading) {
+                    //   //   showDialog(
+                    //   //       context: context,
+                    //   //       builder: (context) {
+                    //   //         return const Center(
+                    //   //           child: CircularProgressIndicator(),
+                    //   //         );
+                    //   //       });
+                    //   //   await Future.delayed(const Duration(seconds: 3));
+                    //   //   Navigator.pop(context);
+                    //   // }
+                    //   if (pageStart > 1) {
+                    //     // if (mounted) {
+                    //     print("first");
+                    //     setState(() {
+                    //       pageStart = pageStart - 1;
+                    //       _isLoading = true;
+                    //     });
+                    //     // }
+                    //     // provider.setTutorList(tutorinfo);
+                    //     // provider.setReview(tutor_list);
+                    //     // if (mounted) {
+                    //     //   setState(() {
+                    //     //     _isLoading = false;
+                    //     //   });
+                    //     // }
+                    //   }
+                    // },
+                    icon: const Icon(Icons.navigate_before)),
+                Text('${currentPage + 1}'),
+                IconButton(
+                    onPressed: nextPage,//() {
+                    //   // if (mounted) {
+                    //   //   setState(() {
+                    //   //     _isLoading = true;
+                    //   //   });
+                    //   // }
+                    //   // if (_isLoading) {
+                    //   //   showDialog(
+                    //   //       context: context,
+                    //   //       builder: (context) {
+                    //   //         return const Center(
+                    //   //           child: CircularProgressIndicator(),
+                    //   //         );
+                    //   //       });
+                    //   //   await Future.delayed(const Duration(seconds: 3));
+                    //   //   Navigator.pop(context);
+                    //   // }
+                    //   // if (pageStart != pageEnd) {
+                    //   // if (mounted) {
+                    //   setState(() {
+                    //     pageStart = pageStart + 1;
+                    //     _isLoading = true;
+                    //   });
+                    //   // }
 
-                            // List<Tutor> tutor_list =
-                            //     await TutorService.GetListTutors(
-                            //         accessToken, pageStart, 9);
-                            // List<TutorInfo> tutorinfo = await Future.wait(
-                            //     tutor_list.map((tutor) => TutorService.GetTutorData(
-                            //         accessToken, tutor.userId!)));
+                    //   // List<Tutor> tutor_list =
+                    //   //     await TutorService.GetListTutors(
+                    //   //         accessToken, pageStart, 9);
+                    //   // List<TutorInfo> tutorinfo = await Future.wait(
+                    //   //     tutor_list.map((tutor) => TutorService.GetTutorData(
+                    //   //         accessToken, tutor.userId!)));
 
-                            // provider.setTutorList(tutorinfo);
-                            // provider.setReview(tutor_list);
-                            // if (mounted) {
-                            //   setState(() {
-                            //     _isLoading = false;
-                            //   });
-                            // }
-                            // }
-                          },
-                          icon: const Icon(Icons.navigate_next)),
-                    ],
-                  )
+                    //   // provider.setTutorList(tutorinfo);
+                    //   // provider.setReview(tutor_list);
+                    //   // if (mounted) {
+                    //   //   setState(() {
+                    //   //     _isLoading = false;
+                    //   //   });
+                    //   // }
+                    //   // }
+                    // },
+                    icon: const Icon(Icons.navigate_next)),
+              ],
+            )
           ],
         ),
       ),

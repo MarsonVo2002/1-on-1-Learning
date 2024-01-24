@@ -221,8 +221,8 @@ class _TeacherState extends State<Teacher> {
 
   @override
   Widget build(BuildContext context) {
-    AccountSessionProvider tutor = context.watch<AccountSessionProvider>();
-    Tutor review = tutor.review
+    AccountSessionProvider provider = context.watch<AccountSessionProvider>();
+    Tutor review = provider.review
         .firstWhere((element) => element.userId == widget.info.user!.id);
     List<DateTime> timetable = widget.schedules
         .map((e) => DateTime.fromMillisecondsSinceEpoch(e.startTimestamp ?? 0))
@@ -236,6 +236,13 @@ class _TeacherState extends State<Teacher> {
     for (int i = 0; i < timetable.length; i++) {
       print(timetable[i]);
     }
+    final learnTopics = provider.topic
+          .where((topic) => widget.info.specialties?.split(',').contains(topic.key) ?? false)
+          .map((e) => e.name ?? 'null');
+      final testPreparations = provider.test
+          .where((test) => widget.info.specialties?.split(',').contains(test.key) ?? false)
+          .map((e) => e.name ?? 'null');
+    List<String> specialties = [...learnTopics, ...testPreparations];
     // TODO: implement build
     return Scaffold(
       body: Container(
@@ -332,7 +339,7 @@ class _TeacherState extends State<Teacher> {
                     : Chewie(controller: controller!),
               ),
               LanguagesSection(items: widget.info.languages!.split(',')),
-              SpecialtiesSection(items: widget.info.specialties!.split(',')),
+              SpecialtiesSection(items:specialties),
               // SuggestedCourseSection(),
               OtherSection(title: 'Interests', content: widget.info.interests!),
               OtherSection(
@@ -349,7 +356,7 @@ class _TeacherState extends State<Teacher> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   widget.schedules.isNotEmpty?
-                  Date(timetable, context, widget.schedules, tutor):Center(child: Text("No classes available"),)
+                  Date(timetable, context, widget.schedules, provider):Center(child: Text("No classes available"),)
                 ],
               ),
                Container(

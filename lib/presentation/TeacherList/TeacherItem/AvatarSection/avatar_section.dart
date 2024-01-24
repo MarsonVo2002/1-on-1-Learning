@@ -44,6 +44,7 @@ class AvatarSection extends StatefulWidget {
 }
 
 class _AvatarSectionState extends State<AvatarSection> {
+
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider session_provider =
@@ -113,26 +114,27 @@ class _AvatarSectionState extends State<AvatarSection> {
         ),
         IconButton(
             onPressed: () async {
-              if (widget.teacher.isFavorite = false) {
-                await TutorService.AddFavorite(
-                    accessToken, widget.teacher.user!.id!);
-                setState(() {
+              if (widget.teacher.isFavorite == false) {
+                 setState(() {
                   widget.teacher.isFavorite = true;
                 });
+                await TutorService.AddFavorite(
+                    accessToken, widget.teacher.user!.id!);
+               
                 session_provider.addFavorite(widget.teacher);
               } else {
-                await TutorService.AddFavorite(
-                    accessToken, widget.teacher.user!.id!);
-                setState(() {
+                  setState(() {
                   widget.teacher.isFavorite = false;
-                });             
+                });
                 await TutorService.AddFavorite(
                     accessToken, widget.teacher.user!.id!);
+                           
                 session_provider.deleteFavorite(widget.teacher);
               }
+              session_provider.sortTutorList();
             },
             icon: Image(
-              image: session_provider.favorite.contains(widget.teacher)
+              image: widget.teacher.isFavorite ?? false
                   ? const AssetImage('asset/icons/fill_heart.png')
                   : const AssetImage('asset/icons/love.png'),
               width: 20,

@@ -52,9 +52,9 @@ class TutorService {
 
     return  tutors.map((tutor) => Tutor.fromJson(tutor)).toList();
   }
-  static Future<int> GetTutorCount(String token, int pageStart,int perPage) async {
+  static Future<int> GetTutorCount(String token) async {
     String apiUrl =
-        'https://sandbox.api.lettutor.com/tutor/more?perPage=$perPage&page=$pageStart';
+        'https://sandbox.api.lettutor.com/tutor/more?perPage=9&page=1';
     final response = await http.get(
       Uri.parse(apiUrl),
       headers: {
@@ -81,7 +81,7 @@ class TutorService {
     return tutors.map((e) => Tutor.fromJson(e)).toList();
   }
 
-  static Future<List<Tutor>> GetFavoriteListTutors(
+  static Future<List<String>> GetFavoriteListTutors(
       String token, int pageStart, int perPage) async {
     String apiUrl =
         'https://sandbox.api.lettutor.com/tutor/more?perPage=$perPage&page=$pageStart';
@@ -93,9 +93,15 @@ class TutorService {
       },
     );
     final body = json.decode(response.body);
-    final List tutors = body['tutors']['favoriteTutor'];
-    print(tutors.length);
-    return tutors.map((e) => Tutor.fromJson(e)).toList();
+    final List data = body['favoriteTutor'];
+   List<String> id = [];
+
+     for (var item in data) {
+        id.add(item['secondId']);
+    
+    }
+
+   return id;
   }
 
   static Future<void> AddFavorite(String token, String userId) async {

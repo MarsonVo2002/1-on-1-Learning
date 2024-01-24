@@ -69,18 +69,25 @@ class _Login extends State<Login> {
 
     void _loadData(String accessToken) async {
       User user = await UserInfoService.GetUserData(accessToken);
-      List<Tutor> tutor = await TutorService.GetListTutors(accessToken, 1, 9);
-      List<Course> course = await CourseService.GetCourseList(accessToken,1, 8);
-      List<BookingInfo> info = await BookingService.GetBookedClass(accessToken,1,20);
+      int count = await TutorService.GetTutorCount(accessToken);
+      List<Tutor> tutor =
+          await TutorService.GetListTutors(accessToken, 1, count);
+      List<Course> course =
+          await CourseService.GetCourseList(accessToken, 1, 8);
+      List<BookingInfo> info =
+          await BookingService.GetBookedClass(accessToken, 1, 20);
       List<BookingInfo> history =
-          await BookingService.GetBookedClass(accessToken,1,20);
+          await BookingService.GetBookedClass(accessToken, 1, 20);
       List<TutorInfo> tutorinfo = await Future.wait(tutor.map(
           (tutor) => TutorService.GetTutorData(accessToken, tutor.userId!)));
       List<TestPreparation> test =
           await UserInfoService.GetTestPreparation(accessToken);
       List<LearnTopic> topic =
           await UserInfoService.GetLearningTopic(accessToken);
-      List<BookingInfo> upcoming = await BookingService.GetAllUpcomingClasses(accessToken);
+      List<BookingInfo> upcoming =
+          await BookingService.GetAllUpcomingClasses(accessToken);
+      List<TutorInfo> favorite =
+          tutorinfo.where((element) => element.isFavorite == true).toList();
       sessionProvider.setUser(user);
       sessionProvider.setReview(tutor);
       sessionProvider.setTutorList(tutorinfo);
@@ -90,12 +97,10 @@ class _Login extends State<Login> {
       sessionProvider.setBookedClass(info);
       sessionProvider.setHistory(history);
       sessionProvider.setUpcomingClasses(upcoming);
-      List<TutorInfo> favorite = sessionProvider.tutor_list
-          .where((element) => element.isFavorite == true)
-          .toList();
       sessionProvider.setFavoriteList(favorite);
       sessionProvider.sortBookedClasses();
       sessionProvider.sortUpcomingClasses();
+      sessionProvider.sortTutorList();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Home()),
@@ -117,7 +122,6 @@ class _Login extends State<Login> {
         });
         _loadData(accessToken);
       } else {
-        // Show an error message
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -143,50 +147,49 @@ class _Login extends State<Login> {
       final result = await FacebookAuth.instance.login();
       if (result.status == LoginStatus.success) {
         String token = result.accessToken!.token;
-         try {
-            setState(() {
-              isLoading = true;
-            });
+        try {
+          setState(() {
+            isLoading = true;
+          });
 
-            var response = await LoginService.FacebookLogin(token);
-            if (response.statusCode == 200) {
-              Map<String, dynamic> jsonData = json.decode(response.body);
-              setState(() {
-                accessToken = jsonData['tokens']['access']['token'];
-              });
-              _loadData(accessToken);
-            } else {
-              // Show an error message
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text("Login Failed"),
-                  content: const Text("Google login failed"),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text("OK"),
-                    ),
-                  ],
-                ),
-              );
-            }
+          var response = await LoginService.FacebookLogin(token);
+          if (response.statusCode == 200) {
+            Map<String, dynamic> jsonData = json.decode(response.body);
             setState(() {
-              isLoading = false;
+              accessToken = jsonData['tokens']['access']['token'];
             });
-          } catch (e) {
-            if (mounted) {
-              print('error 1');
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text('Error Login with Facebook: ${e.toString()}')),
-              );
-            }
+            _loadData(accessToken);
+          } else {
+            // Show an error message
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text("Login Failed"),
+                content: const Text("Google login failed"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("OK"),
+                  ),
+                ],
+              ),
+            );
           }
-      }
-      else{
+          setState(() {
+            isLoading = false;
+          });
+        } catch (e) {
+          if (mounted) {
+            print('error 1');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text('Error Login with Facebook: ${e.toString()}')),
+            );
+          }
+        }
+      } else {
         print('error');
       }
     }

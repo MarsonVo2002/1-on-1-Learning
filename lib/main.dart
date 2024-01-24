@@ -116,6 +116,33 @@ class AccountSessionProvider extends ChangeNotifier {
     booked_class= info;
     notifyListeners();
   }
+  void sortTutorList()
+  {
+    tutor_list.sort((a, b) {
+      int favoriteComparison = (b.isFavorite == true ? 1 : 0) - (a.isFavorite == true ? 1 : 0);
+
+    // If isFavorite is the same, compare by rating
+    if (favoriteComparison == 0) {
+      if (a.rating != null && b.rating != null) {
+        return b.rating!.compareTo(a.rating!);
+      } else if (a.rating != null) {
+        return -1; // Move items with null rating to the end
+      } else if (b.rating != null) {
+        return 1; // Move items with null rating to the end
+      } else {
+        return 0; // Both ratings are null
+      }
+    }
+
+    return favoriteComparison;
+      });
+      review.sort((a, b) {
+        int indexA = tutor_list.indexWhere((info) => info.user!.id == a.userId);
+        int indexB = tutor_list.indexWhere((info) => info.user!.id == b.userId);
+        return indexA.compareTo(indexB);
+      });
+      notifyListeners();
+  }
   void sortBookedClasses()
   {
     booked_class.sort(
