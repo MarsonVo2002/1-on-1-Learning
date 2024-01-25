@@ -20,9 +20,14 @@ import 'package:lettutor/presentation/Login/login.dart';
 import 'package:lettutor/presentation/Schedule/schedule.dart';
 import 'package:lettutor/presentation/Setting/setting.dart';
 import 'package:lettutor/presentation/TeacherList/teacherlist.dart';
+import 'package:lettutor/provider/language_provider.dart';
+import 'package:lettutor/provider/theme_provider.dart';
+import 'package:lettutor/theme/theme.dart';
 import 'package:provider/provider.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => ThemeProvider(), child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -69,82 +74,83 @@ class AccountSessionProvider extends ChangeNotifier {
   List<TutorInfo> tutor_list = [];
   List<TutorInfo> search_tutor = [];
   List<Course> course_list = [];
-  List<TutorInfo> favorite =[];
+  List<TutorInfo> favorite = [];
   List<BookingInfo> booked_class = [];
   List<BookingInfo> history = [];
   List<TestPreparation> test = [];
   List<LearnTopic> topic = [];
   List<BookingInfo> upcoming_classes = [];
   List<Tutor> review = [];
-  void setTests(List<TestPreparation> list)
-  {
+  void setTests(List<TestPreparation> list) {
     test.clear();
     test = list;
     notifyListeners();
   }
-  void setUpcomingClasses(List<BookingInfo> upcoming)
-  {
+
+  void setUpcomingClasses(List<BookingInfo> upcoming) {
     upcoming_classes.clear();
     upcoming_classes = upcoming;
     notifyListeners();
   }
-  void setTopics(List<LearnTopic> list)
-  {
+
+  void setTopics(List<LearnTopic> list) {
     topic.clear();
     topic = list;
     notifyListeners();
   }
-  void setReview(List<Tutor> tutor)
-  {
-    review = tutor; 
-     notifyListeners();
+
+  void setReview(List<Tutor> tutor) {
+    review = tutor;
+    notifyListeners();
   }
+
   void addHistory(ClassInfo info) {
     account.history_list.add(info);
     print('add to favourite');
     notifyListeners();
   }
-  void setHistory(List<BookingInfo> info)
-  {
+
+  void setHistory(List<BookingInfo> info) {
     history.clear();
     history = info;
     notifyListeners();
-  } 
-  void setBookedClass(List<BookingInfo> info)
-  {
+  }
+
+  void setBookedClass(List<BookingInfo> info) {
     booked_class.clear();
-    booked_class= info;
+    booked_class = info;
     notifyListeners();
   }
-  void sortTutorList()
-  {
+
+  void sortTutorList() {
     tutor_list.sort((a, b) {
-      int favoriteComparison = (b.isFavorite == true ? 1 : 0) - (a.isFavorite == true ? 1 : 0);
+      int favoriteComparison =
+          (b.isFavorite == true ? 1 : 0) - (a.isFavorite == true ? 1 : 0);
 
-    // If isFavorite is the same, compare by rating
-    if (favoriteComparison == 0) {
-      if (a.rating != null && b.rating != null) {
-        return b.rating!.compareTo(a.rating!);
-      } else if (a.rating != null) {
-        return -1; // Move items with null rating to the end
-      } else if (b.rating != null) {
-        return 1; // Move items with null rating to the end
-      } else {
-        return 0; // Both ratings are null
+      // If isFavorite is the same, compare by rating
+      if (favoriteComparison == 0) {
+        if (a.rating != null && b.rating != null) {
+          return b.rating!.compareTo(a.rating!);
+        } else if (a.rating != null) {
+          return -1; // Move items with null rating to the end
+        } else if (b.rating != null) {
+          return 1; // Move items with null rating to the end
+        } else {
+          return 0; // Both ratings are null
+        }
       }
-    }
 
-    return favoriteComparison;
-      });
-      review.sort((a, b) {
-        int indexA = tutor_list.indexWhere((info) => info.user!.id == a.userId);
-        int indexB = tutor_list.indexWhere((info) => info.user!.id == b.userId);
-        return indexA.compareTo(indexB);
-      });
-      notifyListeners();
+      return favoriteComparison;
+    });
+    review.sort((a, b) {
+      int indexA = tutor_list.indexWhere((info) => info.user!.id == a.userId);
+      int indexB = tutor_list.indexWhere((info) => info.user!.id == b.userId);
+      return indexA.compareTo(indexB);
+    });
+    notifyListeners();
   }
-  void sortBookedClasses()
-  {
+
+  void sortBookedClasses() {
     booked_class.sort(
       (a, b) {
         DateTime dateTimeA = DateTime.fromMillisecondsSinceEpoch(
@@ -171,8 +177,8 @@ class AccountSessionProvider extends ChangeNotifier {
     );
     notifyListeners();
   }
-   void sortUpcomingClasses()
-  {
+
+  void sortUpcomingClasses() {
     upcoming_classes.sort(
       (a, b) {
         DateTime dateTimeA = DateTime.fromMillisecondsSinceEpoch(
@@ -199,49 +205,50 @@ class AccountSessionProvider extends ChangeNotifier {
     );
     notifyListeners();
   }
-  void setFavoriteList(List<TutorInfo> tutors)
-  {
+
+  void setFavoriteList(List<TutorInfo> tutors) {
     favorite.clear();
     favorite = tutors;
     notifyListeners();
   }
-  void addFavorite(TutorInfo tutor)
-  {
+
+  void addFavorite(TutorInfo tutor) {
     favorite.add(tutor);
     notifyListeners();
   }
-  void deleteFavorite(TutorInfo tutor)
-  {
+
+  void deleteFavorite(TutorInfo tutor) {
     favorite.remove(tutor);
     notifyListeners();
   }
-  void deleteBookedClass()
-  {
+
+  void deleteBookedClass() {
     notifyListeners();
   }
-  void setUser(User u)
-  {
+
+  void setUser(User u) {
     user = u;
     notifyListeners();
   }
-  void setCourseList(List<Course> course)
-  {
+
+  void setCourseList(List<Course> course) {
     course_list.clear();
     course_list = course;
     notifyListeners();
   }
-  void setTutorList(List<TutorInfo> tutor)
-  {
+
+  void setTutorList(List<TutorInfo> tutor) {
     tutor_list.clear();
     tutor_list = tutor;
     notifyListeners();
   }
-   void setSearchList(List<TutorInfo> tutor)
-  {
+
+  void setSearchList(List<TutorInfo> tutor) {
     search_tutor.clear();
     search_tutor = tutor;
     notifyListeners();
   }
+
   void addTeacher(TeacherDTO teacher) {
     account.teacher_list.add(teacher);
     print('add to favourite');
@@ -287,6 +294,7 @@ class AccountSessionProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
 class ClassInfoProvider extends ChangeNotifier {
   List<ClassInfo> list = [];
   int totalLessonTime = 0;
@@ -485,36 +493,26 @@ class TeacherProvider extends ChangeNotifier {
 }
 
 class _MyApp extends State<MyApp> {
-  final provider = AccountProvider();
-  final teacherprovider = TeacherProvider();
-  final keywordprovider = KeywordProvider();
-  final courseprovider = CourseProvider();
-  final favouriteprovider = FavouriteProvider();
-  final classinfoprovider = ClassInfoProvider();
-  final historyprovider = HistoryProvider();
   final accountsessionprovider = AccountSessionProvider();
+  final language_provider = LanguageProvider();
+  final theme_provider = ThemeProvider();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => provider),
-        ChangeNotifierProvider(create: (context) => teacherprovider),
-        ChangeNotifierProvider(create: (context) => keywordprovider),
-        ChangeNotifierProvider(create: (context) => favouriteprovider),
-        ChangeNotifierProvider(create: (context) => classinfoprovider),
-        ChangeNotifierProvider(create: (context) => historyprovider),
-        ChangeNotifierProvider(create: (context) => courseprovider),
-        ChangeNotifierProvider(create: (context) => accountsessionprovider)
+        ChangeNotifierProvider(create: (context) => accountsessionprovider),
+        ChangeNotifierProvider(create: (context) => language_provider),
       ],
       child: MaterialApp(
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
+          theme: Provider.of<ThemeProvider>(context).theme,
           home: Scaffold(
             appBar: AppBar(
-              title: const Text('Lettutor'),
+              title: const Image(
+                image: AssetImage('asset/images/lettutor_logo.png'),
+                width: 175,
+                height: 40,
+              ),
             ),
             body: Center(
               child: Login(),
@@ -552,7 +550,11 @@ class _Home extends State<Home> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lettutor'),
+        title: const Image(
+          image: AssetImage('asset/images/lettutor_logo.png'),
+          width: 175,
+          height: 40,
+        ),
       ),
       body: pages.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(

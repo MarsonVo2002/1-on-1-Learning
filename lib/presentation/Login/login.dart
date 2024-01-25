@@ -5,6 +5,9 @@ import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/model/course/course.dart';
+import 'package:lettutor/model/language/english.dart';
+import 'package:lettutor/model/language/language.dart';
+import 'package:lettutor/model/language/vietnamese.dart';
 import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
 import 'package:lettutor/model/tutor/tutor_info.dart';
@@ -14,6 +17,8 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:lettutor/model/user/user.dart';
 import 'package:lettutor/presentation/ResetPassword/email.dart';
 import 'package:lettutor/presentation/Signup/signup.dart';
+import 'package:lettutor/provider/language_provider.dart';
+import 'package:lettutor/provider/theme_provider.dart';
 import 'package:lettutor/services/booking_service.dart';
 import 'package:lettutor/services/course_service.dart';
 import 'package:lettutor/services/login_service.dart';
@@ -35,19 +40,23 @@ class _Login extends State<Login> {
   String password_error = '';
   bool isLoading = false;
   bool isValid = false;
+  String s = language.first;
   final _googleSignIn = GoogleSignIn();
+  bool isLight = true;
+  bool isEnglish = true;
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider sessionProvider =
         context.watch<AccountSessionProvider>();
+    LanguageProvider language_provider = context.watch<LanguageProvider>();
     void _validation() {
       final emailRegExp = RegExp(
           r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
       if (_emailController.text.isEmpty) {
-        email_error = 'Email is empty';
+        email_error = language_provider.language.emptyEmail;
         isValid = false;
       } else if (!emailRegExp.hasMatch(_emailController.text)) {
-        email_error = 'Email is invalid';
+        email_error = language_provider.language.invalidEmail;
         isValid = false;
       } else {
         email_error = '';
@@ -55,10 +64,10 @@ class _Login extends State<Login> {
       }
 
       if (_passwordController.text.isEmpty) {
-        password_error = 'Password is empty';
+        password_error = language_provider.language.emptyPassword;
         isValid = false;
       } else if (_passwordController.text.length < 6) {
-        password_error = 'Password is to short';
+        password_error = language_provider.language.passwordTooShort;
         isValid = false;
       } else {
         password_error = '';
@@ -88,6 +97,8 @@ class _Login extends State<Login> {
           await BookingService.GetAllUpcomingClasses(accessToken);
       List<TutorInfo> favorite =
           tutorinfo.where((element) => element.isFavorite == true).toList();
+      var total = await UserInfoService.GetTotalLessonTime(accessToken);
+      total_time = Duration(minutes: total);
       sessionProvider.setUser(user);
       sessionProvider.setReview(tutor);
       sessionProvider.setTutorList(tutorinfo);
@@ -273,6 +284,68 @@ class _Login extends State<Login> {
             children: [
               ListView(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Provider.of<ThemeProvider>(context, listen: false)
+                                .setTheme();
+                            setState(() {
+                              if (isLight == true) {
+                                isLight = false;
+                              } else {
+                                isLight = true;
+                              }
+                            });
+                          },
+                          icon: isLight
+                              ? Icon(Icons.light_mode)
+                              : Icon(Icons.dark_mode)),
+                      IconButton(
+                          onPressed: () {
+                            language_provider.setLanguage();
+                            setState(() {
+                              if (isEnglish == true) {
+                                isEnglish = false;
+                              } else {
+                                isEnglish = true;
+                              }
+                            });
+                          },
+                          icon: isEnglish
+                              ? Container(
+                                  width: 30,
+                                  height: 30,
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Image(
+                                  image: AssetImage('asset/icons/unitedstates.png'),
+                                  
+                                ))
+                              : Container(
+                                  width: 30,
+                                  height: 30,
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Image(
+                                  image: AssetImage('asset/icons/vietnam.png'),
+                                 
+                                )))
+                      // TextButton(
+                      //     onPressed: () {
+                      //       Provider.of<ThemeProvider>(context,listen: false).setTheme();
+                      //     },
+                      //     child: const Text(
+                      //       "Change theme",
+                      //       style: TextStyle(color: Colors.blue),
+                      //     )),
+                    ],
+                  ),
                   const Text(
                     'Say hello to your English tutors',
                     style: TextStyle(
@@ -312,8 +385,8 @@ class _Login extends State<Login> {
                         const SizedBox(
                           height: 20,
                         ),
-                        const Text(
-                          'Password',
+                        Text(
+                          language_provider.language.password,
                           style: TextStyle(color: Colors.grey, fontSize: 18),
                         ),
                         TextField(
@@ -350,7 +423,7 @@ class _Login extends State<Login> {
                                         builder: (context) => Email()));
                               },
                               child: Text(
-                                'Forgot password?',
+                                language_provider.language.forgotPassword,
                                 style: TextStyle(color: Colors.blue),
                               )),
                           SizedBox(
@@ -360,8 +433,8 @@ class _Login extends State<Login> {
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.blue,
                                 ),
-                                child: const Text(
-                                  'LOGIN',
+                                child: Text(
+                                  language_provider.language.login,
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 18),
                                 ),
@@ -373,7 +446,7 @@ class _Login extends State<Login> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text('Or continue with'),
+                          Text(language_provider.language.loginWith),
                           const SizedBox(
                             height: 20,
                           ),
@@ -410,7 +483,8 @@ class _Login extends State<Login> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Not a member yet?'),
+                              Text(
+                                  '${language_provider.language.registerQuestion}?'),
                               TextButton(
                                   onPressed: () async {
                                     Navigator.push(
@@ -419,7 +493,7 @@ class _Login extends State<Login> {
                                             builder: (context) => SignUp()));
                                   },
                                   child: Text(
-                                    'Sign up',
+                                    language_provider.language.register,
                                     style: TextStyle(color: Colors.blue),
                                   ))
                             ],

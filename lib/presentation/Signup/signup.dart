@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/account-dto.dart';
+import 'package:lettutor/model/language/language.dart';
 import 'package:lettutor/presentation/Login/login.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/login_service.dart';
 import 'package:provider/provider.dart';
 
@@ -23,14 +25,15 @@ class _SignUp extends State<SignUp> {
   bool isValid = false;
   @override
   Widget build(BuildContext context) {
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     void _validation() {
       final emailRegExp = RegExp(
           r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
       if (_emailController.text.isEmpty) {
-        email_error = 'Email is empty';
+        email_error = languageProvider.language.emptyEmail;
         isValid = false;
       } else if (!emailRegExp.hasMatch(_emailController.text)) {
-        email_error = 'Email is invalid';
+        email_error = languageProvider.language.invalidEmail;
         isValid = false;
       } else {
         email_error = '';
@@ -38,10 +41,10 @@ class _SignUp extends State<SignUp> {
       }
 
       if (_passwordController.text.isEmpty) {
-        password_error = 'Password is empty';
+        password_error =  languageProvider.language.emptyPassword;
         isValid = false;
       } else if (_passwordController.text.length < 6) {
-        password_error = 'Password is to short';
+        password_error =  languageProvider.language.passwordTooShort;
         isValid = false;
       } else {
         password_error = '';
@@ -50,7 +53,7 @@ class _SignUp extends State<SignUp> {
       setState(() {});
     }
 
-    AccountProvider provider = context.watch<AccountProvider>();
+   
     void _signup() async {
       String email = _emailController.text;
       String password = _passwordController.text;
@@ -65,7 +68,7 @@ class _SignUp extends State<SignUp> {
 
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Please check your email')),
+              SnackBar(content: Text(languageProvider.language.sendRecoveryEmailSuccess)),
             );
             Navigator.pop(context);
           }
@@ -97,7 +100,7 @@ class _SignUp extends State<SignUp> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Sign up',
+          languageProvider.language.register,
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue,
@@ -133,8 +136,8 @@ class _SignUp extends State<SignUp> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  'Password',
+                 Text(
+                  languageProvider.language.password,
                   style: TextStyle(color: Colors.grey, fontSize: 18),
                 ),
                 TextField(
@@ -154,8 +157,8 @@ class _SignUp extends State<SignUp> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  'Confirm Password',
+                 Text(
+                  languageProvider.language.confirmPassword,
                   style: TextStyle(color: Colors.grey, fontSize: 18),
                 ),
                 TextField(
@@ -190,8 +193,8 @@ class _SignUp extends State<SignUp> {
                       style: ElevatedButton.styleFrom(
                         primary: Colors.blue,
                       ),
-                      child: const Text(
-                        'Back',
+                      child:  Text(
+                        languageProvider.language.back,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     )),
@@ -201,8 +204,8 @@ class _SignUp extends State<SignUp> {
                       style: ElevatedButton.styleFrom(
                         primary: Colors.blue,
                       ),
-                      child: const Text(
-                        'Sign Up',
+                      child:  Text(
+                        languageProvider.language.register,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ))

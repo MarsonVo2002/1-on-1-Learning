@@ -57,7 +57,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_launcher_icons: ^0.9.2
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "asset/icons/Lettutor.png"
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -88,6 +92,10 @@ flutter:
       - asset/images/English.jpg
       - asset/images/myaccount.png
       - asset/icons/fill_heart.png
+      - asset/images/lettutor_logo.png
+      - asset/icons/Lettutor.png
+      - asset/icons/unitedstates.png
+      - asset/icons/vietnam.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

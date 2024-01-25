@@ -152,4 +152,20 @@ class UserInfoService {
     }
     return User.fromJson(jsonDecode['user']);
   }
+  static GetTotalLessonTime(String token) async {
+    final response = await http.get(
+      Uri.parse('https://sandbox.api.lettutor.com/call/total'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    final body = json.decode(response.body);
+
+    if (response.statusCode != 200) {
+      print('Error');
+    }
+
+    return body['total'];
+  }
 }

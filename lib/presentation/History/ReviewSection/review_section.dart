@@ -4,6 +4,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/schedule/booking_info.dart';
+import 'package:lettutor/model/tutor/tutor_feedback.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
 
@@ -11,10 +13,44 @@ class ReviewSection extends StatefulWidget {
   final DateTime startTime;
   final DateTime endTime;
   final BookingInfo info;
-  ReviewSection({super.key,  required this.info, required this.startTime, required this.endTime});
+  ReviewSection(
+      {super.key,
+      required this.info,
+      required this.startTime,
+      required this.endTime});
 
   @override
   State<ReviewSection> createState() => _ReviewSectionState();
+}
+
+Widget Review(List<TutorFeedback> items, BuildContext context) {
+  return Container(
+      height: 50,
+      child: ListView.builder(
+          itemCount: items.length,
+          itemBuilder: (context, int index) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  items[index].content!,
+                
+                ),
+                RatingBar.builder(
+                  initialRating: items[index].rating?.toDouble() ?? 0,
+                  minRating: 0,
+                  maxRating: 5,
+                  allowHalfRating: false,
+                  direction: Axis.horizontal,
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (double value) {},
+                ),
+              ],
+            );
+          }));
 }
 
 class _ReviewSectionState extends State<ReviewSection> {
@@ -24,13 +60,10 @@ class _ReviewSectionState extends State<ReviewSection> {
   @override
   void initState() {
     // TODO: implement initState
-    if(widget.info.feedbacks!.isNotEmpty)
-    {
-      review = widget.info.feedbacks![0].content??'';
-    }
-        
+
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     DateTime endTime = widget.endTime;
@@ -38,9 +71,9 @@ class _ReviewSectionState extends State<ReviewSection> {
     TextEditingController controller = TextEditingController();
     TextEditingController controller1 = TextEditingController();
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     // TODO: implement build
     return Container(
-      
       padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,31 +83,31 @@ class _ReviewSectionState extends State<ReviewSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                  'Lesson Time: ${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')} - ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}'),
+                  '${languageProvider.language.lesson_time}: ${startTime.hour.toString().padLeft(2, '0')}:${startTime.minute.toString().padLeft(2, '0')} - ${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}',
+                ),
               ElevatedButton(
                   style: ElevatedButton.styleFrom(primary: Colors.blue),
                   onPressed: () {},
-                  child: const Text(
-                    'Record',
+                  child: Text(
+                    languageProvider.language.record,
                     style: TextStyle(color: Colors.white),
                   )),
             ],
           ),
-          const Text('No request for lesson'),
-          const Text(
-            'Review from session',
+          Text(
+            languageProvider.language.review_from_session,
             style: TextStyle(fontSize: 20),
           ),
           Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(border: Border.all()),
+          
             width: 300,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                review != ''
-                    ? Text(review)
-                    : const Center(child: Text('No review'))
+                widget.info.feedbacks!.isNotEmpty
+                    ? Review(widget.info.feedbacks!, context)
+                    : Center(child: Text(languageProvider.language.no_review))
               ],
             ),
           ),
@@ -119,7 +152,6 @@ class _ReviewSectionState extends State<ReviewSection> {
                                     const SizedBox(
                                       width: 10,
                                     ),
-                                   
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -156,7 +188,6 @@ class _ReviewSectionState extends State<ReviewSection> {
                                   height: 10,
                                 ),
                                 Expanded(
-                             
                                   child: TextField(
                                     controller: controller,
                                     keyboardType: TextInputType.multiline,
@@ -164,7 +195,8 @@ class _ReviewSectionState extends State<ReviewSection> {
                                     maxLines: 5,
                                     decoration: InputDecoration(
                                         hintText: 'Review',
-                                        contentPadding: const EdgeInsets.all(12),
+                                        contentPadding:
+                                            const EdgeInsets.all(12),
                                         border: OutlineInputBorder(
                                             borderSide: const BorderSide(
                                                 color: Colors.grey),
@@ -186,6 +218,9 @@ class _ReviewSectionState extends State<ReviewSection> {
                                 onPressed: () async {
                                   setState(() {
                                     review = controller.text;
+                                    TutorFeedback feedback = TutorFeedback(
+                                        content: review, rating: stars);
+                                    widget.info.feedbacks?.add(feedback);
                                   });
                                   print(review);
                                   await TutorService.WriteFeedback(
@@ -202,102 +237,105 @@ class _ReviewSectionState extends State<ReviewSection> {
                           );
                         });
                   },
-                  child: const Text('Add review',
+                  child: Text(languageProvider.language.add_review,
                       style: TextStyle(color: Colors.blue))),
-                TextButton(
-                onPressed: () { 
+              TextButton(
+                onPressed: () {
                   showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Report'),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 72,
-                                      height: 72,
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(languageProvider.language.report),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 72,
+                                    height: 72,
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: provider.user.avatar ?? '',
+                                      fit: BoxFit.cover,
+                                      errorWidget:
+                                          (context, error, stackTrace) =>
+                                              const Icon(
+                                        Icons.error_outline_rounded,
+                                        color: Colors.red,
+                                        size: 32,
                                       ),
-                                      child: CachedNetworkImage(
-                                        imageUrl: provider.user.avatar ?? '',
-                                        fit: BoxFit.cover,
-                                        errorWidget:
-                                            (context, error, stackTrace) =>
-                                                const Icon(
-                                          Icons.error_outline_rounded,
-                                          color: Colors.red,
-                                          size: 32,
-                                        ),
-                                      ),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          provider.user.name!,
-                                          style: const TextStyle(fontSize: 18),
-                                        ),
-                                        Text(provider.user.email!)
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                SizedBox(
-                                  height: 80,
-                                  child: TextField(
-                                    controller: controller1,
-                                    keyboardType: TextInputType.multiline,
-                                    minLines: 3,
-                                    maxLines: 5,
-                                    decoration: InputDecoration(
-                                        hintText: 'Report',
-                                        contentPadding: const EdgeInsets.all(12),
-                                        border: OutlineInputBorder(
-                                            borderSide: const BorderSide(
-                                                color: Colors.grey),
-                                            borderRadius:
-                                                BorderRadius.circular(10))),
                                   ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        provider.user.name!,
+                                        style: const TextStyle(fontSize: 18),
+                                      ),
+                                      Text(provider.user.email!)
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                height: 80,
+                                child: TextField(
+                                  controller: controller1,
+                                  keyboardType: TextInputType.multiline,
+                                  minLines: 3,
+                                  maxLines: 5,
+                                  decoration: InputDecoration(
+                                      hintText:
+                                          languageProvider.language.report,
+                                      contentPadding: const EdgeInsets.all(12),
+                                      border: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(10))),
                                 ),
-                                const SizedBox(
-                                  height: 10,
-                                )
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('NO'),
                               ),
-                              TextButton(
-                                onPressed: () async {
-                                  
-                                 setState(() {
-                                   report = controller1.text;
-                                 });
-                                  await TutorService.reportTutor(accessToken, provider.user.id!, report);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('YES'),
-                              ),
+                              const SizedBox(
+                                height: 10,
+                              )
                             ],
-                          );
-                        });
-                 },
-                child: const Text('Report',style: TextStyle(color: Colors.blue),),
-                
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('NO'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  report = controller1.text;
+                                });
+                                await TutorService.reportTutor(
+                                    accessToken, provider.user.id!, report);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('YES'),
+                            ),
+                          ],
+                        );
+                      });
+                },
+                child: Text(
+                  languageProvider.language.report,
+                  style: TextStyle(color: Colors.blue),
+                ),
               ),
             ],
           )

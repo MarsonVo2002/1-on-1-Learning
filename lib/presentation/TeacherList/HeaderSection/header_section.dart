@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/schedule/booking_info.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/booking_service.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -23,9 +24,20 @@ class _HeaderSection extends State<HeaderSection> {
   final jitsiMeet = JitsiMeet();
   late Timer _timer;
   late Duration _currentTime;
-  int _start = 10;
+  String ConvertTotalLessonTime() {
+    if (total_time.inMinutes == 0) {
+      return 'You have not attended any class';
+    }
+    String result = '';
+    int hour = total_time.inHours;
+    int minute = total_time.inMinutes - hour * 60;
+    result += hour > 0 ? ' $hour ${hour > 1 ? 'hours' : 'hour'}' : '';
+    result += minute > 0 ? ' $minute ${minute > 1 ? 'minutes' : 'minute'}' : '';
 
-  void _startTimer(BookingInfo upcoming) {
+    return result;
+  }
+
+  void StartTimer(BookingInfo upcoming) {
     _currentTime = DateTime.fromMillisecondsSinceEpoch(
             upcoming.scheduleDetailInfo?.startPeriodTimestamp ?? 0)
         .difference(DateTime.now());
@@ -58,11 +70,13 @@ class _HeaderSection extends State<HeaderSection> {
     );
   }
 
-  String _convertWaitingTime() {
+  String ConvertWaitingTime() {
     String negativeSign = _currentTime.isNegative ? '-' : '';
     String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(_currentTime.inMinutes.remainder(60).abs());
-    String twoDigitSeconds = twoDigits(_currentTime.inSeconds.remainder(60).abs());
+    String twoDigitMinutes =
+        twoDigits(_currentTime.inMinutes.remainder(60).abs());
+    String twoDigitSeconds =
+        twoDigits(_currentTime.inSeconds.remainder(60).abs());
     return "$negativeSign${twoDigits(_currentTime.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
@@ -78,7 +92,8 @@ class _HeaderSection extends State<HeaderSection> {
         upcoming_classes[0].scheduleDetailInfo?.startPeriodTimestamp ?? 0;
     final startTime = DateTime.fromMillisecondsSinceEpoch(startTimestamp);
     final now = DateTime.now();
-    return now.isAfter(startTime) || now.isAtSameMomentAs(startTime);
+    return now.isAfter(startTime.subtract(const Duration(minutes: 15))) ||
+        now.isAtSameMomentAs(startTime.subtract(const Duration(minutes: 15)));
   }
 
   @override
@@ -91,6 +106,7 @@ class _HeaderSection extends State<HeaderSection> {
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider session = context.watch<AccountSessionProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     if (IsTimeToJoin(session.upcoming_classes)) {
       _timer.cancel();
     }
@@ -114,7 +130,7 @@ class _HeaderSection extends State<HeaderSection> {
               .startPeriodTimestamp ??
           0);
 
-      _startTimer(session.upcoming_classes[index]);
+      StartTimer(session.upcoming_classes[index]);
 
       start = DateFormat('yyyy-MM-dd – H:mm').format(upcoming);
       end = DateFormat('H:mm').format(DateTime.fromMillisecondsSinceEpoch(
@@ -128,16 +144,16 @@ class _HeaderSection extends State<HeaderSection> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              'Upcoming Lesson',
-              style: TextStyle(fontSize: 20, color: Colors.white),
+            Text(
+              languageProvider.language.upcoming,
+              style: const TextStyle(fontSize: 20, color: Colors.white),
             ),
             Text(
               "$start - $end",
               style: const TextStyle(fontSize: 15, color: Colors.white),
             ),
             Text(
-              'Lesson is starting in\n${_convertWaitingTime()}',
+              '${languageProvider.language.startLesson}\n${ConvertWaitingTime()}',
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 15, color: Colors.white),
             ),
@@ -157,15 +173,36 @@ class _HeaderSection extends State<HeaderSection> {
                         context: context,
                         builder: (context) => AlertDialog(
                               title: const Text("Notice"),
-                              content:
-                                  const Text("Lesson has not started yet."),
+                              content: const Text(
+                                  "Lesson has not started yet, you can join meeting 15 minutes earlier. Do you want to start the meeting now?"),
                               actions: <Widget>[
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("OK"),
-                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("Back"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        String token = session
+                                                .upcoming_classes[index]
+                                                .studentMeetingLink
+                                                ?.split('token=')[1] ??
+                                            '';
+                                        Map<String, dynamic> jwtDecoded =
+                                            JwtDecoder.decode(token);
+                                        String room = jwtDecoded['room'];
+                                        join(room, token);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("OK"),
+                                    ),
+                                  ],
+                                )
                               ],
                             ));
                   }
@@ -182,12 +219,12 @@ class _HeaderSection extends State<HeaderSection> {
                   // historyprovider.add(classinfoprovider.list[0]);
                   // classinfoprovider.remove(classinfoprovider.list[0]);
                 },
-                child: const Text(
-                  'Enter lesson',
-                  style: TextStyle(color: Colors.blue),
+                child: Text(
+                  languageProvider.language.enterLesson,
+                  style: const TextStyle(color: Colors.blue),
                 )),
             Text(
-              'Total lesson time ${session.account.totalLessonTime} minutes',
+              '${languageProvider.language.totalTime} ${ConvertTotalLessonTime()}',
               style: TextStyle(fontSize: 15, color: Colors.white),
             ),
           ],

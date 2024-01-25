@@ -51,9 +51,6 @@ class _SearchSection extends State<SearchSection> {
     );
     List<TutorInfo> tutorinfo = await Future.wait(data
         .map((tutor) => TutorService.GetTutorData(accessToken, tutor.userId!)));
-    favorite =
-        tutorinfo.where((element) => element.isFavorite == true).toList();
-    provider.setFavoriteList(favorite);
     setState(() {
       search_result = tutorinfo;
 

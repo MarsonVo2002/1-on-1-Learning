@@ -10,6 +10,7 @@ final levels = {
   '7': 'Proficiency'
 };
 List<String> items = ["Foreign Tutor", "Vietnamese Tutor"];
+List<String> language = ["English", "Tiếng Việt"];
 Map<String,String> specialties = {
   'All':'',
   'English for kids': 'english-for-kids',
@@ -24,6 +25,7 @@ Map<String,String> specialties = {
   'TOELF': 'toefl',
   'TOEIC': 'toeic',
 };
+Duration total_time = const Duration(minutes: 2);
 String base_url = "https://sandbox.api.lettutor.com/";
 const itemsPerPage = [
   5,

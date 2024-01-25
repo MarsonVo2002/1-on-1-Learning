@@ -4,16 +4,18 @@ import 'package:lettutor/main.dart';
 import 'package:lettutor/model/course-dto.dart';
 import 'package:lettutor/model/course/course.dart';
 import 'package:lettutor/presentation/CourseInfo/course_info.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/course_service.dart';
 import 'package:provider/provider.dart';
 
 Widget CourseItem(Course info, BuildContext context) {
+  LanguageProvider languageProvider = context.watch<LanguageProvider>();
   return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40),
           border: Border.all(
-            color: Colors.black,
+            color: Colors.blue,
           )),
       child: Column(
         children: [
@@ -48,7 +50,7 @@ Widget CourseItem(Course info, BuildContext context) {
                             builder: (context) => CourseInfo(course: info)));
                   },
                   child: Text(
-                    'See detail',
+                    languageProvider.language.seeDetail,
                     style: TextStyle(color: Colors.blue),
                   ))
             ],
@@ -96,12 +98,14 @@ class _CourseSectionState extends State<CourseSection> {
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     if (_isLoading) {
       FetchData(provider);
     }
     // TODO: implement build
     return Container(
         padding: const EdgeInsets.all(20),
+        
         child: ListView(
           children: [
             TextField(
@@ -110,11 +114,11 @@ class _CourseSectionState extends State<CourseSection> {
                   FetchCourse(
                       accessToken, page, search_controller.text, provider);
                 },
-                decoration: const InputDecoration(
-                    hintText: 'Search',
-                    enabledBorder: OutlineInputBorder(
+                decoration:  InputDecoration(
+                    hintText: languageProvider.language.Search,
+                    enabledBorder: const OutlineInputBorder(
                         borderSide: BorderSide(width: 3, color: Colors.blue)),
-                    suffixIcon: Icon(Icons.search))),
+                    suffixIcon: const Icon(Icons.search))),
 
             const SizedBox(
               height: 30,

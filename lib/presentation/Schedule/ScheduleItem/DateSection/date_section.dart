@@ -14,7 +14,7 @@ class DateSection extends StatelessWidget {
       children: [
         Text(
          format,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,),
         ),
       ],
     );

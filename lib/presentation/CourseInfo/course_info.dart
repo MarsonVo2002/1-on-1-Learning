@@ -3,6 +3,8 @@ import 'package:lettutor/const.dart';
 import 'package:lettutor/model/course/course.dart';
 import 'package:lettutor/presentation/Course/lesson.dart';
 import 'package:lettutor/presentation/CourseInfo/OverviewSection/overview_section.dart';
+import 'package:lettutor/provider/language_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 class CourseInfo extends StatelessWidget {
   final Course course;
@@ -10,6 +12,7 @@ class CourseInfo extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     // TODO: implement build
     return Scaffold(
       body: Container(
@@ -35,12 +38,12 @@ class CourseInfo extends StatelessWidget {
           ),
           OverviewSection(course: course,),
           Text(
-           ' ${levels[course.level!]}',
+           languageProvider.language.level,
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          const Padding(padding: EdgeInsets.all(10), child: Text('Beginner')),
-          const Text(
-            'Course length',
+           Padding(padding: EdgeInsets.all(10), child: Text('${levels[course.level!]}')),
+          Text(
+            languageProvider.language.length,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           Padding(padding: EdgeInsets.all(10), child: Text('${course.topics!.length} topic(s)')),
@@ -56,8 +59,8 @@ class CourseInfo extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
                 ),
-                child: const Text(
-                  'Discover',
+                child:  Text(
+                  languageProvider.language.discover,
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ))

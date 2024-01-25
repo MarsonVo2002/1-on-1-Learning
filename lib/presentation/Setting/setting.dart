@@ -1,10 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lettutor/main.dart';
+import 'package:lettutor/model/language/english.dart';
+import 'package:lettutor/model/language/vietnamese.dart';
 import 'package:lettutor/presentation/Login/login.dart';
 import 'package:lettutor/presentation/TeacherForm/teacherform.dart';
 import 'package:lettutor/presentation/UserProfile/user_profile.dart';
+import 'package:lettutor/provider/language_provider.dart';
+import 'package:lettutor/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 Widget AvatarList(List<String> items, AccountSessionProvider provider,
@@ -50,24 +55,16 @@ class Setting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     final _googleSignIn = GoogleSignIn();
-    List<String> items = [
-      'asset/images/avatar.png',
-      'asset/images/france.png',
-      'asset/images/avatar.png'
-    ];
-    TextEditingController controller = TextEditingController();
+    
     // TODO: implement build
     return Scaffold(
       body: ListView(
         children: [
           Container(
             padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-                border: Border.all(
-                  color: Colors.black,
-                )),
+           
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -164,8 +161,56 @@ class Setting extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            height: 10,
+         
+           GestureDetector(
+            onTap: ()  {
+               Provider.of<ThemeProvider>(context, listen: false).setTheme();
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Change theme',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: ()  {
+               
+                languageProvider.setLanguage();
+              
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Change Language',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
+            ),
           ),
           SizedBox(
               width: double.infinity,

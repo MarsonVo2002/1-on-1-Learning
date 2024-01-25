@@ -8,6 +8,7 @@ import 'package:lettutor/model/tutor/tutor.dart';
 import 'package:lettutor/model/tutor/tutor_info.dart';
 import 'package:lettutor/presentation/Teacher/teacher.dart';
 import 'package:lettutor/presentation/TeacherList/TeacherItem/AvatarSection/avatar_section.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/booking_service.dart';
 import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +47,7 @@ class _TeacherItem extends State<TeacherItem> {
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider session_provider = context.watch<AccountSessionProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     final learnTopics = session_provider.topic
           .where((topic) => widget.teacher.specialties?.split(',').contains(topic.key) ?? false)
           .map((e) => e.name ?? 'null');
@@ -60,7 +62,7 @@ class _TeacherItem extends State<TeacherItem> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(40),
             border: Border.all(
-              color: Colors.black,
+              color: Colors.blue,
             )),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,9 +108,9 @@ class _TeacherItem extends State<TeacherItem> {
                                     schedules: schedules,
                                   )));
                     },
-                    child: const Text(
-                      'Book',
-                      style: TextStyle(color: Colors.blue),
+                    child:  Text(
+                      languageProvider.language.book,
+                      style: const TextStyle(color: Colors.blue),
                     ))
               ],
             )

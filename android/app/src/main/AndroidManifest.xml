@@ -6,7 +6,7 @@ xmlns:tools="http://schemas.android.com/tools">
 </queries>
     <application
         tools:replace="android:label"
-        android:label="lettutor"
+        android:label="LetTutor"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -11,6 +11,7 @@ import 'package:lettutor/presentation/Teacher/teacher.dart';
 import 'package:lettutor/presentation/TeacherList/HeaderSection/header_section.dart';
 import 'package:lettutor/presentation/TeacherList/SearchSection/search_section.dart';
 import 'package:lettutor/presentation/TeacherList/TeacherItem/teacher_item.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
 
@@ -107,7 +108,7 @@ class _TeacherList extends State<TeacherList> {
   Widget build(BuildContext context) {
     // TODO: implement build
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
-    KeywordProvider keywordProvider = context.watch<KeywordProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     final startIndex = currentPage * itemsPerPage;
     final endIndex = (currentPage + 1) * itemsPerPage;
     // if (_isLoading) {
@@ -128,6 +129,7 @@ class _TeacherList extends State<TeacherList> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ElevatedButton(
+                  style:  ElevatedButton.styleFrom(primary: Colors.blue),
                     onPressed: () async {
                       showDialog(
                           context: context,
@@ -150,9 +152,9 @@ class _TeacherList extends State<TeacherList> {
                           MaterialPageRoute(
                               builder: (context) => SearchSection()));
                     },
-                    child: const Text(
-                      'Search',
-                      style: TextStyle(color: Colors.blue),
+                    child: Text(
+                      languageProvider.language.Search,
+                      style: const TextStyle(color: Colors.white),
                     )),
                 const SizedBox(
                   width: 10,
@@ -188,8 +190,8 @@ class _TeacherList extends State<TeacherList> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              'Recommend Tutors',
+             Text(
+             languageProvider.language.recommend,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(

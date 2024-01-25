@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/schedule/booking_info.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/booking_service.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ class TimeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     return Container(
         padding: const EdgeInsets.all(10),
         child: Column(
@@ -23,7 +25,9 @@ class TimeSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                    '${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(info.scheduleDetailInfo!.startPeriodTimestamp ?? 0))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(info.scheduleDetailInfo!.endPeriodTimestamp ?? 0))}'),
+                  '${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(info.scheduleDetailInfo!.startPeriodTimestamp ?? 0))} - ${DateFormat.Hm().format(DateTime.fromMillisecondsSinceEpoch(info.scheduleDetailInfo!.endPeriodTimestamp ?? 0))}',
+                 
+                ),
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {
@@ -33,53 +37,55 @@ class TimeSection extends StatelessWidget {
                           .subtract(const Duration(hours: 2));
                       //Test
                       // DateTime test = DateTime(2024, 1, 22, 21);
-                      (DateTime.now().isAfter(time) || time.isAtSameMomentAs(DateTime.now()))?
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Cancel class'),
-                          content:
-                              const Text('Are you sure to cancel this class?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('NO'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                await BookingService.cancelBookedClass(
-                                  [info.id ?? ''],
-                                  accessToken,
-                                );
-                                List<BookingInfo> upcoming =
-                                    await BookingService.GetAllUpcomingClasses(
-                                        accessToken);
-                                provider.setUpcomingClasses(upcoming);
-                                provider.sortUpcomingClasses();
-                                Navigator.pop(context);
-                              },
-                              child: const Text('YES'),
-                            ),
-                          ],
-                        ),
-                      ):showDialog( context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Cancel class'),
-                          content:
-                              const Text('You can only cancel the meeting before 2 hours!'),
-                          actions: [
-                            
-                            TextButton(
-                              onPressed: ()  {
-                                
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Back'),
-                            ),
-                          ]));
+                      (DateTime.now().isAfter(time) ||
+                              time.isAtSameMomentAs(DateTime.now()))
+                          ? showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Text('Cancel class'),
+                                content: const Text(
+                                    'Are you sure to cancel this class?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('NO'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      await BookingService.cancelBookedClass(
+                                        [info.id ?? ''],
+                                        accessToken,
+                                      );
+                                      List<BookingInfo> upcoming =
+                                          await BookingService
+                                              .GetAllUpcomingClasses(
+                                                  accessToken);
+                                      provider.setUpcomingClasses(upcoming);
+                                      provider.sortUpcomingClasses();
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('YES'),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                      title: const Text('Cancel class'),
+                                      content: const Text(
+                                          'You can only cancel the meeting before 2 hours!'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Back'),
+                                        ),
+                                      ]));
                     },
-                    child: const Text(
-                      'Cancel',
+                    child: Text(
+                      languageProvider.language.Cancel,
                       style: TextStyle(color: Colors.white),
                     )),
               ],
@@ -88,7 +94,6 @@ class TimeSection extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Request for lesson'),
                 TextButton(
                   onPressed: () {
                     showDialog(
@@ -130,8 +135,8 @@ class TimeSection extends StatelessWidget {
                       },
                     );
                   },
-                  child: const Text(
-                    'Edit Request',
+                  child: Text(
+                    languageProvider.language.Request,
                     style: TextStyle(color: Colors.blue),
                   ),
                 ),

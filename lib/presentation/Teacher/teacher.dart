@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:lettutor/model/calendar-dto.dart';
@@ -243,6 +244,7 @@ class _TeacherState extends State<Teacher> {
           .where((test) => widget.info.specialties?.split(',').contains(test.key) ?? false)
           .map((e) => e.name ?? 'null');
     List<String> specialties = [...learnTopics, ...testPreparations];
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     // TODO: implement build
     return Scaffold(
       body: Container(
@@ -265,7 +267,7 @@ class _TeacherState extends State<Teacher> {
                         color: Colors.blue,
                       ),
                       Text(
-                        'Report',
+                        languageProvider.language.report,
                         style: TextStyle(color: Colors.blue),
                       )
                     ],
@@ -297,7 +299,7 @@ class _TeacherState extends State<Teacher> {
                         color: Colors.blue,
                       ),
                       Text(
-                        'Review',
+                       languageProvider.language.review,
                         style: TextStyle(color: Colors.blue),
                       )
                     ],
@@ -317,7 +319,7 @@ class _TeacherState extends State<Teacher> {
                         color: Colors.blue,
                       ),
                       Text(
-                        'Chat',
+                       languageProvider.language.chat,
                         style: TextStyle(color: Colors.blue),
                       )
                     ],
@@ -341,14 +343,14 @@ class _TeacherState extends State<Teacher> {
               LanguagesSection(items: widget.info.languages!.split(',')),
               SpecialtiesSection(items:specialties),
               // SuggestedCourseSection(),
-              OtherSection(title: 'Interests', content: widget.info.interests!),
+              OtherSection(title: languageProvider.language.interest, content: widget.info.interests!),
               OtherSection(
-                  title: 'Teaching experience',
+                  title: languageProvider.language.exp,
                   content: widget.info.experience!),
               Container(
                 padding: const EdgeInsets.all(10),
-                child: const Text(
-                  'Booking',
+                child:  Text(
+                  languageProvider.language.book,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -356,13 +358,13 @@ class _TeacherState extends State<Teacher> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   widget.schedules.isNotEmpty?
-                  Date(timetable, context, widget.schedules, provider):Center(child: Text("No classes available"),)
+                  Date(timetable, context, widget.schedules, provider):Center(child: Text(languageProvider.language.no_classes),)
                 ],
               ),
                Container(
                 padding: const EdgeInsets.all(10),
-                child: const Text(
-                  'Review',
+                child:  Text(
+                  languageProvider.language.review,
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -381,7 +383,7 @@ class _TeacherState extends State<Teacher> {
                               review.feedbacks![index].firstInfo!.name!),
                         );
                       })
-                    : Center(child: Text("No review yet")),
+                    : Center(child: Text(languageProvider.language.no_review)),
               ),
               Container(
                   padding: const EdgeInsets.all(10),
@@ -396,8 +398,8 @@ class _TeacherState extends State<Teacher> {
                         style: ElevatedButton.styleFrom(
                           primary: Colors.blue,
                         ),
-                        child: const Text(
-                          'Back',
+                        child:  Text(
+                          languageProvider.language.back,
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                       )),

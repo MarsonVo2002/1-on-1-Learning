@@ -51,8 +51,8 @@ class _HistoryState extends State<History> {
                         child: Container(
                           padding: EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(),
+                              
+                              border: Border.all(color: Colors.blue),
                               borderRadius: BorderRadius.circular(20)),
                           child: Column(
                             children: [

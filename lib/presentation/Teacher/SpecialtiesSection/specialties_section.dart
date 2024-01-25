@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lettutor/provider/language_provider.dart';
+import 'package:provider/provider.dart';
 Widget Specialities(List<String> item) {
   List<Widget> list = [];
   for (int i = 0; i < item.length; i++) {
@@ -20,14 +22,15 @@ class SpecialtiesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     LanguageProvider languageProvider = context.watch<LanguageProvider>();
     // TODO: implement build
     return Container(
         padding: const EdgeInsets.all(10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Specialties',
+             Text(
+              languageProvider.language.specialties,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Padding(

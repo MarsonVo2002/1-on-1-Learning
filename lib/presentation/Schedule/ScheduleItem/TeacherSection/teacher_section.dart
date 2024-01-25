@@ -1,6 +1,8 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:lettutor/model/tutor/tutor.dart';
+import 'package:lettutor/provider/language_provider.dart';
+import 'package:provider/provider.dart';
 
 class TeacherSection extends StatelessWidget {
   final Tutor info;
@@ -9,6 +11,7 @@ class TeacherSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     // TODO: implement build
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,18 +44,18 @@ class TeacherSection extends StatelessWidget {
                     const SizedBox(
                       width: 5,
                     ),
-                    Text(info.country!)
+                    Text(info.country!,)
                   ],
                 ),
-                const Row(
+                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.chat,
                       color: Colors.blue,
                     ),
                     Text(
-                      'Direct message',
-                      style: TextStyle(color: Colors.blue),
+                      languageProvider.language.DirectMessage,
+                      style: const TextStyle(color: Colors.blue),
                     )
                   ],
                 )

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/presentation/ResetPassword/password_reset.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/login_service.dart';
 import 'package:provider/provider.dart';
 
@@ -18,14 +19,18 @@ class _Email extends State<Email> {
   bool isValid = false;
   @override
   Widget build(BuildContext context) {
+    
+
+    AccountProvider provider = context.watch<AccountProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     void _validation() {
       final emailRegExp = RegExp(
           r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
       if (_emailController.text.isEmpty) {
-        email_error = 'Email is empty';
+        email_error = languageProvider.language.emptyEmail;
         isValid = false;
       } else if (!emailRegExp.hasMatch(_emailController.text)) {
-        email_error = 'Email is invalid';
+        email_error = languageProvider.language.invalidEmail;
         isValid = false;
       } else {
         email_error = '';
@@ -33,15 +38,13 @@ class _Email extends State<Email> {
       }
       setState(() {});
     }
-
-    AccountProvider provider = context.watch<AccountProvider>();
     void _SendEmail() async {
       try {
         await LoginService.ForgotPassword(_emailController.text);
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Email send success')),
+             SnackBar(content: Text(languageProvider.language.sendRecoveryEmailSuccess)),
           );
         }
       } catch (e) {
@@ -84,7 +87,7 @@ class _Email extends State<Email> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Forgot password',
+        languageProvider.language.forgotPassword,
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue,
@@ -134,8 +137,8 @@ class _Email extends State<Email> {
                       style: ElevatedButton.styleFrom(
                         primary: Colors.blue,
                       ),
-                      child: const Text(
-                        'Back',
+                      child:  Text(
+                        languageProvider.language.back,
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     )),

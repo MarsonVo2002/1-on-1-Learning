@@ -14,8 +14,8 @@ class ScheduleItem extends StatelessWidget {
     // TODO: implement build
     return Container(
         decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(), borderRadius: BorderRadius.circular(20)),
+           
+            border: Border.all(color: Colors.blue), borderRadius: BorderRadius.circular(20)),
         padding: const EdgeInsets.all(10),
         child:  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
