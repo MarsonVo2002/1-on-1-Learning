@@ -34,8 +34,8 @@ class _HistoryState extends State<History> {
 
     // TODO: implement build
     return Scaffold(
+      appBar: AppBar(title: const HistoryTitleSection()),
       body: ListView(children: [
-        const HistoryTitleSection(),
         const SizedBox(
           height: 20,
         ),

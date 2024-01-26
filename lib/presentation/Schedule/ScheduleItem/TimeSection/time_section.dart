@@ -37,7 +37,7 @@ class TimeSection extends StatelessWidget {
                           .subtract(const Duration(hours: 2));
                       //Test
                       // DateTime test = DateTime(2024, 1, 22, 21);
-                      (DateTime.now().isAfter(time) ||
+                      (DateTime.now().isBefore(time) ||
                               time.isAtSameMomentAs(DateTime.now()))
                           ? showDialog(
                               context: context,
@@ -56,10 +56,12 @@ class TimeSection extends StatelessWidget {
                                         [info.id ?? ''],
                                         accessToken,
                                       );
+                                      print(info.id);
                                       List<BookingInfo> upcoming =
                                           await BookingService
                                               .GetAllUpcomingClasses(
                                                   accessToken);
+                              
                                       provider.setUpcomingClasses(upcoming);
                                       provider.sortUpcomingClasses();
                                       Navigator.pop(context);

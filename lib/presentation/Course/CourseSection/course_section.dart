@@ -195,10 +195,10 @@ class _CourseSectionState extends State<CourseSection> {
                               );
                             }),
                       )
-                : const SizedBox(
+                :  SizedBox(
                     height: 380,
                     child: Center(
-                      child: Text("No courses found"),
+                      child: Text(languageProvider.language.no_courses),
                     )),
            _isLoading? Container(): Row(
               mainAxisAlignment: MainAxisAlignment.center,

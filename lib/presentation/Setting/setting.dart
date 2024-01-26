@@ -51,7 +51,14 @@ Widget AvatarList(List<String> items, AccountSessionProvider provider,
   );
 }
 
-class Setting extends StatelessWidget {
+class Setting extends StatefulWidget {
+  @override
+  State<Setting> createState() => _SettingState();
+}
+
+class _SettingState extends State<Setting> {
+   bool isLight = true;
+  bool isEnglish = true;
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
@@ -62,6 +69,68 @@ class Setting extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
+          Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Provider.of<ThemeProvider>(context, listen: false)
+                                .setTheme();
+                            setState(() {
+                              if (isLight == true) {
+                                isLight = false;
+                              } else {
+                                isLight = true;
+                              }
+                            });
+                          },
+                          icon: isLight
+                              ? Icon(Icons.light_mode)
+                              : Icon(Icons.dark_mode)),
+                      IconButton(
+                          onPressed: () {
+                            languageProvider.setLanguage();
+                            setState(() {
+                              if (isEnglish == true) {
+                                isEnglish = false;
+                              } else {
+                                isEnglish = true;
+                              }
+                            });
+                          },
+                          icon: isEnglish
+                              ? Container(
+                                  width: 30,
+                                  height: 30,
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Image(
+                                  image: AssetImage('asset/icons/unitedstates.png'),
+                                  
+                                ))
+                              : Container(
+                                  width: 30,
+                                  height: 30,
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Image(
+                                  image: AssetImage('asset/icons/vietnam.png'),
+                                 
+                                )))
+                      // TextButton(
+                      //     onPressed: () {
+                      //       Provider.of<ThemeProvider>(context,listen: false).setTheme();
+                      //     },
+                      //     child: const Text(
+                      //       "Change theme",
+                      //       style: TextStyle(color: Colors.blue),
+                      //     )),
+                    ],
+                  ),
           Container(
             padding: EdgeInsets.all(15),
            
@@ -119,35 +188,11 @@ class Setting extends StatelessWidget {
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-              child: const Row(
+              child:  Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Edit profile',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.grey,
-                  )
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () async {
-              showDialog(context: context, builder: (context) => TeacherForm());
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Teacher enrollment',
+                    languageProvider.language.edit_profile,
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
@@ -162,56 +207,6 @@ class Setting extends StatelessWidget {
             ),
           ),
          
-           GestureDetector(
-            onTap: ()  {
-               Provider.of<ThemeProvider>(context, listen: false).setTheme();
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Change theme',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.grey,
-                  )
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: ()  {
-               
-                languageProvider.setLanguage();
-              
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Change Language',
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.grey,
-                  )
-                ],
-              ),
-            ),
-          ),
           SizedBox(
               width: double.infinity,
               child: ElevatedButton(

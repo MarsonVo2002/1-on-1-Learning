@@ -206,4 +206,20 @@ class Vietnamese extends Language
   @override
   // TODO: implement discover
   String get discover => 'Khám phá';
+  
+  @override
+  // TODO: implement no_upcoming
+  String get no_upcoming => 'Không có lớp học nào sắp diễn ra';
+  
+  @override
+  // TODO: implement edit_profile
+  String get edit_profile => 'Chỉnh sửa thông tin';
+  
+  @override
+  // TODO: implement no_tutors
+  String get no_tutors => 'Xin lỗi chúng tui không tìm được gia sư nào ứng với từ khóa tìm kiếm';
+  
+  @override
+  // TODO: implement no_courses
+  String get no_courses => 'Không tìm thấy khóa học nào';
 }

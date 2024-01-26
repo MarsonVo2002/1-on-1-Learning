@@ -149,7 +149,11 @@ class AccountSessionProvider extends ChangeNotifier {
     });
     notifyListeners();
   }
-
+  void removeUpcoming(BookingInfo info)
+  {
+    upcoming_classes.remove(info);
+    notifyListeners();
+  }
   void sortBookedClasses() {
     booked_class.sort(
       (a, b) {

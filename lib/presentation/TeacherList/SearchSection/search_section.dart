@@ -8,6 +8,7 @@ import 'package:lettutor/model/tutor/tutor_info.dart';
 import 'package:lettutor/presentation/ResetPassword/email.dart';
 import 'package:lettutor/presentation/Signup/signup.dart';
 import 'package:lettutor/presentation/TeacherList/TeacherItem/teacher_item.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
 
@@ -74,6 +75,7 @@ class _SearchSection extends State<SearchSection> {
   @override
   Widget build(BuildContext context) {
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     // TODO: implement build
     if (isLoading) {
       SearchTutors(accessToken, name.text, isVietnamese, _specialties, provider);
@@ -160,7 +162,7 @@ class _SearchSection extends State<SearchSection> {
                       teacher: search_result[index],
                     ),
                   );
-                }): const Center(child: Text('Sorry we can not find any tutor with this keywords')),
+                }):  Center(child: Text(languageProvider.language.no_tutors)),
           ),
            isLoading? Container(): Row(
               mainAxisAlignment: MainAxisAlignment.center,

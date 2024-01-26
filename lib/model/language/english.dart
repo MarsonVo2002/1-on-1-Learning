@@ -206,6 +206,22 @@ class English extends Language
   @override
   // TODO: implement discover
   String get discover => "Discover";
+  
+  @override
+  // TODO: implement no_upcoming
+  String get no_upcoming => 'No upcoming classes';
+  
+  @override
+  // TODO: implement edit_profile
+  String get edit_profile => 'Edit profile';
+  
+  @override
+  // TODO: implement no_tutors
+  String get no_tutors => 'Sorry we can not find any tutor with this keywords';
+  
+  @override
+  // TODO: implement no_courses
+  String get no_courses => 'No courses found';
 
 
 }

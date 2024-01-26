@@ -52,4 +52,8 @@
   String get level;
   String get length;
   String get discover;
+  String get no_upcoming;
+  String get edit_profile;
+  String get no_tutors;
+  String get no_courses;
 }

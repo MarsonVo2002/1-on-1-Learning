@@ -64,11 +64,13 @@ class BookingService {
     if (response.statusCode != 200) {
       throw Exception(jsonDecode['message']);
     }
-
     final List<dynamic> data = jsonDecode['data'];
     List<BookingInfo> lessons =
         data.map((e) => BookingInfo.fromJson(e)).toList();
-    return lessons;
+    return lessons.where((element) => DateTime.fromMillisecondsSinceEpoch(element
+              .scheduleDetailInfo!
+              .startPeriodTimestamp ??
+          0).isAfter(DateTime.now())).toList();
   }
   static Future<List<BookingInfo>> GetBookedClass(String token,int page, int perPage) async {
     final now = DateTime.now().subtract(const Duration(minutes: 35)).millisecondsSinceEpoch;

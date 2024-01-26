@@ -20,9 +20,10 @@ class _HeaderSection extends State<HeaderSection> {
   String start = '';
   String end = '';
   DateTime upcoming = DateTime.now();
+  DateTime end_lesson = DateTime.now();
   int index = 0;
   final jitsiMeet = JitsiMeet();
-  late Timer _timer;
+  Timer? _timer;
   late Duration _currentTime;
   String ConvertTotalLessonTime() {
     if (total_time.inMinutes == 0) {
@@ -51,9 +52,10 @@ class _HeaderSection extends State<HeaderSection> {
     _timer = Timer.periodic(
       const Duration(seconds: 1),
       (Timer timer) {
-        if (_currentTime.inSeconds == 0) {
+        if (_currentTime.inSeconds <= 0) {
           if (mounted) {
             setState(() {
+              Provider.of<AccountSessionProvider>(context, listen: false).removeUpcoming(upcoming);
               timer.cancel();
             });
           }
@@ -98,7 +100,7 @@ class _HeaderSection extends State<HeaderSection> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     _timer;
     super.dispose();
   }
@@ -107,20 +109,26 @@ class _HeaderSection extends State<HeaderSection> {
   Widget build(BuildContext context) {
     AccountSessionProvider session = context.watch<AccountSessionProvider>();
     LanguageProvider languageProvider = context.watch<LanguageProvider>();
-    if (IsTimeToJoin(session.upcoming_classes)) {
-      _timer.cancel();
-    }
-    if (session.upcoming_classes.isEmpty ||
-        index == session.upcoming_classes.length - 1) {
+
+    if (session.upcoming_classes.isEmpty) {
       return Container(
         alignment: Alignment.center,
         color: Colors.blue,
-        height: 300,
+        height: 150,
         padding: const EdgeInsets.all(5),
         width: double.infinity,
-        child: const Text(
-          'No Upcoming Lesson',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              languageProvider.language.no_upcoming,
+              style: TextStyle(fontSize: 20, color: Colors.white),
+            ),
+            Text(
+              '${languageProvider.language.totalTime} ${ConvertTotalLessonTime()}',
+              style: TextStyle(fontSize: 15, color: Colors.white),
+            ),
+          ],
         ),
       );
     } else {
@@ -129,14 +137,16 @@ class _HeaderSection extends State<HeaderSection> {
               .scheduleDetailInfo!
               .startPeriodTimestamp ??
           0);
-
+      end_lesson = DateTime.fromMillisecondsSinceEpoch(session
+              .upcoming_classes[index].scheduleDetailInfo!.endPeriodTimestamp ??
+          0);
+      if (IsTimeToJoin(session.upcoming_classes)) {
+        _timer?.cancel();
+      }
       StartTimer(session.upcoming_classes[index]);
 
       start = DateFormat('yyyy-MM-dd – H:mm').format(upcoming);
-      end = DateFormat('H:mm').format(DateTime.fromMillisecondsSinceEpoch(
-          session.upcoming_classes[index].scheduleDetailInfo!
-                  .endPeriodTimestamp ??
-              0));
+      end = DateFormat('H:mm').format(end_lesson);
       return Container(
         color: Colors.blue,
         padding: const EdgeInsets.all(5),
@@ -159,7 +169,7 @@ class _HeaderSection extends State<HeaderSection> {
             ),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.white),
-                onPressed: () {
+                onPressed: () async {
                   if (IsTimeToJoin(session.upcoming_classes)) {
                     String token = session
                             .upcoming_classes[index].studentMeetingLink
@@ -167,14 +177,21 @@ class _HeaderSection extends State<HeaderSection> {
                         '';
                     Map<String, dynamic> jwtDecoded = JwtDecoder.decode(token);
                     String room = jwtDecoded['room'];
-                    join(room, token);
+
+                    if (DateTime.now().isAfter(end_lesson) || end_lesson.isAtSameMomentAs(DateTime.now())) {
+                      setState(() {
+                        index += 1;
+                      });
+                    } else {
+                      join(room, token);
+                    }
                   } else {
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
                               title: const Text("Notice"),
                               content: const Text(
-                                  "Lesson has not started yet, you can join meeting 15 minutes earlier. Do you want to start the meeting now?"),
+                                  "Lesson has not started yet. Do you want to start the meeting now?"),
                               actions: <Widget>[
                                 Row(
                                   mainAxisAlignment:
@@ -231,6 +248,5 @@ class _HeaderSection extends State<HeaderSection> {
         ),
       );
     }
-    // TODO: implement build
   }
 }
