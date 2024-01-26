@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/model/account-dto.dart';
 import 'package:lettutor/presentation/Login/login.dart';
+import 'package:lettutor/provider/language_provider.dart';
 import 'package:provider/provider.dart';
 
 class ResetPassword extends StatefulWidget {
@@ -36,6 +37,7 @@ class _ResetPassword extends State<ResetPassword> {
       setState(() {});
     }
     AccountProvider provider = context.watch<AccountProvider>();
+    LanguageProvider languageProvider = context.watch<LanguageProvider>();
     void _reset() {
       String password = _passwordController.text;
       String confirmpassword = _confirmpasswordController.text;
@@ -87,8 +89,8 @@ class _ResetPassword extends State<ResetPassword> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  'Password',
+                Text(
+                  languageProvider.language.password,
                   style: TextStyle(color: Colors.grey, fontSize: 18),
                 ),
                 TextField(
@@ -108,8 +110,8 @@ class _ResetPassword extends State<ResetPassword> {
                 const SizedBox(
                   height: 20,
                 ),
-                const Text(
-                  'Confirm Password',
+                 Text(
+                  languageProvider.language.confirmPassword,
                   style: TextStyle(color: Colors.grey, fontSize: 18),
                 ),
                 TextField(

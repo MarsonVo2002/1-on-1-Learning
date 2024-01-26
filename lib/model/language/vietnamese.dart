@@ -222,4 +222,56 @@ class Vietnamese extends Language
   @override
   // TODO: implement no_courses
   String get no_courses => 'Không tìm thấy khóa học nào';
+  
+  @override
+  // TODO: implement not_started
+  String get not_started => 'Lớp học chưa bắt đầu, Bạn vẫn muốn tham gia?';
+  
+  @override
+  // TODO: implement notice
+  String get notice => 'Thông báo';
+  
+  @override
+  // TODO: implement already_book
+  String get already_book => 'Lớp đã được đặt';
+  
+  @override
+  // TODO: implement booking_confirm
+  String get booking_confirm => 'Xác nhận đặt lịch';
+  
+  @override
+  // TODO: implement booking_question
+  String get booking_question => 'Bạn sẽ đặt lịch ';
+  
+  @override
+  // TODO: implement cancel_class
+  String get cancel_class => 'Hủy lớp';
+  
+  @override
+  // TODO: implement cancel_notice
+  String get cancel_notice => 'Bạn chỉ có thể hủy buổi học trước 2 tiếng';
+  
+  @override
+  // TODO: implement cancel_question
+  String get cancel_question => 'Hủy buổi học?';
+  
+  @override
+  // TODO: implement invalid_email_password
+  String get invalid_email_password => 'Email hoặc mật khẩu không hợp lệ';
+  
+  @override
+  // TODO: implement login_failed
+  String get login_failed => 'Đăng nhập thất bại';
+  
+  @override
+  // TODO: implement sign_out
+  String get sign_out => 'Đăng xuất';
+  
+  @override
+  // TODO: implement password_match
+  String get password_match => 'Mật khẩu không trùng khớp';
+  
+  @override
+  // TODO: implement sign_up_failed
+  String get sign_up_failed => 'Đăng ký thất bại';
 }

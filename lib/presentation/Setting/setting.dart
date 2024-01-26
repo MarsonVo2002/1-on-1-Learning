@@ -220,8 +220,8 @@ class _SettingState extends State<Setting> {
                 style: ElevatedButton.styleFrom(
                   primary: Colors.blue,
                 ),
-                child: const Text(
-                  'SIGN OUT',
+                child:  Text(
+                  languageProvider.language.sign_out,
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ))

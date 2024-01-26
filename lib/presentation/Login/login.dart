@@ -138,8 +138,8 @@ class _Login extends State<Login> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text("Login Failed"),
-            content: const Text("Invalid email or password."),
+            title:  Text(language_provider.language.login_failed),
+            content:  Text(language_provider.language.invalid_email_password),
             actions: <Widget>[
               TextButton(
                 onPressed: () {

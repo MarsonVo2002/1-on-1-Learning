@@ -46,7 +46,7 @@ class English extends Language
 
   @override
   // TODO: implement login
-  String get login => 'Login';
+  String get login => 'LOGIN';
 
   @override
   // TODO: implement loginWith
@@ -222,6 +222,58 @@ class English extends Language
   @override
   // TODO: implement no_courses
   String get no_courses => 'No courses found';
+  
+  @override
+  // TODO: implement not_started
+  String get not_started => 'Lesson has not started yet. Do you want to start the meeting now?';
+  
+  @override
+  // TODO: implement notice
+  String get notice => 'Notice';
+  
+  @override
+  // TODO: implement already_book
+  String get already_book => 'Already booked';
+  
+  @override
+  // TODO: implement booking_confirm
+  String get booking_confirm => 'Booking confirm';
+  
+  @override
+  // TODO: implement booking_question
+  String get booking_question => 'You are booking class on ';
+  
+  @override
+  // TODO: implement cancel_class
+  String get cancel_class => 'Cancel class';
+  
+  @override
+  // TODO: implement cancel_notice
+  String get cancel_notice => 'You can only cancel the meeting before 2 hours!';
+  
+  @override
+  // TODO: implement cancel_question
+  String get cancel_question => 'Are you sure to cancel this class?';
+  
+  @override
+  // TODO: implement invalid_email_password
+  String get invalid_email_password =>'Invalid email or password';
+  
+  @override
+  // TODO: implement login_failed
+  String get login_failed => 'Login failed';
+  
+  @override
+  // TODO: implement sign_out
+  String get sign_out => 'SIGN OUT';
+  
+  @override
+  // TODO: implement password_match
+  String get password_match => 'Password does not match';
+  
+  @override
+  // TODO: implement sign_up_failed
+  String get sign_up_failed => 'Sign up failed';
 
 
 }

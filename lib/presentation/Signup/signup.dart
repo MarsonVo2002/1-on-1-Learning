@@ -81,8 +81,8 @@ class _SignUp extends State<SignUp> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text("Sign up Failed"),
-            content: const Text("Passwords do not match"),
+            title:  Text(languageProvider.language.sign_up_failed),
+            content:  Text(languageProvider.language.password_match),
             actions: <Widget>[
               TextButton(
                 onPressed: () {

@@ -44,9 +44,9 @@ class TimeSection extends StatelessWidget {
                           ? showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: const Text('Cancel class'),
-                                content: const Text(
-                                    'Are you sure to cancel this class?'),
+                                title:  Text(languageProvider.language.cancel_class),
+                                content: Text(
+                                    languageProvider.language.cancel_question),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(context),
@@ -76,9 +76,9 @@ class TimeSection extends StatelessWidget {
                           : showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                      title: const Text('Cancel class'),
-                                      content: const Text(
-                                          'You can only cancel the meeting before 2 hours!'),
+                                      title:  Text(languageProvider.language.cancel_class),
+                                      content:  Text(
+                                          languageProvider.language.cancel_notice),
                                       actions: [
                                         TextButton(
                                           onPressed: () {

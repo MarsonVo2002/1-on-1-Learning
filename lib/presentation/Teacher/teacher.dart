@@ -80,8 +80,8 @@ Widget Time(List<ScheduleInfo> items, BuildContext context,
                   context: context,
                   builder: (context) => AlertDialog(
                         scrollable: true,
-                        title: const Text("Notice"),
-                        content: const Center(child: Text('Already booked')),
+                        title:  Text(Provider.of<LanguageProvider>(context).language.notice),
+                        content:  Center(child: Text(Provider.of<LanguageProvider>(context).language.already_book)),
                         actions: [
                           TextButton(
                             onPressed: () {
@@ -95,9 +95,9 @@ Widget Time(List<ScheduleInfo> items, BuildContext context,
                   context: context,
                   builder: (context) => AlertDialog(
                     scrollable: true,
-                    title: const Text("Booking confirm"),
+                    title:  Text(Provider.of<LanguageProvider>(context).language.booking_confirm),
                     content: Text(
-                        'You are booking class on ${DateTime.fromMillisecondsSinceEpoch(items[i].startTimestamp!)}'),
+                        '${Provider.of<LanguageProvider>(context).language.booking_question}${DateTime.fromMillisecondsSinceEpoch(items[i].startTimestamp!)}'),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {

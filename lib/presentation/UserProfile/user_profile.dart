@@ -116,7 +116,7 @@ class _UserProfileState extends State<UserProfile> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         SizedBox(

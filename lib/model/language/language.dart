@@ -56,4 +56,17 @@
   String get edit_profile;
   String get no_tutors;
   String get no_courses;
+  String get notice;
+  String get not_started;
+  String get already_book;
+  String get booking_confirm;
+  String get booking_question;
+  String get cancel_class;
+  String get cancel_question;
+  String get cancel_notice;
+  String get login_failed;
+  String get invalid_email_password;
+  String get sign_out;
+  String get sign_up_failed;
+  String get password_match;
 }

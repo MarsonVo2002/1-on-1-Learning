@@ -191,9 +191,9 @@ class _HeaderSection extends State<HeaderSection> {
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                              title: const Text("Notice"),
-                              content: const Text(
-                                  "Lesson has not started yet. Do you want to start the meeting now?"),
+                              title:  Text(languageProvider.language.notice),
+                              content:  Text(
+                                  languageProvider.language.not_started),
                               actions: <Widget>[
                                 Row(
                                   mainAxisAlignment:
