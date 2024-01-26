@@ -11,6 +11,8 @@ import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:jitsi_meet_flutter_sdk/jitsi_meet_flutter_sdk.dart';
 
+import '../../../provider/account_session_provider.dart';
+
 class HeaderSection extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HeaderSection();

@@ -11,6 +11,8 @@ import 'package:lettutor/model/teacher-dto.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../../../provider/account_session_provider.dart';
+
 List<Appointment> _getAppointment(
     List<int> schedule, List<String> time, List<bool> isBook) {
   List<Appointment> appointments = [];

@@ -5,6 +5,7 @@ import 'package:lettutor/model/schedule/booking_info.dart';
 import 'package:lettutor/services/booking_service.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/account_session_provider.dart';
 import '../Schedule/ScheduleItem/DateSection/date_section.dart';
 import '../Schedule/ScheduleItem/TeacherSection/teacher_section.dart';
 import 'HistoryTitleSection/history_title_section.dart';

@@ -12,6 +12,8 @@ import 'package:lettutor/model/user/user.dart';
 import 'package:lettutor/services/user_info_service.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/account_session_provider.dart';
+
 class UserProfile extends StatefulWidget {
   final User user;
   const UserProfile({super.key, required this.user});

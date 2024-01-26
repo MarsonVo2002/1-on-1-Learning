@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lettutor/model/teacher-dto.dart';
+import 'package:lettutor/model/tutor/tutor_info.dart';
 
 class Chat extends StatefulWidget {
-  final TeacherDTO teacher;
+  final TutorInfo teacher;
   Chat({required this.teacher});
   @override
   State<Chat> createState() => _Chat();
@@ -24,107 +26,121 @@ class _Chat extends State<Chat> {
                 color: Colors.blue,
                 child: Row(
                   children: [
-                    Image(
-                      image: AssetImage(widget.teacher.avatarpath),
-                      width: 40,
-                      height: 40,
+                     widget.teacher.user!.avatar == null
+                ? Container()
+                : Container(
+                    width: 72,
+                    height: 72,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
                     ),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.teacher.user!.avatar ?? '',
+                      fit: BoxFit.cover,
+                      errorWidget: (context, error, stackTrace) => const Icon(
+                        Icons.error_outline_rounded,
+                        color: Colors.red,
+                        size: 32,
+                      ),
+                    ),
+                  ),
                     SizedBox(
                       width: 10,
                     ),
                     Text(
-                      widget.teacher.name,
+                      widget.teacher.user?.name ?? '',
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
               ),
             ),
-            Expanded(
-             flex: 8,
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: widget.teacher.chat.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: EdgeInsets.only(
-                          left: 14, right: 14, top: 10, bottom: 10),
-                      child: Align(
-                        alignment:  Alignment.topRight,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.blue,
-                          ),
-                          padding: EdgeInsets.all(16),
-                          child: Text(
-                            widget.teacher.chat[index],
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-            //Chat box
-            Expanded(
-              flex: 1,
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          color: Colors.lightBlue,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        decoration: const InputDecoration(
-                            hintText: "Write message...",
-                            hintStyle: TextStyle(color: Colors.black54),
-                            border: InputBorder.none),
-                        controller: chatController,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    FloatingActionButton(
-                      onPressed: () {
-                        setState(() {
-                          if (!chatController.text.trim().isEmpty) {
-                            widget.teacher.chat.add(chatController.text);
-                          }
-                          chatController.clear();
-                        });
-                      },
-                      child: Icon(
-                        Icons.send,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                      backgroundColor: Colors.blue,
-                      elevation: 0,
-                    ),
-                  ],
-                ),
-              ),
-            )
+            // Expanded(
+            //  flex: 8,
+            //   child: ListView.builder(
+            //       shrinkWrap: true,
+            //       itemCount: widget.teacher.chat.length,
+            //       itemBuilder: (context, index) {
+            //         return Container(
+            //           padding: EdgeInsets.only(
+            //               left: 14, right: 14, top: 10, bottom: 10),
+            //           child: Align(
+            //             alignment:  Alignment.topRight,
+            //             child: Container(
+            //               decoration: BoxDecoration(
+            //                 borderRadius: BorderRadius.circular(20),
+            //                 color: Colors.blue,
+            //               ),
+            //               padding: EdgeInsets.all(16),
+            //               child: Text(
+            //                 widget.teacher.chat[index],
+            //                 style: TextStyle(fontSize: 15, color: Colors.white),
+            //               ),
+            //             ),
+            //           ),
+            //         );
+            //       }),
+            // ),
+            // //Chat box
+            // Expanded(
+            //   flex: 1,
+            //   child: Container(
+            //     padding: EdgeInsets.all(10),
+            //     child: Row(
+            //       children: <Widget>[
+            //         GestureDetector(
+            //           onTap: () {},
+            //           child: Container(
+            //             height: 30,
+            //             width: 30,
+            //             decoration: BoxDecoration(
+            //               color: Colors.lightBlue,
+            //               borderRadius: BorderRadius.circular(30),
+            //             ),
+            //             child: Icon(
+            //               Icons.add,
+            //               color: Colors.white,
+            //               size: 20,
+            //             ),
+            //           ),
+            //         ),
+            //         SizedBox(
+            //           width: 15,
+            //         ),
+            //         Expanded(
+            //           child: TextField(
+            //             decoration: const InputDecoration(
+            //                 hintText: "Write message...",
+            //                 hintStyle: TextStyle(color: Colors.black54),
+            //                 border: InputBorder.none),
+            //             controller: chatController,
+            //           ),
+            //         ),
+            //         SizedBox(
+            //           width: 15,
+            //         ),
+            //         FloatingActionButton(
+            //           onPressed: () {
+            //             setState(() {
+            //               if (!chatController.text.trim().isEmpty) {
+            //                 widget.teacher.chat.add(chatController.text);
+            //               }
+            //               chatController.clear();
+            //             });
+            //           },
+            //           child: Icon(
+            //             Icons.send,
+            //             color: Colors.white,
+            //             size: 18,
+            //           ),
+            //           backgroundColor: Colors.blue,
+            //           elevation: 0,
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),

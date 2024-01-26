@@ -13,6 +13,8 @@ import 'package:lettutor/services/booking_service.dart';
 import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/account_session_provider.dart';
+
 Widget Specialities(List<String> item) {
   List<Widget> list = [];
   for (int i = 0; i < item.length; i++) {

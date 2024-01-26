@@ -9,6 +9,8 @@ import 'package:lettutor/model/tutor/tutor_info.dart';
 import 'package:lettutor/services/tutor_service.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../provider/account_session_provider.dart';
+
 Widget Rating(int rating) {
   List<Widget> list = [];
   for (var i = 0; i < 5; i++) {

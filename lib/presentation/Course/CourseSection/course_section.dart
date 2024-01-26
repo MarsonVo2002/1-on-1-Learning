@@ -8,6 +8,8 @@ import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/course_service.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/account_session_provider.dart';
+
 Widget CourseItem(Course info, BuildContext context) {
   LanguageProvider languageProvider = context.watch<LanguageProvider>();
   return Container(

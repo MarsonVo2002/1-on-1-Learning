@@ -12,6 +12,8 @@ import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/account_session_provider.dart';
+
 Widget AvatarList(List<String> items, AccountSessionProvider provider,
     TextEditingController controller) {
   List<Widget> list = [];

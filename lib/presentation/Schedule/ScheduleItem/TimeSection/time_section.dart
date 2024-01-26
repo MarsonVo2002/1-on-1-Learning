@@ -7,6 +7,8 @@ import 'package:lettutor/provider/language_provider.dart';
 import 'package:lettutor/services/booking_service.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../provider/account_session_provider.dart';
+
 class TimeSection extends StatelessWidget {
   final BookingInfo info;
   const TimeSection({super.key, required this.info});

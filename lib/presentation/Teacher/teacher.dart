@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:lettutor/const.dart';
 import 'package:lettutor/main.dart';
 import 'package:lettutor/provider/language_provider.dart';
+import 'package:lettutor/services/tutor_service.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 import 'package:lettutor/model/calendar-dto.dart';
@@ -25,6 +26,8 @@ import 'package:lettutor/presentation/TeacherList/TeacherItem/AvatarSection/avat
 import 'package:lettutor/services/booking_service.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+
+import '../../provider/account_session_provider.dart';
 
 Widget ReviewSection(String url, String content, int rating, String name) {
   return Row(
@@ -197,6 +200,8 @@ class _TeacherState extends State<Teacher> {
   VideoPlayerController? VideoController;
   ChewieController? controller;
   bool hasError = false;
+  TextEditingController controller1 = TextEditingController();
+  String report = '';
   @override
   void initState() {
     super.initState();
@@ -262,7 +267,98 @@ class _TeacherState extends State<Teacher> {
                   Column(
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(languageProvider.language.report),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 72,
+                                    height: 72,
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: CachedNetworkImage(
+                                      imageUrl: provider.user.avatar ?? '',
+                                      fit: BoxFit.cover,
+                                      errorWidget:
+                                          (context, error, stackTrace) =>
+                                              const Icon(
+                                        Icons.error_outline_rounded,
+                                        color: Colors.red,
+                                        size: 32,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        provider.user.name!,
+                                        style: const TextStyle(fontSize: 18),
+                                      ),
+                                      Text(provider.user.email!)
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              SizedBox(
+                                height: 80,
+                                child: TextField(
+                                  controller: controller1,
+                                  keyboardType: TextInputType.multiline,
+                                  minLines: 3,
+                                  maxLines: 5,
+                                  decoration: InputDecoration(
+                                      hintText:
+                                          languageProvider.language.report,
+                                      contentPadding: const EdgeInsets.all(12),
+                                      border: OutlineInputBorder(
+                                          borderSide: const BorderSide(
+                                              color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(10))),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              )
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('NO'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                setState(() {
+                                  report = controller1.text;
+                                });
+                                await TutorService.reportTutor(
+                                    accessToken, provider.user.id!, report);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('YES'),
+                            ),
+                          ],
+                        );
+                      });
+                        },
                         icon: Icon(Icons.apps_outage_outlined),
                         color: Colors.blue,
                       ),
@@ -312,7 +408,7 @@ class _TeacherState extends State<Teacher> {
                           //     context,
                           //     MaterialPageRoute(
                           //         builder: (context) => Chat(
-                          //               teacher: teacher,
+                          //               teacher: widget.info,
                           //             )));
                         },
                         icon: Icon(Icons.chat),

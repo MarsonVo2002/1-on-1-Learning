@@ -7,6 +7,8 @@ import 'package:lettutor/presentation/Schedule/TitleSection/title_section.dart';
 import 'package:lettutor/services/booking_service.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/account_session_provider.dart';
+
 class Schedule extends StatefulWidget {
   const Schedule({super.key});
 

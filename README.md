@@ -1,16 +1,9 @@
 # lettutor
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Họ tên: Võ Phi Hùng
+MSSV: 20120293
+Link UI Diagram: https://drive.google.com/file/d/1QrWSVJtUAR0ODeackodTWVTKX86JS2yd/view?usp=sharing
+Link video demo milestone 2: https://studenthcmusedu-my.sharepoint.com/:v:/g/personal/20120293_student_hcmus_edu_vn/EcSmqjIC5olNke-tFQMXIukBQHFyxZIVuJGYVGgTVp0vnQ?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0RpcmVjdCJ9fQ&e=AVp22o
+Link video demo milestone 3: https://studenthcmusedu-my.sharepoint.com/:v:/g/personal/20120293_student_hcmus_edu_vn/EdLYk-dJGVNKjuzak9Ppw9oBTOT3o3DcEkFTdzb9coh41g?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=c1UHpw
+Link video demo milestone 4: https://studenthcmusedu-my.sharepoint.com/:v:/g/personal/20120293_student_hcmus_edu_vn/EaJATvxgQJ9LqdtVAMKea54BVZE0NLsDzYNCRFZy1mmC5g?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=Qwxr6D
+Lưu ý mở bằng diagram.net để có thể xem rõ
