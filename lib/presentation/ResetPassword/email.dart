@@ -19,9 +19,6 @@ class _Email extends State<Email> {
   bool isValid = false;
   @override
   Widget build(BuildContext context) {
-    
-
-    AccountProvider provider = context.watch<AccountProvider>();
     LanguageProvider languageProvider = context.watch<LanguageProvider>();
     void _validation() {
       final emailRegExp = RegExp(
@@ -54,34 +51,7 @@ class _Email extends State<Email> {
       }
     }
 
-    void _findEmail() {
-      String email = _emailController.text;
-      if (provider.accountList.any((element) => element.email == email)) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ResetPassword(
-                    email: email,
-                  )),
-        );
-      } else {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Account unavailable"),
-            content: const Text("Your account does not exist"),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("OK"),
-              ),
-            ],
-          ),
-        );
-      }
-    }
+    
 
     // TODO: implement build
     return Scaffold(

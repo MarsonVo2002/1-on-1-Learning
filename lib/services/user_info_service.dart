@@ -148,6 +148,7 @@ class UserInfoService {
 
     final jsonDecode = json.decode(response.body);
     if (response.statusCode != 200) {
+      print(jsonDecode);
       return null;
     }
     return User.fromJson(jsonDecode['user']);

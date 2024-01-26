@@ -65,6 +65,7 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     AccountSessionProvider provider = context.watch<AccountSessionProvider>();
     LanguageProvider languageProvider = context.watch<LanguageProvider>();
+    ThemeProvider themeProvider = context.watch<ThemeProvider>();
     final _googleSignIn = GoogleSignIn();
     
     // TODO: implement build
@@ -76,31 +77,19 @@ class _SettingState extends State<Setting> {
                     children: [
                       IconButton(
                           onPressed: () {
-                            Provider.of<ThemeProvider>(context, listen: false)
-                                .setTheme();
-                            setState(() {
-                              if (isLight == true) {
-                                isLight = false;
-                              } else {
-                                isLight = true;
-                              }
-                            });
+                            themeProvider.setTheme();
+                                
+                           
                           },
-                          icon: isLight
+                          icon: themeProvider.isLight
                               ? Icon(Icons.light_mode)
                               : Icon(Icons.dark_mode)),
                       IconButton(
                           onPressed: () {
                             languageProvider.setLanguage();
-                            setState(() {
-                              if (isEnglish == true) {
-                                isEnglish = false;
-                              } else {
-                                isEnglish = true;
-                              }
-                            });
+                            
                           },
-                          icon: isEnglish
+                          icon: languageProvider.language.id == "English"
                               ? Container(
                                   width: 30,
                                   height: 30,

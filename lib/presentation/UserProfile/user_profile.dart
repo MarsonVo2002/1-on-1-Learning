@@ -224,7 +224,7 @@ class _UserProfileState extends State<UserProfile> {
                           name.text,
                           country,
                           birthday,
-                          widget.user.level??'',
+                          widget.user.level??'BEGINNER',
                           learnTopics,
                           testPreparations,
                           widget.user.studySchedule??'',

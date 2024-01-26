@@ -126,10 +126,7 @@ class _HeaderSection extends State<HeaderSection> {
               languageProvider.language.no_upcoming,
               style: TextStyle(fontSize: 20, color: Colors.white),
             ),
-            Text(
-              '${languageProvider.language.totalTime} ${ConvertTotalLessonTime()}',
-              style: TextStyle(fontSize: 15, color: Colors.white),
-            ),
+           
           ],
         ),
       );
